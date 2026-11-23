@@ -490,7 +490,7 @@
       "light_condition": {
         "name": "Lichtverhältnisse",
         "state": {
-          "ok": "Passend",
+          "ok": "OK",
           "too_dark": "Zu dunkel",
           "too_bright": "Zu hell"
         }
@@ -498,7 +498,7 @@
       "temperature_condition": {
         "name": "Temperaturverhältnisse",
         "state": {
-          "ok": "Passend",
+          "ok": "OK",
           "too_cold": "Zu kalt",
           "too_hot": "Zu warm"
         }

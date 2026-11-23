@@ -59,12 +59,12 @@ LEVELS = {
         "de": {"on": "Ja", "off": "Nein"},
     },
     "light_cond": {
-        "en": {"ok": "Suitable", "too_dark": "Too dark", "too_bright": "Too bright"},
-        "de": {"ok": "Passend", "too_dark": "Zu dunkel", "too_bright": "Zu hell"},
+        "en": {"ok": "OK", "too_dark": "Too dark", "too_bright": "Too bright"},
+        "de": {"ok": "OK", "too_dark": "Zu dunkel", "too_bright": "Zu hell"},
     },
     "temp_cond": {
-        "en": {"ok": "Suitable", "too_cold": "Too cold", "too_hot": "Too warm"},
-        "de": {"ok": "Passend", "too_cold": "Zu kalt", "too_hot": "Zu warm"},
+        "en": {"ok": "OK", "too_cold": "Too cold", "too_hot": "Too warm"},
+        "de": {"ok": "OK", "too_cold": "Zu kalt", "too_hot": "Zu warm"},
     },
     "status_attr": {
         "en": {"summary": "Summary", "plant_name": "Plant", "area": "Room", "photo": "Photo", "notes": "Notes",
