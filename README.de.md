@@ -81,21 +81,21 @@ Ansichten: **Übersicht** (alle Pflanzen nach Raum, Räume einklappbar) und **F�
 
 ## Dazulernen
 
-Plant Butler passt Gießintervall und Gießmenge jeder Pflanze aus Erfahrung an. Unter **Allgemein**: **Lernstärke** (Sanft / Normal / Stark) und zwei Häkchen, **Gießintervall lernen** und **Gießmenge lernen**.
+Plant Butler passt Gießintervall und Gießmenge jeder Pflanze aus Erfahrung an. Unter **Allgemein**: **Lernstärke** (Vorsichtig / Ausgewogen / Stark) und zwei Häkchen, **Gießintervall lernen** und **Gießmenge lernen**.
 
 - Nach dem Gießen kommt die Frage **„Wie war die Erde vor dem Gießen?“** (Noch feucht / Leicht trocken / Sehr trocken) – am Handy nach „Gegossen“ und auf der Pflanzenkarte nach dem Abhaken.
 - Bei Pflanzen mit Gießmenge zusätzlich **„Wie war die Gießmenge?“**: Zu viel (Wasser im Untersetzer / lief unten raus) / Passt / Zu wenig (Erde nicht ganz durchfeuchtet). Am Handy nacheinander, auf der Karte beide Zeilen gleichzeitig.
 - Eine Benachrichtigung meldet Änderungen („alle 9 statt 8 Tage“, „Gießmenge künftig 330 statt 300 ml“).
 - Gelernt wird aus den **tatsächlich vergangenen Tagen**: zu spät gegossen und sehr trocken ist normal und ändert nichts; nach langer Zeit noch feucht verlängert; nach kurzer Zeit sehr trocken verkürzt.
 - Pflanzen mit **Bodensensor** lernen ohne Fragen: Austrocknungszeit → Intervall, erreichte Feuchte → Gießmenge.
-- Häkchen entfernt: wieder die berechneten Werte, das Gelernte bleibt gespeichert. **Dazulernen pausiert** (Schalter) hält das Lernen für alle Pflanzen an, z. B. im Urlaub. Pro Pflanze: **Gelerntes zurücksetzen**.
+- Häkchen entfernt: wieder die berechneten Werte, das Gelernte bleibt gespeichert. **Dazulernen pausieren** (Schalter) hält das Lernen für alle Pflanzen an, z. B. im Urlaub. Pro Pflanze: **Gelerntes zurücksetzen**.
 - **Rückgängig:** auf der Karte (30 s), per Button **Letztes Gießen rückgängig** (24 h) oder durch Antippen der Nachfrage am Handy.
 
 ## Benachrichtigungen und Ansagen
 
 Einstellungen → Geräte & Dienste → Plant Butler → ⚙ **Konfigurieren**:
 
-- **Allgemein** – Lernstärke (Sanft / Normal / Stark), Gießintervall / Gießmenge lernen (Häkchen) und Raumklima-Korrektur (Aus / Wenig / Normal / Stark), beides auf der Seite erklärt.
+- **Allgemein** – Lernstärke (Vorsichtig / Ausgewogen / Stark), Gießintervall / Gießmenge lernen (Häkchen) und Raumklima-Korrektur (Aus / Schwach / Mittel / Stark), beides auf der Seite erklärt.
 - **Handy-Benachrichtigungen** – Empfänger (alle Handys mit Companion-App werden automatisch aufgelistet), Themen, je Stufe *Aus / Tägliche Zusammenfassung / Sofort*, Uhrzeit, Wiederholung bei Kritisch, „Kritisch durchbricht Nicht stören“, Ruhezeit, „Nicht stören“ des Handys beachten, Buttons.
 - **Ansagen** – Sprachassistenten und Lautsprecher (automatisch aufgelistet), *nur im Raum der Pflanze* oder *alle ausgewählten*, gleiche Themen und Stufen, Ruhezeit, Lautstärke, Sprachausgabe. Music-Assistant-Player senken für die Ansage die Musik ab.
 
