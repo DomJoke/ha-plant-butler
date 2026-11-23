@@ -1,0 +1,20 @@
+mark_done:
+  fields:
+    entity_id:
+      selector:
+        entity:
+          integration: plant_butler
+          multiple: true
+    device_id:
+      selector:
+        device:
+          integration: plant_butler
+          multiple: true
+    task:
+      required: true
+      selector:
+        select:
+          options:
+            - water
+            - fertilize
+          translation_key: task

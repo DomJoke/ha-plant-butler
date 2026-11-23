@@ -1,0 +1,2483 @@
+{
+ "version": 1,
+ "species": [
+  {
+   "id": "agave",
+   "name": {
+    "de": "Agave",
+    "en": "Agave"
+   },
+   "latin": "Agave spp.",
+   "water": "very_low",
+   "light": "full_sun",
+   "temperature": {
+    "min": 5,
+    "max": 35
+   },
+   "humidity": "low",
+   "fertilizer": {
+    "interval_days": 28,
+    "winter_interval_days": 0
+   },
+   "toxic_pets": true,
+   "icon": "mdi:cactus"
+  },
+  {
+   "id": "alocasia",
+   "name": {
+    "de": "Alocasia (Pfeilblatt)",
+    "en": "Elephant ear"
+   },
+   "latin": "Alocasia spp.",
+   "water": "high",
+   "light": "bright_indirect",
+   "temperature": {
+    "min": 18,
+    "max": 28
+   },
+   "humidity": "high",
+   "fertilizer": {
+    "interval_days": 14,
+    "winter_interval_days": 0
+   },
+   "toxic_pets": true,
+   "icon": "mdi:leaf"
+  },
+  {
+   "id": "aloe",
+   "name": {
+    "de": "Aloe vera",
+    "en": "Aloe vera"
+   },
+   "latin": "Aloe vera",
+   "water": "very_low",
+   "light": "bright_some_sun",
+   "temperature": {
+    "min": 10,
+    "max": 32
+   },
+   "humidity": "low",
+   "fertilizer": {
+    "interval_days": 28,
+    "winter_interval_days": 0
+   },
+   "toxic_pets": true,
+   "icon": "mdi:cactus"
+  },
+  {
+   "id": "alpenveilchen",
+   "name": {
+    "de": "Alpenveilchen",
+    "en": "Cyclamen"
+   },
+   "latin": "Cyclamen persicum",
+   "water": "medium",
+   "light": "bright_indirect",
+   "temperature": {
+    "min": 10,
+    "max": 20
+   },
+   "humidity": "medium",
+   "fertilizer": {
+    "interval_days": 14,
+    "winter_interval_days": 14
+   },
+   "toxic_pets": true,
+   "icon": "mdi:flower"
+  },
+  {
+   "id": "amaryllis",
+   "name": {
+    "de": "Amaryllis (Ritterstern)",
+    "en": "Amaryllis"
+   },
+   "latin": "Hippeastrum spp.",
+   "water": "medium",
+   "light": "bright_some_sun",
+   "temperature": {
+    "min": 16,
+    "max": 24
+   },
+   "humidity": "medium",
+   "fertilizer": {
+    "interval_days": 14,
+    "winter_interval_days": 0
+   },
+   "toxic_pets": true,
+   "icon": "mdi:flower"
+  },
+  {
+   "id": "bambus",
+   "name": {
+    "de": "Bambus (Fargesia)",
+    "en": "Bamboo"
+   },
+   "latin": "Fargesia murielae",
+   "water": "high",
+   "light": "bright_some_sun",
+   "temperature": {
+    "min": -15,
+    "max": 30
+   },
+   "humidity": "medium",
+   "fertilizer": {
+    "interval_days": 28,
+    "winter_interval_days": 0
+   },
+   "toxic_pets": false,
+   "icon": "mdi:grass"
+  },
+  {
+   "id": "basilikum",
+   "name": {
+    "de": "Basilikum",
+    "en": "Basil"
+   },
+   "latin": "Ocimum basilicum",
+   "water": "high",
+   "light": "full_sun",
+   "temperature": {
+    "min": 15,
+    "max": 30
+   },
+   "humidity": "medium",
+   "fertilizer": {
+    "interval_days": 14,
+    "winter_interval_days": 0
+   },
+   "toxic_pets": false,
+   "icon": "mdi:sprout"
+  },
+  {
+   "id": "begonie",
+   "name": {
+    "de": "Begonie",
+    "en": "Begonia"
+   },
+   "latin": "Begonia spp.",
+   "water": "medium",
+   "light": "bright_indirect",
+   "temperature": {
+    "min": 16,
+    "max": 26
+   },
+   "humidity": "high",
+   "fertilizer": {
+    "interval_days": 14,
+    "winter_interval_days": 0
+   },
+   "toxic_pets": true,
+   "icon": "mdi:flower"
+  },
+  {
+   "id": "bergpalme",
+   "name": {
+    "de": "Bergpalme",
+    "en": "Parlour palm"
+   },
+   "latin": "Chamaedorea elegans",
+   "water": "medium",
+   "light": "partial_shade",
+   "temperature": {
+    "min": 16,
+    "max": 28
+   },
+   "humidity": "medium",
+   "fertilizer": {
+    "interval_days": 21,
+    "winter_interval_days": 0
+   },
+   "toxic_pets": false,
+   "icon": "mdi:palm-tree"
+  },
+  {
+   "id": "ficus_benjamina",
+   "name": {
+    "de": "Birkenfeige",
+    "en": "Weeping fig"
+   },
+   "latin": "Ficus benjamina",
+   "water": "medium",
+   "light": "bright_indirect",
+   "temperature": {
+    "min": 16,
+    "max": 28
+   },
+   "humidity": "medium",
+   "fertilizer": {
+    "interval_days": 14,
+    "winter_interval_days": 0
+   },
+   "toxic_pets": true,
+   "icon": "mdi:leaf"
+  },
+  {
+   "id": "bogenhanf",
+   "name": {
+    "de": "Bogenhanf (Sansevieria)",
+    "en": "Snake plant"
+   },
+   "latin": "Dracaena trifasciata",
+   "water": "low",
+   "light": "partial_shade",
+   "temperature": {
+    "min": 12,
+    "max": 32
+   },
+   "humidity": "low",
+   "fertilizer": {
+    "interval_days": 28,
+    "winter_interval_days": 0
+   },
+   "toxic_pets": true,
+   "icon": "mdi:grass"
+  },
+  {
+   "id": "bonsai_ficus",
+   "name": {
+    "de": "Bonsai (Ficus)",
+    "en": "Ficus bonsai"
+   },
+   "latin": "Ficus retusa",
+   "water": "medium",
+   "light": "bright_indirect",
+   "temperature": {
+    "min": 15,
+    "max": 28
+   },
+   "humidity": "medium",
+   "fertilizer": {
+    "interval_days": 14,
+    "winter_interval_days": 28
+   },
+   "toxic_pets": true,
+   "icon": "mdi:tree"
+  },
+  {
+   "id": "bougainvillea",
+   "name": {
+    "de": "Bougainvillea",
+    "en": "Bougainvillea"
+   },
+   "latin": "Bougainvillea spectabilis",
+   "water": "medium",
+   "light": "full_sun",
+   "temperature": {
+    "min": 10,
+    "max": 35
+   },
+   "humidity": "low",
+   "fertilizer": {
+    "interval_days": 14,
+    "winter_interval_days": 0
+   },
+   "toxic_pets": false,
+   "icon": "mdi:flower"
+  },
+  {
+   "id": "bromelie",
+   "name": {
+    "de": "Bromelie (Guzmania)",
+    "en": "Guzmania"
+   },
+   "latin": "Guzmania lingulata",
+   "water": "medium",
+   "light": "bright_indirect",
+   "temperature": {
+    "min": 18,
+    "max": 28
+   },
+   "humidity": "high",
+   "fertilizer": {
+    "interval_days": 28,
+    "winter_interval_days": 0
+   },
+   "toxic_pets": false,
+   "icon": "mdi:flower"
+  },
+  {
+   "id": "buchsbaum",
+   "name": {
+    "de": "Buchsbaum",
+    "en": "Boxwood"
+   },
+   "latin": "Buxus sempervirens",
+   "water": "medium",
+   "light": "bright_some_sun",
+   "temperature": {
+    "min": -10,
+    "max": 30
+   },
+   "humidity": "medium",
+   "fertilizer": {
+    "interval_days": 28,
+    "winter_interval_days": 0
+   },
+   "toxic_pets": true,
+   "icon": "mdi:tree"
+  },
+  {
+   "id": "buntnessel",
+   "name": {
+    "de": "Buntnessel",
+    "en": "Coleus"
+   },
+   "latin": "Coleus scutellarioides",
+   "water": "high",
+   "light": "bright_indirect",
+   "temperature": {
+    "min": 15,
+    "max": 28
+   },
+   "humidity": "medium",
+   "fertilizer": {
+    "interval_days": 14,
+    "winter_interval_days": 0
+   },
+   "toxic_pets": true,
+   "icon": "mdi:leaf"
+  },
+  {
+   "id": "calla",
+   "name": {
+    "de": "Calla",
+    "en": "Calla lily"
+   },
+   "latin": "Zantedeschia spp.",
+   "water": "high",
+   "light": "bright_indirect",
+   "temperature": {
+    "min": 15,
+    "max": 25
+   },
+   "humidity": "medium",
+   "fertilizer": {
+    "interval_days": 14,
+    "winter_interval_days": 0
+   },
+   "toxic_pets": true,
+   "icon": "mdi:flower"
+  },
+  {
+   "id": "chili",
+   "name": {
+    "de": "Chili / Paprika",
+    "en": "Chili pepper"
+   },
+   "latin": "Capsicum annuum",
+   "water": "high",
+   "light": "full_sun",
+   "temperature": {
+    "min": 15,
+    "max": 32
+   },
+   "humidity": "medium",
+   "fertilizer": {
+    "interval_days": 7,
+    "winter_interval_days": 0
+   },
+   "toxic_pets": true,
+   "icon": "mdi:chili-mild"
+  },
+  {
+   "id": "christusdorn",
+   "name": {
+    "de": "Christusdorn",
+    "en": "Crown of thorns"
+   },
+   "latin": "Euphorbia milii",
+   "water": "low",
+   "light": "full_sun",
+   "temperature": {
+    "min": 12,
+    "max": 32
+   },
+   "humidity": "low",
+   "fertilizer": {
+    "interval_days": 21,
+    "winter_interval_days": 0
+   },
+   "toxic_pets": true,
+   "icon": "mdi:cactus"
+  },
+  {
+   "id": "dieffenbachia",
+   "name": {
+    "de": "Dieffenbachie",
+    "en": "Dumb cane"
+   },
+   "latin": "Dieffenbachia seguine",
+   "water": "medium",
+   "light": "partial_shade",
+   "temperature": {
+    "min": 16,
+    "max": 28
+   },
+   "humidity": "medium",
+   "fertilizer": {
+    "interval_days": 14,
+    "winter_interval_days": 0
+   },
+   "toxic_pets": true,
+   "icon": "mdi:leaf"
+  },
+  {
+   "id": "dill",
+   "name": {
+    "de": "Dill",
+    "en": "Dill"
+   },
+   "latin": "Anethum graveolens",
+   "water": "medium",
+   "light": "full_sun",
+   "temperature": {
+    "min": 8,
+    "max": 28
+   },
+   "humidity": "medium",
+   "fertilizer": {
+    "interval_days": 14,
+    "winter_interval_days": 0
+   },
+   "toxic_pets": false,
+   "icon": "mdi:sprout"
+  },
+  {
+   "id": "mandevilla",
+   "name": {
+    "de": "Dipladenie (Mandevilla)",
+    "en": "Mandevilla"
+   },
+   "latin": "Mandevilla sanderi",
+   "water": "medium",
+   "light": "full_sun",
+   "temperature": {
+    "min": 10,
+    "max": 35
+   },
+   "humidity": "medium",
+   "fertilizer": {
+    "interval_days": 7,
+    "winter_interval_days": 0
+   },
+   "toxic_pets": true,
+   "icon": "mdi:flower"
+  },
+  {
+   "id": "dracaena_marginata",
+   "name": {
+    "de": "Drachenbaum (Marginata)",
+    "en": "Dragon tree"
+   },
+   "latin": "Dracaena marginata",
+   "water": "low",
+   "light": "bright_indirect",
+   "temperature": {
+    "min": 15,
+    "max": 30
+   },
+   "humidity": "medium",
+   "fertilizer": {
+    "interval_days": 21,
+    "winter_interval_days": 0
+   },
+   "toxic_pets": true,
+   "icon": "mdi:palm-tree"
+  },
+  {
+   "id": "drehfrucht",
+   "name": {
+    "de": "Drehfrucht",
+    "en": "Cape primrose"
+   },
+   "latin": "Streptocarpus hybr.",
+   "water": "medium",
+   "light": "bright_indirect",
+   "temperature": {
+    "min": 15,
+    "max": 26
+   },
+   "humidity": "medium",
+   "fertilizer": {
+    "interval_days": 14,
+    "winter_interval_days": 0
+   },
+   "toxic_pets": false,
+   "icon": "mdi:flower"
+  },
+  {
+   "id": "tradescantia",
+   "name": {
+    "de": "Dreimasterblume",
+    "en": "Inch plant"
+   },
+   "latin": "Tradescantia zebrina",
+   "water": "medium",
+   "light": "bright_indirect",
+   "temperature": {
+    "min": 14,
+    "max": 28
+   },
+   "humidity": "medium",
+   "fertilizer": {
+    "interval_days": 14,
+    "winter_interval_days": 0
+   },
+   "toxic_pets": true,
+   "icon": "mdi:leaf"
+  },
+  {
+   "id": "dracaena_fragrans",
+   "name": {
+    "de": "Duftende Dracaena",
+    "en": "Corn plant"
+   },
+   "latin": "Dracaena fragrans",
+   "water": "medium",
+   "light": "partial_shade",
+   "temperature": {
+    "min": 15,
+    "max": 30
+   },
+   "humidity": "medium",
+   "fertilizer": {
+    "interval_days": 21,
+    "winter_interval_days": 0
+   },
+   "toxic_pets": true,
+   "icon": "mdi:palm-tree"
+  },
+  {
+   "id": "echeverie",
+   "name": {
+    "de": "Echeverie",
+    "en": "Echeveria"
+   },
+   "latin": "Echeveria spp.",
+   "water": "very_low",
+   "light": "full_sun",
+   "temperature": {
+    "min": 8,
+    "max": 32
+   },
+   "humidity": "low",
+   "fertilizer": {
+    "interval_days": 28,
+    "winter_interval_days": 0
+   },
+   "toxic_pets": false,
+   "icon": "mdi:cactus"
+  },
+  {
+   "id": "lorbeer",
+   "name": {
+    "de": "Echter Lorbeer",
+    "en": "Bay laurel"
+   },
+   "latin": "Laurus nobilis",
+   "water": "medium",
+   "light": "bright_some_sun",
+   "temperature": {
+    "min": 0,
+    "max": 30
+   },
+   "humidity": "low",
+   "fertilizer": {
+    "interval_days": 14,
+    "winter_interval_days": 0
+   },
+   "toxic_pets": true,
+   "icon": "mdi:tree"
+  },
+  {
+   "id": "efeu",
+   "name": {
+    "de": "Efeu",
+    "en": "English ivy"
+   },
+   "latin": "Hedera helix",
+   "water": "medium",
+   "light": "partial_shade",
+   "temperature": {
+    "min": 8,
+    "max": 24
+   },
+   "humidity": "medium",
+   "fertilizer": {
+    "interval_days": 14,
+    "winter_interval_days": 0
+   },
+   "toxic_pets": true,
+   "icon": "mdi:leaf"
+  },
+  {
+   "id": "efeutute",
+   "name": {
+    "de": "Efeutute",
+    "en": "Pothos"
+   },
+   "latin": "Epipremnum aureum",
+   "water": "medium",
+   "light": "partial_shade",
+   "temperature": {
+    "min": 15,
+    "max": 30
+   },
+   "humidity": "medium",
+   "fertilizer": {
+    "interval_days": 14,
+    "winter_interval_days": 0
+   },
+   "toxic_pets": true,
+   "icon": "mdi:leaf"
+  },
+  {
+   "id": "efeutute_neon",
+   "name": {
+    "de": "Efeutute Neon",
+    "en": "Neon pothos"
+   },
+   "latin": "Epipremnum aureum 'Neon'",
+   "water": "medium",
+   "light": "bright_indirect",
+   "temperature": {
+    "min": 15,
+    "max": 30
+   },
+   "humidity": "medium",
+   "fertilizer": {
+    "interval_days": 14,
+    "winter_interval_days": 0
+   },
+   "toxic_pets": true,
+   "icon": "mdi:leaf"
+  },
+  {
+   "id": "einblatt",
+   "name": {
+    "de": "Einblatt",
+    "en": "Peace lily"
+   },
+   "latin": "Spathiphyllum wallisii",
+   "water": "high",
+   "light": "partial_shade",
+   "temperature": {
+    "min": 16,
+    "max": 28
+   },
+   "humidity": "high",
+   "fertilizer": {
+    "interval_days": 14,
+    "winter_interval_days": 0
+   },
+   "toxic_pets": true,
+   "icon": "mdi:flower"
+  },
+  {
+   "id": "elefantenfuss",
+   "name": {
+    "de": "Elefantenfuß",
+    "en": "Ponytail palm"
+   },
+   "latin": "Beaucarnea recurvata",
+   "water": "very_low",
+   "light": "bright_some_sun",
+   "temperature": {
+    "min": 10,
+    "max": 32
+   },
+   "humidity": "low",
+   "fertilizer": {
+    "interval_days": 28,
+    "winter_interval_days": 0
+   },
+   "toxic_pets": false,
+   "icon": "mdi:palm-tree"
+  },
+  {
+   "id": "erbsenpflanze",
+   "name": {
+    "de": "Erbsenpflanze",
+    "en": "String of pearls"
+   },
+   "latin": "Curio rowleyanus",
+   "water": "very_low",
+   "light": "bright_some_sun",
+   "temperature": {
+    "min": 10,
+    "max": 30
+   },
+   "humidity": "low",
+   "fertilizer": {
+    "interval_days": 28,
+    "winter_interval_days": 0
+   },
+   "toxic_pets": true,
+   "icon": "mdi:cactus"
+  },
+  {
+   "id": "erdbeere",
+   "name": {
+    "de": "Erdbeere",
+    "en": "Strawberry"
+   },
+   "latin": "Fragaria × ananassa",
+   "water": "high",
+   "light": "full_sun",
+   "temperature": {
+    "min": 5,
+    "max": 30
+   },
+   "humidity": "medium",
+   "fertilizer": {
+    "interval_days": 14,
+    "winter_interval_days": 0
+   },
+   "toxic_pets": false,
+   "icon": "mdi:fruit-cherries"
+  },
+  {
+   "id": "feige_echt",
+   "name": {
+    "de": "Feigenbaum",
+    "en": "Common fig"
+   },
+   "latin": "Ficus carica",
+   "water": "medium",
+   "light": "full_sun",
+   "temperature": {
+    "min": 0,
+    "max": 32
+   },
+   "humidity": "low",
+   "fertilizer": {
+    "interval_days": 14,
+    "winter_interval_days": 0
+   },
+   "toxic_pets": true,
+   "icon": "mdi:tree"
+  },
+  {
+   "id": "anthurie",
+   "name": {
+    "de": "Flamingoblume",
+    "en": "Flamingo flower"
+   },
+   "latin": "Anthurium andraeanum",
+   "water": "medium",
+   "light": "bright_indirect",
+   "temperature": {
+    "min": 18,
+    "max": 28
+   },
+   "humidity": "high",
+   "fertilizer": {
+    "interval_days": 14,
+    "winter_interval_days": 28
+   },
+   "toxic_pets": true,
+   "icon": "mdi:flower"
+  },
+  {
+   "id": "kalanchoe",
+   "name": {
+    "de": "Flammendes Käthchen",
+    "en": "Flaming Katy"
+   },
+   "latin": "Kalanchoe blossfeldiana",
+   "water": "low",
+   "light": "bright_some_sun",
+   "temperature": {
+    "min": 12,
+    "max": 28
+   },
+   "humidity": "low",
+   "fertilizer": {
+    "interval_days": 21,
+    "winter_interval_days": 0
+   },
+   "toxic_pets": true,
+   "icon": "mdi:flower"
+  },
+  {
+   "id": "fleissiges_lieschen",
+   "name": {
+    "de": "Fleißiges Lieschen",
+    "en": "Busy Lizzie"
+   },
+   "latin": "Impatiens walleriana",
+   "water": "high",
+   "light": "partial_shade",
+   "temperature": {
+    "min": 12,
+    "max": 28
+   },
+   "humidity": "medium",
+   "fertilizer": {
+    "interval_days": 14,
+    "winter_interval_days": 0
+   },
+   "toxic_pets": false,
+   "icon": "mdi:flower"
+  },
+  {
+   "id": "farn_frauenhaar",
+   "name": {
+    "de": "Frauenhaarfarn",
+    "en": "Maidenhair fern"
+   },
+   "latin": "Adiantum raddianum",
+   "water": "very_high",
+   "light": "partial_shade",
+   "temperature": {
+    "min": 16,
+    "max": 26
+   },
+   "humidity": "high",
+   "fertilizer": {
+    "interval_days": 21,
+    "winter_interval_days": 0
+   },
+   "toxic_pets": false,
+   "icon": "mdi:leaf"
+  },
+  {
+   "id": "fuchsie",
+   "name": {
+    "de": "Fuchsie",
+    "en": "Fuchsia"
+   },
+   "latin": "Fuchsia hybr.",
+   "water": "high",
+   "light": "partial_shade",
+   "temperature": {
+    "min": 8,
+    "max": 26
+   },
+   "humidity": "medium",
+   "fertilizer": {
+    "interval_days": 7,
+    "winter_interval_days": 0
+   },
+   "toxic_pets": false,
+   "icon": "mdi:flower"
+  },
+  {
+   "id": "gardenie",
+   "name": {
+    "de": "Gardenie",
+    "en": "Gardenia"
+   },
+   "latin": "Gardenia jasminoides",
+   "water": "high",
+   "light": "bright_indirect",
+   "temperature": {
+    "min": 16,
+    "max": 24
+   },
+   "humidity": "high",
+   "fertilizer": {
+    "interval_days": 14,
+    "winter_interval_days": 0
+   },
+   "toxic_pets": true,
+   "icon": "mdi:flower"
+  },
+  {
+   "id": "ficus_lyrata",
+   "name": {
+    "de": "Geigenfeige",
+    "en": "Fiddle-leaf fig"
+   },
+   "latin": "Ficus lyrata",
+   "water": "medium",
+   "light": "bright_some_sun",
+   "temperature": {
+    "min": 16,
+    "max": 30
+   },
+   "humidity": "medium",
+   "fertilizer": {
+    "interval_days": 14,
+    "winter_interval_days": 0
+   },
+   "toxic_pets": true,
+   "icon": "mdi:leaf"
+  },
+  {
+   "id": "geldbaum",
+   "name": {
+    "de": "Geldbaum (Crassula)",
+    "en": "Jade plant"
+   },
+   "latin": "Crassula ovata",
+   "water": "very_low",
+   "light": "bright_some_sun",
+   "temperature": {
+    "min": 8,
+    "max": 30
+   },
+   "humidity": "low",
+   "fertilizer": {
+    "interval_days": 28,
+    "winter_interval_days": 0
+   },
+   "toxic_pets": true,
+   "icon": "mdi:cactus"
+  },
+  {
+   "id": "geranie",
+   "name": {
+    "de": "Geranie (Pelargonie)",
+    "en": "Geranium"
+   },
+   "latin": "Pelargonium × hortorum",
+   "water": "medium",
+   "light": "full_sun",
+   "temperature": {
+    "min": 5,
+    "max": 32
+   },
+   "humidity": "low",
+   "fertilizer": {
+    "interval_days": 7,
+    "winter_interval_days": 0
+   },
+   "toxic_pets": true,
+   "icon": "mdi:flower"
+  },
+  {
+   "id": "farn_geweih",
+   "name": {
+    "de": "Geweihfarn",
+    "en": "Staghorn fern"
+   },
+   "latin": "Platycerium bifurcatum",
+   "water": "medium",
+   "light": "bright_indirect",
+   "temperature": {
+    "min": 16,
+    "max": 28
+   },
+   "humidity": "high",
+   "fertilizer": {
+    "interval_days": 28,
+    "winter_interval_days": 0
+   },
+   "toxic_pets": false,
+   "icon": "mdi:leaf"
+  },
+  {
+   "id": "zimmerbambus",
+   "name": {
+    "de": "Glücksbambus",
+    "en": "Lucky bamboo"
+   },
+   "latin": "Dracaena sanderiana",
+   "water": "high",
+   "light": "partial_shade",
+   "temperature": {
+    "min": 16,
+    "max": 30
+   },
+   "humidity": "medium",
+   "fertilizer": {
+    "interval_days": 28,
+    "winter_interval_days": 0
+   },
+   "toxic_pets": true,
+   "icon": "mdi:grass"
+  },
+  {
+   "id": "zamioculcas",
+   "name": {
+    "de": "Glücksfeder (Zamioculcas)",
+    "en": "ZZ plant"
+   },
+   "latin": "Zamioculcas zamiifolia",
+   "water": "low",
+   "light": "partial_shade",
+   "temperature": {
+    "min": 15,
+    "max": 30
+   },
+   "humidity": "low",
+   "fertilizer": {
+    "interval_days": 28,
+    "winter_interval_days": 0
+   },
+   "toxic_pets": true,
+   "icon": "mdi:leaf"
+  },
+  {
+   "id": "goldfruchtpalme",
+   "name": {
+    "de": "Goldfruchtpalme",
+    "en": "Areca palm"
+   },
+   "latin": "Dypsis lutescens",
+   "water": "medium",
+   "light": "bright_indirect",
+   "temperature": {
+    "min": 16,
+    "max": 28
+   },
+   "humidity": "high",
+   "fertilizer": {
+    "interval_days": 14,
+    "winter_interval_days": 0
+   },
+   "toxic_pets": false,
+   "icon": "mdi:palm-tree"
+  },
+  {
+   "id": "gruenlilie",
+   "name": {
+    "de": "Grünlilie",
+    "en": "Spider plant"
+   },
+   "latin": "Chlorophytum comosum",
+   "water": "medium",
+   "light": "bright_indirect",
+   "temperature": {
+    "min": 12,
+    "max": 28
+   },
+   "humidity": "medium",
+   "fertilizer": {
+    "interval_days": 14,
+    "winter_interval_days": 0
+   },
+   "toxic_pets": false,
+   "icon": "mdi:grass"
+  },
+  {
+   "id": "ficus_elastica",
+   "name": {
+    "de": "Gummibaum",
+    "en": "Rubber plant"
+   },
+   "latin": "Ficus elastica",
+   "water": "medium",
+   "light": "bright_indirect",
+   "temperature": {
+    "min": 15,
+    "max": 30
+   },
+   "humidity": "medium",
+   "fertilizer": {
+    "interval_days": 14,
+    "winter_interval_days": 0
+   },
+   "toxic_pets": true,
+   "icon": "mdi:leaf"
+  },
+  {
+   "id": "gurke",
+   "name": {
+    "de": "Gurke",
+    "en": "Cucumber"
+   },
+   "latin": "Cucumis sativus",
+   "water": "very_high",
+   "light": "full_sun",
+   "temperature": {
+    "min": 15,
+    "max": 32
+   },
+   "humidity": "high",
+   "fertilizer": {
+    "interval_days": 7,
+    "winter_interval_days": 0
+   },
+   "toxic_pets": false,
+   "icon": "mdi:sprout"
+  },
+  {
+   "id": "zimmerpalme_hanf",
+   "name": {
+    "de": "Hanfpalme",
+    "en": "Windmill palm"
+   },
+   "latin": "Trachycarpus fortunei",
+   "water": "medium",
+   "light": "bright_some_sun",
+   "temperature": {
+    "min": 5,
+    "max": 30
+   },
+   "humidity": "medium",
+   "fertilizer": {
+    "interval_days": 21,
+    "winter_interval_days": 0
+   },
+   "toxic_pets": false,
+   "icon": "mdi:palm-tree"
+  },
+  {
+   "id": "haworthia",
+   "name": {
+    "de": "Haworthie",
+    "en": "Zebra plant"
+   },
+   "latin": "Haworthiopsis attenuata",
+   "water": "very_low",
+   "light": "bright_indirect",
+   "temperature": {
+    "min": 10,
+    "max": 30
+   },
+   "humidity": "low",
+   "fertilizer": {
+    "interval_days": 28,
+    "winter_interval_days": 0
+   },
+   "toxic_pets": false,
+   "icon": "mdi:cactus"
+  },
+  {
+   "id": "hortensie",
+   "name": {
+    "de": "Hortensie",
+    "en": "Hydrangea"
+   },
+   "latin": "Hydrangea macrophylla",
+   "water": "very_high",
+   "light": "partial_shade",
+   "temperature": {
+    "min": 0,
+    "max": 28
+   },
+   "humidity": "medium",
+   "fertilizer": {
+    "interval_days": 14,
+    "winter_interval_days": 0
+   },
+   "toxic_pets": true,
+   "icon": "mdi:flower"
+  },
+  {
+   "id": "surfinie",
+   "name": {
+    "de": "Hängepetunie (Surfinie)",
+    "en": "Trailing petunia"
+   },
+   "latin": "Petunia Surfinia",
+   "water": "very_high",
+   "light": "full_sun",
+   "temperature": {
+    "min": 8,
+    "max": 32
+   },
+   "humidity": "medium",
+   "fertilizer": {
+    "interval_days": 7,
+    "winter_interval_days": 0
+   },
+   "toxic_pets": false,
+   "icon": "mdi:flower"
+  },
+  {
+   "id": "kaffeepflanze",
+   "name": {
+    "de": "Kaffeepflanze",
+    "en": "Coffee plant"
+   },
+   "latin": "Coffea arabica",
+   "water": "medium",
+   "light": "bright_indirect",
+   "temperature": {
+    "min": 16,
+    "max": 28
+   },
+   "humidity": "high",
+   "fertilizer": {
+    "interval_days": 14,
+    "winter_interval_days": 0
+   },
+   "toxic_pets": true,
+   "icon": "mdi:leaf"
+  },
+  {
+   "id": "kaktus",
+   "name": {
+    "de": "Kaktus (allgemein)",
+    "en": "Cactus (general)"
+   },
+   "latin": "Cactaceae",
+   "water": "very_low",
+   "light": "full_sun",
+   "temperature": {
+    "min": 5,
+    "max": 35
+   },
+   "humidity": "low",
+   "fertilizer": {
+    "interval_days": 28,
+    "winter_interval_days": 0
+   },
+   "toxic_pets": false,
+   "icon": "mdi:cactus"
+  },
+  {
+   "id": "kannenpflanze",
+   "name": {
+    "de": "Kannenpflanze",
+    "en": "Pitcher plant"
+   },
+   "latin": "Nepenthes spp.",
+   "water": "high",
+   "light": "bright_indirect",
+   "temperature": {
+    "min": 18,
+    "max": 30
+   },
+   "humidity": "high",
+   "fertilizer": {
+    "interval_days": 0,
+    "winter_interval_days": 0
+   },
+   "toxic_pets": false,
+   "icon": "mdi:sprout"
+  },
+  {
+   "id": "kentiapalme",
+   "name": {
+    "de": "Kentiapalme",
+    "en": "Kentia palm"
+   },
+   "latin": "Howea forsteriana",
+   "water": "medium",
+   "light": "partial_shade",
+   "temperature": {
+    "min": 14,
+    "max": 28
+   },
+   "humidity": "medium",
+   "fertilizer": {
+    "interval_days": 21,
+    "winter_interval_days": 0
+   },
+   "toxic_pets": false,
+   "icon": "mdi:palm-tree"
+  },
+  {
+   "id": "ficus_pumila",
+   "name": {
+    "de": "Kletterfeige",
+    "en": "Creeping fig"
+   },
+   "latin": "Ficus pumila",
+   "water": "high",
+   "light": "partial_shade",
+   "temperature": {
+    "min": 12,
+    "max": 26
+   },
+   "humidity": "high",
+   "fertilizer": {
+    "interval_days": 14,
+    "winter_interval_days": 0
+   },
+   "toxic_pets": true,
+   "icon": "mdi:leaf"
+  },
+  {
+   "id": "clivie",
+   "name": {
+    "de": "Klivie (Riemenblatt)",
+    "en": "Bush lily"
+   },
+   "latin": "Clivia miniata",
+   "water": "medium",
+   "light": "bright_indirect",
+   "temperature": {
+    "min": 10,
+    "max": 24
+   },
+   "humidity": "medium",
+   "fertilizer": {
+    "interval_days": 14,
+    "winter_interval_days": 0
+   },
+   "toxic_pets": true,
+   "icon": "mdi:flower"
+  },
+  {
+   "id": "aglaonema",
+   "name": {
+    "de": "Kolbenfaden (Aglaonema)",
+    "en": "Chinese evergreen"
+   },
+   "latin": "Aglaonema spp.",
+   "water": "medium",
+   "light": "partial_shade",
+   "temperature": {
+    "min": 16,
+    "max": 28
+   },
+   "humidity": "medium",
+   "fertilizer": {
+    "interval_days": 21,
+    "winter_interval_days": 0
+   },
+   "toxic_pets": true,
+   "icon": "mdi:leaf"
+  },
+  {
+   "id": "calathea",
+   "name": {
+    "de": "Korbmarante (Calathea)",
+    "en": "Calathea"
+   },
+   "latin": "Goeppertia spp.",
+   "water": "high",
+   "light": "partial_shade",
+   "temperature": {
+    "min": 18,
+    "max": 27
+   },
+   "humidity": "high",
+   "fertilizer": {
+    "interval_days": 14,
+    "winter_interval_days": 0
+   },
+   "toxic_pets": false,
+   "icon": "mdi:leaf"
+  },
+  {
+   "id": "koriander",
+   "name": {
+    "de": "Koriander",
+    "en": "Coriander"
+   },
+   "latin": "Coriandrum sativum",
+   "water": "medium",
+   "light": "bright_some_sun",
+   "temperature": {
+    "min": 8,
+    "max": 26
+   },
+   "humidity": "medium",
+   "fertilizer": {
+    "interval_days": 14,
+    "winter_interval_days": 0
+   },
+   "toxic_pets": false,
+   "icon": "mdi:sprout"
+  },
+  {
+   "id": "lavendel",
+   "name": {
+    "de": "Lavendel",
+    "en": "Lavender"
+   },
+   "latin": "Lavandula angustifolia",
+   "water": "low",
+   "light": "full_sun",
+   "temperature": {
+    "min": 0,
+    "max": 35
+   },
+   "humidity": "low",
+   "fertilizer": {
+    "interval_days": 28,
+    "winter_interval_days": 0
+   },
+   "toxic_pets": true,
+   "icon": "mdi:flower"
+  },
+  {
+   "id": "ceropegia",
+   "name": {
+    "de": "Leuchterblume (Herzkette)",
+    "en": "String of hearts"
+   },
+   "latin": "Ceropegia woodii",
+   "water": "low",
+   "light": "bright_some_sun",
+   "temperature": {
+    "min": 12,
+    "max": 30
+   },
+   "humidity": "low",
+   "fertilizer": {
+    "interval_days": 28,
+    "winter_interval_days": 0
+   },
+   "toxic_pets": false,
+   "icon": "mdi:leaf"
+  },
+  {
+   "id": "minze",
+   "name": {
+    "de": "Minze",
+    "en": "Mint"
+   },
+   "latin": "Mentha spp.",
+   "water": "very_high",
+   "light": "bright_some_sun",
+   "temperature": {
+    "min": 5,
+    "max": 28
+   },
+   "humidity": "medium",
+   "fertilizer": {
+    "interval_days": 14,
+    "winter_interval_days": 0
+   },
+   "toxic_pets": true,
+   "icon": "mdi:sprout"
+  },
+  {
+   "id": "monstera",
+   "name": {
+    "de": "Monstera (Fensterblatt)",
+    "en": "Swiss cheese plant"
+   },
+   "latin": "Monstera deliciosa",
+   "water": "medium",
+   "light": "bright_indirect",
+   "temperature": {
+    "min": 16,
+    "max": 30
+   },
+   "humidity": "high",
+   "fertilizer": {
+    "interval_days": 14,
+    "winter_interval_days": 0
+   },
+   "toxic_pets": true,
+   "icon": "mdi:leaf"
+  },
+  {
+   "id": "monstera_adansonii",
+   "name": {
+    "de": "Monstera adansonii",
+    "en": "Monkey mask monstera"
+   },
+   "latin": "Monstera adansonii",
+   "water": "medium",
+   "light": "bright_indirect",
+   "temperature": {
+    "min": 16,
+    "max": 30
+   },
+   "humidity": "high",
+   "fertilizer": {
+    "interval_days": 14,
+    "winter_interval_days": 0
+   },
+   "toxic_pets": true,
+   "icon": "mdi:leaf"
+  },
+  {
+   "id": "fittonia",
+   "name": {
+    "de": "Mosaikpflanze (Fittonia)",
+    "en": "Nerve plant"
+   },
+   "latin": "Fittonia albivenis",
+   "water": "high",
+   "light": "partial_shade",
+   "temperature": {
+    "min": 18,
+    "max": 27
+   },
+   "humidity": "high",
+   "fertilizer": {
+    "interval_days": 14,
+    "winter_interval_days": 0
+   },
+   "toxic_pets": false,
+   "icon": "mdi:leaf"
+  },
+  {
+   "id": "farn_nest",
+   "name": {
+    "de": "Nestfarn",
+    "en": "Bird's nest fern"
+   },
+   "latin": "Asplenium nidus",
+   "water": "high",
+   "light": "partial_shade",
+   "temperature": {
+    "min": 16,
+    "max": 28
+   },
+   "humidity": "high",
+   "fertilizer": {
+    "interval_days": 21,
+    "winter_interval_days": 0
+   },
+   "toxic_pets": false,
+   "icon": "mdi:leaf"
+  },
+  {
+   "id": "oleander",
+   "name": {
+    "de": "Oleander",
+    "en": "Oleander"
+   },
+   "latin": "Nerium oleander",
+   "water": "high",
+   "light": "full_sun",
+   "temperature": {
+    "min": 3,
+    "max": 35
+   },
+   "humidity": "low",
+   "fertilizer": {
+    "interval_days": 7,
+    "winter_interval_days": 0
+   },
+   "toxic_pets": true,
+   "icon": "mdi:flower"
+  },
+  {
+   "id": "olivenbaum",
+   "name": {
+    "de": "Olivenbaum",
+    "en": "Olive tree"
+   },
+   "latin": "Olea europaea",
+   "water": "low",
+   "light": "full_sun",
+   "temperature": {
+    "min": 2,
+    "max": 35
+   },
+   "humidity": "low",
+   "fertilizer": {
+    "interval_days": 14,
+    "winter_interval_days": 0
+   },
+   "toxic_pets": false,
+   "icon": "mdi:tree"
+  },
+  {
+   "id": "orangenbaeumchen",
+   "name": {
+    "de": "Orangenbäumchen (Calamondin)",
+    "en": "Calamondin"
+   },
+   "latin": "Citrus × microcarpa",
+   "water": "medium",
+   "light": "full_sun",
+   "temperature": {
+    "min": 8,
+    "max": 30
+   },
+   "humidity": "medium",
+   "fertilizer": {
+    "interval_days": 7,
+    "winter_interval_days": 28
+   },
+   "toxic_pets": false,
+   "icon": "mdi:fruit-citrus"
+  },
+  {
+   "id": "orchidee_dendrobium",
+   "name": {
+    "de": "Orchidee (Dendrobium)",
+    "en": "Dendrobium orchid"
+   },
+   "latin": "Dendrobium spp.",
+   "water": "low",
+   "light": "bright_some_sun",
+   "temperature": {
+    "min": 12,
+    "max": 28
+   },
+   "humidity": "medium",
+   "fertilizer": {
+    "interval_days": 14,
+    "winter_interval_days": 0
+   },
+   "toxic_pets": false,
+   "icon": "mdi:flower"
+  },
+  {
+   "id": "orchidee_oncidium",
+   "name": {
+    "de": "Orchidee (Oncidium)",
+    "en": "Dancing lady orchid"
+   },
+   "latin": "Oncidium spp.",
+   "water": "medium",
+   "light": "bright_indirect",
+   "temperature": {
+    "min": 14,
+    "max": 28
+   },
+   "humidity": "high",
+   "fertilizer": {
+    "interval_days": 14,
+    "winter_interval_days": 28
+   },
+   "toxic_pets": false,
+   "icon": "mdi:flower"
+  },
+  {
+   "id": "orchidee",
+   "name": {
+    "de": "Orchidee (Phalaenopsis)",
+    "en": "Moth orchid"
+   },
+   "latin": "Phalaenopsis spp.",
+   "water": "low",
+   "light": "bright_indirect",
+   "temperature": {
+    "min": 16,
+    "max": 28
+   },
+   "humidity": "high",
+   "fertilizer": {
+    "interval_days": 14,
+    "winter_interval_days": 28
+   },
+   "toxic_pets": false,
+   "icon": "mdi:flower"
+  },
+  {
+   "id": "oregano",
+   "name": {
+    "de": "Oregano",
+    "en": "Oregano"
+   },
+   "latin": "Origanum vulgare",
+   "water": "low",
+   "light": "full_sun",
+   "temperature": {
+    "min": 0,
+    "max": 32
+   },
+   "humidity": "low",
+   "fertilizer": {
+    "interval_days": 28,
+    "winter_interval_days": 0
+   },
+   "toxic_pets": true,
+   "icon": "mdi:sprout"
+  },
+  {
+   "id": "osterkaktus",
+   "name": {
+    "de": "Osterkaktus",
+    "en": "Easter cactus"
+   },
+   "latin": "Hatiora gaertneri",
+   "water": "medium",
+   "light": "bright_indirect",
+   "temperature": {
+    "min": 10,
+    "max": 26
+   },
+   "humidity": "medium",
+   "fertilizer": {
+    "interval_days": 14,
+    "winter_interval_days": 0
+   },
+   "toxic_pets": false,
+   "icon": "mdi:cactus"
+  },
+  {
+   "id": "peperomia",
+   "name": {
+    "de": "Peperomie",
+    "en": "Peperomia"
+   },
+   "latin": "Peperomia obtusifolia",
+   "water": "low",
+   "light": "bright_indirect",
+   "temperature": {
+    "min": 16,
+    "max": 28
+   },
+   "humidity": "medium",
+   "fertilizer": {
+    "interval_days": 21,
+    "winter_interval_days": 0
+   },
+   "toxic_pets": false,
+   "icon": "mdi:leaf"
+  },
+  {
+   "id": "petersilie",
+   "name": {
+    "de": "Petersilie",
+    "en": "Parsley"
+   },
+   "latin": "Petroselinum crispum",
+   "water": "high",
+   "light": "bright_some_sun",
+   "temperature": {
+    "min": 8,
+    "max": 26
+   },
+   "humidity": "medium",
+   "fertilizer": {
+    "interval_days": 14,
+    "winter_interval_days": 0
+   },
+   "toxic_pets": false,
+   "icon": "mdi:sprout"
+  },
+  {
+   "id": "petunie",
+   "name": {
+    "de": "Petunie",
+    "en": "Petunia"
+   },
+   "latin": "Petunia × atkinsiana",
+   "water": "high",
+   "light": "full_sun",
+   "temperature": {
+    "min": 8,
+    "max": 32
+   },
+   "humidity": "medium",
+   "fertilizer": {
+    "interval_days": 7,
+    "winter_interval_days": 0
+   },
+   "toxic_pets": false,
+   "icon": "mdi:flower"
+  },
+  {
+   "id": "maranta",
+   "name": {
+    "de": "Pfeilwurz (Maranta)",
+    "en": "Prayer plant"
+   },
+   "latin": "Maranta leuconeura",
+   "water": "high",
+   "light": "partial_shade",
+   "temperature": {
+    "min": 18,
+    "max": 27
+   },
+   "humidity": "high",
+   "fertilizer": {
+    "interval_days": 14,
+    "winter_interval_days": 0
+   },
+   "toxic_pets": false,
+   "icon": "mdi:leaf"
+  },
+  {
+   "id": "salat",
+   "name": {
+    "de": "Pflücksalat",
+    "en": "Leaf lettuce"
+   },
+   "latin": "Lactuca sativa",
+   "water": "high",
+   "light": "bright_some_sun",
+   "temperature": {
+    "min": 5,
+    "max": 24
+   },
+   "humidity": "medium",
+   "fertilizer": {
+    "interval_days": 14,
+    "winter_interval_days": 0
+   },
+   "toxic_pets": false,
+   "icon": "mdi:sprout"
+  },
+  {
+   "id": "philodendron_scandens",
+   "name": {
+    "de": "Philodendron (Kletter-)",
+    "en": "Heartleaf philodendron"
+   },
+   "latin": "Philodendron hederaceum",
+   "water": "medium",
+   "light": "partial_shade",
+   "temperature": {
+    "min": 16,
+    "max": 30
+   },
+   "humidity": "medium",
+   "fertilizer": {
+    "interval_days": 14,
+    "winter_interval_days": 0
+   },
+   "toxic_pets": true,
+   "icon": "mdi:leaf"
+  },
+  {
+   "id": "philodendron_birkin",
+   "name": {
+    "de": "Philodendron Birkin",
+    "en": "Philodendron Birkin"
+   },
+   "latin": "Philodendron 'Birkin'",
+   "water": "medium",
+   "light": "bright_indirect",
+   "temperature": {
+    "min": 16,
+    "max": 30
+   },
+   "humidity": "high",
+   "fertilizer": {
+    "interval_days": 14,
+    "winter_interval_days": 0
+   },
+   "toxic_pets": true,
+   "icon": "mdi:leaf"
+  },
+  {
+   "id": "philodendron_xanadu",
+   "name": {
+    "de": "Philodendron Xanadu",
+    "en": "Philodendron Xanadu"
+   },
+   "latin": "Thaumatophyllum xanadu",
+   "water": "medium",
+   "light": "bright_indirect",
+   "temperature": {
+    "min": 16,
+    "max": 30
+   },
+   "humidity": "medium",
+   "fertilizer": {
+    "interval_days": 14,
+    "winter_interval_days": 0
+   },
+   "toxic_pets": true,
+   "icon": "mdi:leaf"
+  },
+  {
+   "id": "syngonium",
+   "name": {
+    "de": "Purpurtute (Syngonium)",
+    "en": "Arrowhead plant"
+   },
+   "latin": "Syngonium podophyllum",
+   "water": "medium",
+   "light": "partial_shade",
+   "temperature": {
+    "min": 16,
+    "max": 28
+   },
+   "humidity": "medium",
+   "fertilizer": {
+    "interval_days": 14,
+    "winter_interval_days": 0
+   },
+   "toxic_pets": true,
+   "icon": "mdi:leaf"
+  },
+  {
+   "id": "fensterblatt_mini",
+   "name": {
+    "de": "Rhaphidophora (Mini-Monstera)",
+    "en": "Mini monstera"
+   },
+   "latin": "Rhaphidophora tetrasperma",
+   "water": "medium",
+   "light": "bright_indirect",
+   "temperature": {
+    "min": 16,
+    "max": 30
+   },
+   "humidity": "high",
+   "fertilizer": {
+    "interval_days": 14,
+    "winter_interval_days": 0
+   },
+   "toxic_pets": true,
+   "icon": "mdi:leaf"
+  },
+  {
+   "id": "rose_topf",
+   "name": {
+    "de": "Rose (Topf)",
+    "en": "Rose (potted)"
+   },
+   "latin": "Rosa spp.",
+   "water": "high",
+   "light": "full_sun",
+   "temperature": {
+    "min": 0,
+    "max": 30
+   },
+   "humidity": "medium",
+   "fertilizer": {
+    "interval_days": 14,
+    "winter_interval_days": 0
+   },
+   "toxic_pets": false,
+   "icon": "mdi:flower"
+  },
+  {
+   "id": "rosmarin",
+   "name": {
+    "de": "Rosmarin",
+    "en": "Rosemary"
+   },
+   "latin": "Salvia rosmarinus",
+   "water": "low",
+   "light": "full_sun",
+   "temperature": {
+    "min": 5,
+    "max": 32
+   },
+   "humidity": "low",
+   "fertilizer": {
+    "interval_days": 28,
+    "winter_interval_days": 0
+   },
+   "toxic_pets": false,
+   "icon": "mdi:sprout"
+  },
+  {
+   "id": "salbei",
+   "name": {
+    "de": "Salbei",
+    "en": "Sage"
+   },
+   "latin": "Salvia officinalis",
+   "water": "low",
+   "light": "full_sun",
+   "temperature": {
+    "min": 0,
+    "max": 32
+   },
+   "humidity": "low",
+   "fertilizer": {
+    "interval_days": 28,
+    "winter_interval_days": 0
+   },
+   "toxic_pets": false,
+   "icon": "mdi:sprout"
+  },
+  {
+   "id": "schnittlauch",
+   "name": {
+    "de": "Schnittlauch",
+    "en": "Chives"
+   },
+   "latin": "Allium schoenoprasum",
+   "water": "high",
+   "light": "bright_some_sun",
+   "temperature": {
+    "min": 5,
+    "max": 26
+   },
+   "humidity": "medium",
+   "fertilizer": {
+    "interval_days": 14,
+    "winter_interval_days": 0
+   },
+   "toxic_pets": true,
+   "icon": "mdi:sprout"
+  },
+  {
+   "id": "farn_schwert",
+   "name": {
+    "de": "Schwertfarn (Nephrolepis)",
+    "en": "Boston fern"
+   },
+   "latin": "Nephrolepis exaltata",
+   "water": "very_high",
+   "light": "partial_shade",
+   "temperature": {
+    "min": 16,
+    "max": 26
+   },
+   "humidity": "high",
+   "fertilizer": {
+    "interval_days": 21,
+    "winter_interval_days": 0
+   },
+   "toxic_pets": false,
+   "icon": "mdi:leaf"
+  },
+  {
+   "id": "scindapsus",
+   "name": {
+    "de": "Scindapsus (Silberne Efeutute)",
+    "en": "Satin pothos"
+   },
+   "latin": "Scindapsus pictus",
+   "water": "medium",
+   "light": "partial_shade",
+   "temperature": {
+    "min": 16,
+    "max": 30
+   },
+   "humidity": "medium",
+   "fertilizer": {
+    "interval_days": 21,
+    "winter_interval_days": 0
+   },
+   "toxic_pets": true,
+   "icon": "mdi:leaf"
+  },
+  {
+   "id": "schefflera",
+   "name": {
+    "de": "Strahlenaralie (Schefflera)",
+    "en": "Umbrella tree"
+   },
+   "latin": "Schefflera arboricola",
+   "water": "medium",
+   "light": "bright_indirect",
+   "temperature": {
+    "min": 14,
+    "max": 28
+   },
+   "humidity": "medium",
+   "fertilizer": {
+    "interval_days": 14,
+    "winter_interval_days": 0
+   },
+   "toxic_pets": true,
+   "icon": "mdi:leaf"
+  },
+  {
+   "id": "margerite",
+   "name": {
+    "de": "Strauchmargerite",
+    "en": "Marguerite daisy"
+   },
+   "latin": "Argyranthemum frutescens",
+   "water": "high",
+   "light": "full_sun",
+   "temperature": {
+    "min": 5,
+    "max": 30
+   },
+   "humidity": "medium",
+   "fertilizer": {
+    "interval_days": 7,
+    "winter_interval_days": 0
+   },
+   "toxic_pets": false,
+   "icon": "mdi:flower"
+  },
+  {
+   "id": "stromanthe",
+   "name": {
+    "de": "Stromanthe",
+    "en": "Stromanthe"
+   },
+   "latin": "Stromanthe sanguinea",
+   "water": "high",
+   "light": "bright_indirect",
+   "temperature": {
+    "min": 18,
+    "max": 27
+   },
+   "humidity": "high",
+   "fertilizer": {
+    "interval_days": 14,
+    "winter_interval_days": 0
+   },
+   "toxic_pets": false,
+   "icon": "mdi:leaf"
+  },
+  {
+   "id": "wolfsmilch_euphorbia",
+   "name": {
+    "de": "Säulen-Wolfsmilch",
+    "en": "African milk tree"
+   },
+   "latin": "Euphorbia trigona",
+   "water": "very_low",
+   "light": "full_sun",
+   "temperature": {
+    "min": 12,
+    "max": 32
+   },
+   "humidity": "low",
+   "fertilizer": {
+    "interval_days": 28,
+    "winter_interval_days": 0
+   },
+   "toxic_pets": true,
+   "icon": "mdi:cactus"
+  },
+  {
+   "id": "thymian",
+   "name": {
+    "de": "Thymian",
+    "en": "Thyme"
+   },
+   "latin": "Thymus vulgaris",
+   "water": "low",
+   "light": "full_sun",
+   "temperature": {
+    "min": 0,
+    "max": 32
+   },
+   "humidity": "low",
+   "fertilizer": {
+    "interval_days": 28,
+    "winter_interval_days": 0
+   },
+   "toxic_pets": false,
+   "icon": "mdi:sprout"
+  },
+  {
+   "id": "tillandsie",
+   "name": {
+    "de": "Tillandsie (Luftpflanze)",
+    "en": "Air plant"
+   },
+   "latin": "Tillandsia spp.",
+   "water": "low",
+   "light": "bright_indirect",
+   "temperature": {
+    "min": 12,
+    "max": 30
+   },
+   "humidity": "high",
+   "fertilizer": {
+    "interval_days": 28,
+    "winter_interval_days": 0
+   },
+   "toxic_pets": false,
+   "icon": "mdi:sprout"
+  },
+  {
+   "id": "tomate",
+   "name": {
+    "de": "Tomate",
+    "en": "Tomato"
+   },
+   "latin": "Solanum lycopersicum",
+   "water": "very_high",
+   "light": "full_sun",
+   "temperature": {
+    "min": 12,
+    "max": 32
+   },
+   "humidity": "medium",
+   "fertilizer": {
+    "interval_days": 7,
+    "winter_interval_days": 0
+   },
+   "toxic_pets": true,
+   "icon": "mdi:fruit-cherries"
+  },
+  {
+   "id": "pilea",
+   "name": {
+    "de": "Ufopflanze (Pilea)",
+    "en": "Chinese money plant"
+   },
+   "latin": "Pilea peperomioides",
+   "water": "medium",
+   "light": "bright_indirect",
+   "temperature": {
+    "min": 14,
+    "max": 28
+   },
+   "humidity": "medium",
+   "fertilizer": {
+    "interval_days": 14,
+    "winter_interval_days": 0
+   },
+   "toxic_pets": false,
+   "icon": "mdi:leaf"
+  },
+  {
+   "id": "usambaraveilchen",
+   "name": {
+    "de": "Usambaraveilchen",
+    "en": "African violet"
+   },
+   "latin": "Streptocarpus ionanthus",
+   "water": "medium",
+   "light": "bright_indirect",
+   "temperature": {
+    "min": 18,
+    "max": 26
+   },
+   "humidity": "medium",
+   "fertilizer": {
+    "interval_days": 14,
+    "winter_interval_days": 28
+   },
+   "toxic_pets": false,
+   "icon": "mdi:flower"
+  },
+  {
+   "id": "venusfliegenfalle",
+   "name": {
+    "de": "Venusfliegenfalle",
+    "en": "Venus flytrap"
+   },
+   "latin": "Dionaea muscipula",
+   "water": "very_high",
+   "light": "full_sun",
+   "temperature": {
+    "min": 5,
+    "max": 30
+   },
+   "humidity": "high",
+   "fertilizer": {
+    "interval_days": 0,
+    "winter_interval_days": 0
+   },
+   "toxic_pets": false,
+   "icon": "mdi:sprout"
+  },
+  {
+   "id": "hoya",
+   "name": {
+    "de": "Wachsblume (Hoya)",
+    "en": "Wax plant"
+   },
+   "latin": "Hoya carnosa",
+   "water": "low",
+   "light": "bright_indirect",
+   "temperature": {
+    "min": 14,
+    "max": 28
+   },
+   "humidity": "medium",
+   "fertilizer": {
+    "interval_days": 21,
+    "winter_interval_days": 0
+   },
+   "toxic_pets": false,
+   "icon": "mdi:flower"
+  },
+  {
+   "id": "weihnachtskaktus",
+   "name": {
+    "de": "Weihnachtskaktus",
+    "en": "Christmas cactus"
+   },
+   "latin": "Schlumbergera spp.",
+   "water": "medium",
+   "light": "bright_indirect",
+   "temperature": {
+    "min": 12,
+    "max": 26
+   },
+   "humidity": "medium",
+   "fertilizer": {
+    "interval_days": 14,
+    "winter_interval_days": 0
+   },
+   "toxic_pets": false,
+   "icon": "mdi:cactus"
+  },
+  {
+   "id": "weihnachtsstern",
+   "name": {
+    "de": "Weihnachtsstern",
+    "en": "Poinsettia"
+   },
+   "latin": "Euphorbia pulcherrima",
+   "water": "medium",
+   "light": "bright_indirect",
+   "temperature": {
+    "min": 16,
+    "max": 24
+   },
+   "humidity": "medium",
+   "fertilizer": {
+    "interval_days": 14,
+    "winter_interval_days": 0
+   },
+   "toxic_pets": true,
+   "icon": "mdi:flower"
+  },
+  {
+   "id": "croton",
+   "name": {
+    "de": "Wunderstrauch (Croton)",
+    "en": "Croton"
+   },
+   "latin": "Codiaeum variegatum",
+   "water": "medium",
+   "light": "bright_some_sun",
+   "temperature": {
+    "min": 16,
+    "max": 28
+   },
+   "humidity": "high",
+   "fertilizer": {
+    "interval_days": 14,
+    "winter_interval_days": 0
+   },
+   "toxic_pets": true,
+   "icon": "mdi:leaf"
+  },
+  {
+   "id": "yucca",
+   "name": {
+    "de": "Yucca-Palme",
+    "en": "Spineless yucca"
+   },
+   "latin": "Yucca elephantipes",
+   "water": "low",
+   "light": "bright_some_sun",
+   "temperature": {
+    "min": 10,
+    "max": 30
+   },
+   "humidity": "low",
+   "fertilizer": {
+    "interval_days": 21,
+    "winter_interval_days": 0
+   },
+   "toxic_pets": true,
+   "icon": "mdi:palm-tree"
+  },
+  {
+   "id": "gras_ziergras",
+   "name": {
+    "de": "Ziergras (Topf)",
+    "en": "Ornamental grass"
+   },
+   "latin": "Pennisetum / Carex",
+   "water": "medium",
+   "light": "full_sun",
+   "temperature": {
+    "min": -5,
+    "max": 32
+   },
+   "humidity": "low",
+   "fertilizer": {
+    "interval_days": 28,
+    "winter_interval_days": 0
+   },
+   "toxic_pets": false,
+   "icon": "mdi:grass"
+  },
+  {
+   "id": "zimmeraralie",
+   "name": {
+    "de": "Zimmeraralie",
+    "en": "Japanese aralia"
+   },
+   "latin": "Fatsia japonica",
+   "water": "medium",
+   "light": "partial_shade",
+   "temperature": {
+    "min": 8,
+    "max": 24
+   },
+   "humidity": "medium",
+   "fertilizer": {
+    "interval_days": 14,
+    "winter_interval_days": 0
+   },
+   "toxic_pets": true,
+   "icon": "mdi:leaf"
+  },
+  {
+   "id": "hibiskus",
+   "name": {
+    "de": "Zimmerhibiskus",
+    "en": "Chinese hibiscus"
+   },
+   "latin": "Hibiscus rosa-sinensis",
+   "water": "high",
+   "light": "bright_some_sun",
+   "temperature": {
+    "min": 15,
+    "max": 28
+   },
+   "humidity": "medium",
+   "fertilizer": {
+    "interval_days": 7,
+    "winter_interval_days": 28
+   },
+   "toxic_pets": false,
+   "icon": "mdi:flower"
+  },
+  {
+   "id": "jasmin",
+   "name": {
+    "de": "Zimmerjasmin",
+    "en": "Pink jasmine"
+   },
+   "latin": "Jasminum polyanthum",
+   "water": "medium",
+   "light": "bright_some_sun",
+   "temperature": {
+    "min": 10,
+    "max": 24
+   },
+   "humidity": "medium",
+   "fertilizer": {
+    "interval_days": 14,
+    "winter_interval_days": 0
+   },
+   "toxic_pets": false,
+   "icon": "mdi:flower"
+  },
+  {
+   "id": "zitronenbaum",
+   "name": {
+    "de": "Zitronenbaum",
+    "en": "Lemon tree"
+   },
+   "latin": "Citrus limon",
+   "water": "medium",
+   "light": "full_sun",
+   "temperature": {
+    "min": 5,
+    "max": 30
+   },
+   "humidity": "medium",
+   "fertilizer": {
+    "interval_days": 7,
+    "winter_interval_days": 28
+   },
+   "toxic_pets": false,
+   "icon": "mdi:fruit-citrus"
+  },
+  {
+   "id": "zitronenmelisse",
+   "name": {
+    "de": "Zitronenmelisse",
+    "en": "Lemon balm"
+   },
+   "latin": "Melissa officinalis",
+   "water": "medium",
+   "light": "bright_some_sun",
+   "temperature": {
+    "min": 5,
+    "max": 28
+   },
+   "humidity": "medium",
+   "fertilizer": {
+    "interval_days": 14,
+    "winter_interval_days": 0
+   },
+   "toxic_pets": false,
+   "icon": "mdi:sprout"
+  },
+  {
+   "id": "zyperngras",
+   "name": {
+    "de": "Zyperngras",
+    "en": "Umbrella papyrus"
+   },
+   "latin": "Cyperus alternifolius",
+   "water": "very_high",
+   "light": "bright_indirect",
+   "temperature": {
+    "min": 14,
+    "max": 28
+   },
+   "humidity": "high",
+   "fertilizer": {
+    "interval_days": 14,
+    "winter_interval_days": 0
+   },
+   "toxic_pets": false,
+   "icon": "mdi:grass"
+  }
+ ]
+}

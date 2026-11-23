@@ -1,0 +1,119 @@
+# id	name_de	name_en	latin	water	light	tmin	tmax	humidity	fert	fert_winter	toxic_pets	icon
+monstera	Monstera (Fensterblatt)	Swiss cheese plant	Monstera deliciosa	m	bi	16	30	h	14	0	1	leaf
+monstera_adansonii	Monstera adansonii	Monkey mask monstera	Monstera adansonii	m	bi	16	30	h	14	0	1	leaf
+philodendron_scandens	Philodendron (Kletter-)	Heartleaf philodendron	Philodendron hederaceum	m	ps	16	30	m	14	0	1	leaf
+philodendron_xanadu	Philodendron Xanadu	Philodendron Xanadu	Thaumatophyllum xanadu	m	bi	16	30	m	14	0	1	leaf
+philodendron_birkin	Philodendron Birkin	Philodendron Birkin	Philodendron 'Birkin'	m	bi	16	30	h	14	0	1	leaf
+efeutute	Efeutute	Pothos	Epipremnum aureum	m	ps	15	30	m	14	0	1	leaf
+scindapsus	Scindapsus (Silberne Efeutute)	Satin pothos	Scindapsus pictus	m	ps	16	30	m	21	0	1	leaf
+gruenlilie	Grünlilie	Spider plant	Chlorophytum comosum	m	bi	12	28	m	14	0	0	grass
+bogenhanf	Bogenhanf (Sansevieria)	Snake plant	Dracaena trifasciata	l	ps	12	32	l	28	0	1	grass
+zamioculcas	Glücksfeder (Zamioculcas)	ZZ plant	Zamioculcas zamiifolia	l	ps	15	30	l	28	0	1	leaf
+einblatt	Einblatt	Peace lily	Spathiphyllum wallisii	h	ps	16	28	h	14	0	1	flower
+ficus_lyrata	Geigenfeige	Fiddle-leaf fig	Ficus lyrata	m	bs	16	30	m	14	0	1	leaf
+ficus_benjamina	Birkenfeige	Weeping fig	Ficus benjamina	m	bi	16	28	m	14	0	1	leaf
+ficus_elastica	Gummibaum	Rubber plant	Ficus elastica	m	bi	15	30	m	14	0	1	leaf
+ficus_pumila	Kletterfeige	Creeping fig	Ficus pumila	h	ps	12	26	h	14	0	1	leaf
+dracaena_marginata	Drachenbaum (Marginata)	Dragon tree	Dracaena marginata	l	bi	15	30	m	21	0	1	palm-tree
+dracaena_fragrans	Duftende Dracaena	Corn plant	Dracaena fragrans	m	ps	15	30	m	21	0	1	palm-tree
+yucca	Yucca-Palme	Spineless yucca	Yucca elephantipes	l	bs	10	30	l	21	0	1	palm-tree
+elefantenfuss	Elefantenfuß	Ponytail palm	Beaucarnea recurvata	vl	bs	10	32	l	28	0	0	palm-tree
+goldfruchtpalme	Goldfruchtpalme	Areca palm	Dypsis lutescens	m	bi	16	28	h	14	0	0	palm-tree
+kentiapalme	Kentiapalme	Kentia palm	Howea forsteriana	m	ps	14	28	m	21	0	0	palm-tree
+bergpalme	Bergpalme	Parlour palm	Chamaedorea elegans	m	ps	16	28	m	21	0	0	palm-tree
+zimmerpalme_hanf	Hanfpalme	Windmill palm	Trachycarpus fortunei	m	bs	5	30	m	21	0	0	palm-tree
+calathea	Korbmarante (Calathea)	Calathea	Goeppertia spp.	h	ps	18	27	h	14	0	0	leaf
+maranta	Pfeilwurz (Maranta)	Prayer plant	Maranta leuconeura	h	ps	18	27	h	14	0	0	leaf
+stromanthe	Stromanthe	Stromanthe	Stromanthe sanguinea	h	bi	18	27	h	14	0	0	leaf
+alocasia	Alocasia (Pfeilblatt)	Elephant ear	Alocasia spp.	h	bi	18	28	h	14	0	1	leaf
+anthurie	Flamingoblume	Flamingo flower	Anthurium andraeanum	m	bi	18	28	h	14	28	1	flower
+aglaonema	Kolbenfaden (Aglaonema)	Chinese evergreen	Aglaonema spp.	m	ps	16	28	m	21	0	1	leaf
+dieffenbachia	Dieffenbachie	Dumb cane	Dieffenbachia seguine	m	ps	16	28	m	14	0	1	leaf
+schefflera	Strahlenaralie (Schefflera)	Umbrella tree	Schefflera arboricola	m	bi	14	28	m	14	0	1	leaf
+zimmeraralie	Zimmeraralie	Japanese aralia	Fatsia japonica	m	ps	8	24	m	14	0	1	leaf
+efeu	Efeu	English ivy	Hedera helix	m	ps	8	24	m	14	0	1	leaf
+farn_schwert	Schwertfarn (Nephrolepis)	Boston fern	Nephrolepis exaltata	vh	ps	16	26	h	21	0	0	leaf
+farn_frauenhaar	Frauenhaarfarn	Maidenhair fern	Adiantum raddianum	vh	ps	16	26	h	21	0	0	leaf
+farn_geweih	Geweihfarn	Staghorn fern	Platycerium bifurcatum	m	bi	16	28	h	28	0	0	leaf
+farn_nest	Nestfarn	Bird's nest fern	Asplenium nidus	h	ps	16	28	h	21	0	0	leaf
+pilea	Ufopflanze (Pilea)	Chinese money plant	Pilea peperomioides	m	bi	14	28	m	14	0	0	leaf
+peperomia	Peperomie	Peperomia	Peperomia obtusifolia	l	bi	16	28	m	21	0	0	leaf
+tradescantia	Dreimasterblume	Inch plant	Tradescantia zebrina	m	bi	14	28	m	14	0	1	leaf
+fittonia	Mosaikpflanze (Fittonia)	Nerve plant	Fittonia albivenis	h	ps	18	27	h	14	0	0	leaf
+hoya	Wachsblume (Hoya)	Wax plant	Hoya carnosa	l	bi	14	28	m	21	0	0	flower
+ceropegia	Leuchterblume (Herzkette)	String of hearts	Ceropegia woodii	l	bs	12	30	l	28	0	0	leaf
+erbsenpflanze	Erbsenpflanze	String of pearls	Curio rowleyanus	vl	bs	10	30	l	28	0	1	cactus
+geldbaum	Geldbaum (Crassula)	Jade plant	Crassula ovata	vl	bs	8	30	l	28	0	1	cactus
+aloe	Aloe vera	Aloe vera	Aloe vera	vl	bs	10	32	l	28	0	1	cactus
+echeverie	Echeverie	Echeveria	Echeveria spp.	vl	fs	8	32	l	28	0	0	cactus
+haworthia	Haworthie	Zebra plant	Haworthiopsis attenuata	vl	bi	10	30	l	28	0	0	cactus
+kalanchoe	Flammendes Käthchen	Flaming Katy	Kalanchoe blossfeldiana	l	bs	12	28	l	21	0	1	flower
+kaktus	Kaktus (allgemein)	Cactus (general)	Cactaceae	vl	fs	5	35	l	28	0	0	cactus
+weihnachtskaktus	Weihnachtskaktus	Christmas cactus	Schlumbergera spp.	m	bi	12	26	m	14	0	0	cactus
+osterkaktus	Osterkaktus	Easter cactus	Hatiora gaertneri	m	bi	10	26	m	14	0	0	cactus
+wolfsmilch_euphorbia	Säulen-Wolfsmilch	African milk tree	Euphorbia trigona	vl	fs	12	32	l	28	0	1	cactus
+christusdorn	Christusdorn	Crown of thorns	Euphorbia milii	l	fs	12	32	l	21	0	1	cactus
+agave	Agave	Agave	Agave spp.	vl	fs	5	35	l	28	0	1	cactus
+zimmerbambus	Glücksbambus	Lucky bamboo	Dracaena sanderiana	h	ps	16	30	m	28	0	1	grass
+zyperngras	Zyperngras	Umbrella papyrus	Cyperus alternifolius	vh	bi	14	28	h	14	0	0	grass
+orchidee	Orchidee (Phalaenopsis)	Moth orchid	Phalaenopsis spp.	l	bi	16	28	h	14	28	0	flower
+orchidee_dendrobium	Orchidee (Dendrobium)	Dendrobium orchid	Dendrobium spp.	l	bs	12	28	m	14	0	0	flower
+orchidee_oncidium	Orchidee (Oncidium)	Dancing lady orchid	Oncidium spp.	m	bi	14	28	h	14	28	0	flower
+bromelie	Bromelie (Guzmania)	Guzmania	Guzmania lingulata	m	bi	18	28	h	28	0	0	flower
+tillandsie	Tillandsie (Luftpflanze)	Air plant	Tillandsia spp.	l	bi	12	30	h	28	0	0	sprout
+usambaraveilchen	Usambaraveilchen	African violet	Streptocarpus ionanthus	m	bi	18	26	m	14	28	0	flower
+drehfrucht	Drehfrucht	Cape primrose	Streptocarpus hybr.	m	bi	15	26	m	14	0	0	flower
+alpenveilchen	Alpenveilchen	Cyclamen	Cyclamen persicum	m	bi	10	20	m	14	14	1	flower
+weihnachtsstern	Weihnachtsstern	Poinsettia	Euphorbia pulcherrima	m	bi	16	24	m	14	0	1	flower
+begonie	Begonie	Begonia	Begonia spp.	m	bi	16	26	h	14	0	1	flower
+amaryllis	Amaryllis (Ritterstern)	Amaryllis	Hippeastrum spp.	m	bs	16	24	m	14	0	1	flower
+hibiskus	Zimmerhibiskus	Chinese hibiscus	Hibiscus rosa-sinensis	h	bs	15	28	m	7	28	0	flower
+gardenie	Gardenie	Gardenia	Gardenia jasminoides	h	bi	16	24	h	14	0	1	flower
+jasmin	Zimmerjasmin	Pink jasmine	Jasminum polyanthum	m	bs	10	24	m	14	0	0	flower
+clivie	Klivie (Riemenblatt)	Bush lily	Clivia miniata	m	bi	10	24	m	14	0	1	flower
+calla	Calla	Calla lily	Zantedeschia spp.	h	bi	15	25	m	14	0	1	flower
+kaffeepflanze	Kaffeepflanze	Coffee plant	Coffea arabica	m	bi	16	28	h	14	0	1	leaf
+zitronenbaum	Zitronenbaum	Lemon tree	Citrus limon	m	fs	5	30	m	7	28	0	fruit-citrus
+orangenbaeumchen	Orangenbäumchen (Calamondin)	Calamondin	Citrus × microcarpa	m	fs	8	30	m	7	28	0	fruit-citrus
+olivenbaum	Olivenbaum	Olive tree	Olea europaea	l	fs	2	35	l	14	0	0	tree
+oleander	Oleander	Oleander	Nerium oleander	h	fs	3	35	l	7	0	1	flower
+feige_echt	Feigenbaum	Common fig	Ficus carica	m	fs	0	32	l	14	0	1	tree
+lorbeer	Echter Lorbeer	Bay laurel	Laurus nobilis	m	bs	0	30	l	14	0	1	tree
+bonsai_ficus	Bonsai (Ficus)	Ficus bonsai	Ficus retusa	m	bi	15	28	m	14	28	1	tree
+fensterblatt_mini	Rhaphidophora (Mini-Monstera)	Mini monstera	Rhaphidophora tetrasperma	m	bi	16	30	h	14	0	1	leaf
+syngonium	Purpurtute (Syngonium)	Arrowhead plant	Syngonium podophyllum	m	ps	16	28	m	14	0	1	leaf
+croton	Wunderstrauch (Croton)	Croton	Codiaeum variegatum	m	bs	16	28	h	14	0	1	leaf
+buntnessel	Buntnessel	Coleus	Coleus scutellarioides	h	bi	15	28	m	14	0	1	leaf
+venusfliegenfalle	Venusfliegenfalle	Venus flytrap	Dionaea muscipula	vh	fs	5	30	h	0	0	0	sprout
+kannenpflanze	Kannenpflanze	Pitcher plant	Nepenthes spp.	h	bi	18	30	h	0	0	0	sprout
+basilikum	Basilikum	Basil	Ocimum basilicum	h	fs	15	30	m	14	0	0	sprout
+petersilie	Petersilie	Parsley	Petroselinum crispum	h	bs	8	26	m	14	0	0	sprout
+schnittlauch	Schnittlauch	Chives	Allium schoenoprasum	h	bs	5	26	m	14	0	1	sprout
+minze	Minze	Mint	Mentha spp.	vh	bs	5	28	m	14	0	1	sprout
+rosmarin	Rosmarin	Rosemary	Salvia rosmarinus	l	fs	5	32	l	28	0	0	sprout
+thymian	Thymian	Thyme	Thymus vulgaris	l	fs	0	32	l	28	0	0	sprout
+oregano	Oregano	Oregano	Origanum vulgare	l	fs	0	32	l	28	0	1	sprout
+salbei	Salbei	Sage	Salvia officinalis	l	fs	0	32	l	28	0	0	sprout
+koriander	Koriander	Coriander	Coriandrum sativum	m	bs	8	26	m	14	0	0	sprout
+dill	Dill	Dill	Anethum graveolens	m	fs	8	28	m	14	0	0	sprout
+zitronenmelisse	Zitronenmelisse	Lemon balm	Melissa officinalis	m	bs	5	28	m	14	0	0	sprout
+lavendel	Lavendel	Lavender	Lavandula angustifolia	l	fs	0	35	l	28	0	1	flower
+tomate	Tomate	Tomato	Solanum lycopersicum	vh	fs	12	32	m	7	0	1	fruit-cherries
+chili	Chili / Paprika	Chili pepper	Capsicum annuum	h	fs	15	32	m	7	0	1	chili-mild
+erdbeere	Erdbeere	Strawberry	Fragaria × ananassa	h	fs	5	30	m	14	0	0	fruit-cherries
+gurke	Gurke	Cucumber	Cucumis sativus	vh	fs	15	32	h	7	0	0	sprout
+salat	Pflücksalat	Leaf lettuce	Lactuca sativa	h	bs	5	24	m	14	0	0	sprout
+geranie	Geranie (Pelargonie)	Geranium	Pelargonium × hortorum	m	fs	5	32	l	7	0	1	flower
+petunie	Petunie	Petunia	Petunia × atkinsiana	h	fs	8	32	m	7	0	0	flower
+surfinie	Hängepetunie (Surfinie)	Trailing petunia	Petunia Surfinia	vh	fs	8	32	m	7	0	0	flower
+fuchsie	Fuchsie	Fuchsia	Fuchsia hybr.	h	ps	8	26	m	7	0	0	flower
+fleissiges_lieschen	Fleißiges Lieschen	Busy Lizzie	Impatiens walleriana	h	ps	12	28	m	14	0	0	flower
+margerite	Strauchmargerite	Marguerite daisy	Argyranthemum frutescens	h	fs	5	30	m	7	0	0	flower
+bougainvillea	Bougainvillea	Bougainvillea	Bougainvillea spectabilis	m	fs	10	35	l	14	0	0	flower
+mandevilla	Dipladenie (Mandevilla)	Mandevilla	Mandevilla sanderi	m	fs	10	35	m	7	0	1	flower
+hortensie	Hortensie	Hydrangea	Hydrangea macrophylla	vh	ps	0	28	m	14	0	1	flower
+rose_topf	Rose (Topf)	Rose (potted)	Rosa spp.	h	fs	0	30	m	14	0	0	flower
+buchsbaum	Buchsbaum	Boxwood	Buxus sempervirens	m	bs	-10	30	m	28	0	1	tree
+bambus	Bambus (Fargesia)	Bamboo	Fargesia murielae	h	bs	-15	30	m	28	0	0	grass
+gras_ziergras	Ziergras (Topf)	Ornamental grass	Pennisetum / Carex	m	fs	-5	32	l	28	0	0	grass
+efeutute_neon	Efeutute Neon	Neon pothos	Epipremnum aureum 'Neon'	m	bi	15	30	m	14	0	1	leaf
