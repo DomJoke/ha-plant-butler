@@ -25,6 +25,7 @@ from homeassistant.helpers.storage import Store
 from homeassistant.helpers.typing import ConfigType
 
 from .const import (
+    CONF_ILLUMINANCE_SENSOR,
     CONF_SPECIES,
     DOMAIN,
     SERVICE_MARK_DONE,
@@ -145,9 +146,17 @@ async def async_setup_entry(hass: HomeAssistant, entry: PlantButlerConfigEntry) 
             plant.state["applied_area"] = plant.area_id
 
     # Entities replaced in 0.4: problem binary sensors -> condition sensors
+    # Light level exists only with a light sensor since 0.5
     ent_reg = er.async_get(hass)
+    without_lux = {
+        f"{plant.id}_light_level"
+        for plant in hub.plants.values()
+        if not plant.sensor(CONF_ILLUMINANCE_SENSOR)
+    }
     for reg_entry in er.async_entries_for_config_entry(ent_reg, entry.entry_id):
-        if reg_entry.unique_id.endswith(REMOVED_ENTITY_SUFFIXES):
+        if reg_entry.unique_id.endswith(REMOVED_ENTITY_SUFFIXES) or (
+            reg_entry.unique_id in without_lux
+        ):
             ent_reg.async_remove(reg_entry.entity_id)
 
     entry.runtime_data = hub

@@ -76,6 +76,20 @@ LEVELS = {
                "needs_fertilizer": "Braucht Dünger", "winter_rest": "Winterruhe", "sensors": "Sensoren",
                "targets": "Sollwerte", "care": "Pflege", "light": "Licht", "species": "Art"},
     },
+    "notify_mode": {
+        "en": {"off": "Off", "summary": "Daily summary", "immediate": "Immediately"},
+        "de": {"off": "Aus", "summary": "Tägliche Zusammenfassung", "immediate": "Sofort"},
+    },
+    "topics": {
+        "en": {"water": "Watering due", "fertilize": "Fertilizing due", "wet": "Soil too wet",
+               "temperature": "Temperature", "light": "Light", "sensor": "Sensor unavailable"},
+        "de": {"water": "Gießen fällig", "fertilize": "Düngen fällig", "wet": "Erde zu nass",
+               "temperature": "Temperatur", "light": "Licht", "sensor": "Sensor nicht erreichbar"},
+    },
+    "announce_where": {
+        "en": {"room": "Only in the plant's room (if it has none: all selected)", "all": "All selected"},
+        "de": {"room": "Nur im Raum der Pflanze (hat er keine: alle ausgewählten)", "all": "Alle ausgewählten"},
+    },
     "task": {
         "en": {"water": "Water", "fertilize": "Fertilize"},
         "de": {"water": "Gießen", "fertilize": "Düngen"},
@@ -86,6 +100,30 @@ T = {
     "en": {
         "hub_desc": "Plant Butler keeps track of your plants. After setup, add plants with \"+ Add plant\" on the integration page.",
         "single": "Plant Butler is already set up. Add plants on its integration page.",
+        "options": {
+            "init": {"title": "Plant Butler", "menu_options": {"general": "General", "phone": "Phone notifications", "announce": "Announcements (voice assistants & speakers)"}},
+            "general": {"title": "General", "data": {"climate_strength": "Strength of the room climate correction"},
+                        "data_description": {"climate_strength": "Only for plants without a soil moisture sensor. Plant Butler uses room temperature and humidity to estimate how fast the soil dries out: warm, dry air shortens the watering interval, cool, humid air lengthens it (at most 0.6× to 1.4×). 0 = off (fixed interval), 1 = recommended, 2 = twice as strong – choose more if your plants are regularly dry before the reminder, less if they are still moist."}},
+            "phone": {"title": "Phone notifications", "description": "Only Companion app phones are listed – they support buttons, urgent alerts and do-not-disturb detection. To hold messages during do-not-disturb, enable the 'Do Not Disturb' sensor in the Companion app (Settings → Companion app → Manage sensors).",
+                      "sections": {
+                        "recipients": {"name": "Recipients", "data": {"devices": "Phones"}},
+                        "topics_section": {"name": "What to notify", "data": {"topics": "Topics"}},
+                        "levels": {"name": "Levels", "data": {"info": "Notices", "warning": "Warnings", "critical": "Critical", "summary_time": "Time of the daily summary", "critical_repeat_hours": "Repeat critical every … hours (0 = never)", "critical_breaks_dnd": "Critical overrides do-not-disturb"},
+                                   "data_description": {"critical_breaks_dnd": "Critical messages are sent as an alarm that sounds even in do-not-disturb mode."}},
+                        "quiet": {"name": "Quiet times", "data": {"quiet_start": "Quiet hours from", "quiet_end": "Quiet hours until", "respect_dnd": "Respect the phone's do-not-disturb"},
+                                  "data_description": {"quiet_start": "Notices and warnings wait until the quiet hours end; critical messages always come through. Leave empty for no quiet hours.", "respect_dnd": "Notices and warnings wait until do-not-disturb ends on the phone."}},
+                        "buttons_section": {"name": "Buttons", "data": {"buttons": "Buttons in the notification"},
+                                            "data_description": {"buttons": "Watered / Fertilized, In 1 h, Tomorrow."}}}},
+            "announce": {"title": "Announcements", "description": "Voice assistants announce with a chime. Music Assistant players lower the music for the announcement; other speakers use text-to-speech.",
+                         "sections": {
+                           "targets": {"name": "Targets", "data": {"satellites": "Voice assistants", "speakers": "Speakers", "where": "Where to announce"}},
+                           "topics_section": {"name": "What to announce", "data": {"topics": "Topics"}},
+                           "levels": {"name": "Levels", "data": {"info": "Notices", "warning": "Warnings", "critical": "Critical", "summary_time": "Time of the daily summary"}},
+                           "quiet": {"name": "Quiet times", "data": {"quiet_start": "Quiet hours from", "quiet_end": "Quiet hours until", "critical_in_quiet": "Announce critical during quiet hours too"},
+                                     "data_description": {"quiet_start": "Announcements wait until the quiet hours end. Leave empty for no quiet hours."}},
+                           "sound": {"name": "Sound", "data": {"volume": "Volume", "tts_engine": "Text-to-speech engine"},
+                                     "data_description": {"volume": "Empty = unchanged. Applies to normal speakers and is restored afterwards; Music Assistant uses its own announcement volume.", "tts_engine": "Used for speakers; voice assistants use their own voice."}}}}
+        },
         "climate": "Strength of the room climate correction",
         "climate_desc": "0 = off, 1 = default, 2 = strong. Warm, dry air shortens the watering interval for plants without a soil sensor.",
         "plant": "Plant", "add": "Add plant", "reconf": "Edit plant",
@@ -123,7 +161,7 @@ T = {
             "temperature_max": "Temperature maximum", "watering_interval": "Watering interval",
             "watering_amount": "Watering amount", "fertilizer_interval": "Fertilizing interval",
             "fertilizer_winter_interval": "Fertilizing interval winter", "fertilizer_amount": "Fertilizer amount",
-            "winter_rest": "Winter rest", "photo": "Photo", "plant_size": "Plant size", "checklist": "Plant care",
+            "winter_rest": "Winter rest", "photo": "Photo", "plant_size": "Plant size", "hints": "Hints", "notifications": "Notifications", "checklist": "Plant care",
         },
         "svc_name": "Mark care task done", "svc_desc": "Marks watering or fertilizing as done for the given plants and restarts the schedule.",
         "svc_ent": "Plant entities", "svc_ent_d": "Any entity of the plant.", "svc_dev": "Plant devices",
@@ -133,6 +171,30 @@ T = {
     "de": {
         "hub_desc": "Plant Butler kümmert sich um deine Pflanzen. Nach der Einrichtung fügst du Pflanzen auf der Integrationsseite mit „+ Pflanze hinzufügen“ hinzu.",
         "single": "Plant Butler ist bereits eingerichtet. Pflanzen fügst du auf der Integrationsseite hinzu.",
+        "options": {
+            "init": {"title": "Plant Butler", "menu_options": {"general": "Allgemein", "phone": "Handy-Benachrichtigungen", "announce": "Ansagen (Sprachassistenten & Lautsprecher)"}},
+            "general": {"title": "Allgemein", "data": {"climate_strength": "Stärke der Raumklima-Korrektur"},
+                        "data_description": {"climate_strength": "Nur für Pflanzen ohne Bodenfeuchtesensor. Plant Butler schätzt aus Raumtemperatur und Luftfeuchte, wie schnell die Erde austrocknet: Warme, trockene Luft verkürzt das Gießintervall, kühle, feuchte Luft verlängert es (höchstens 0,6- bis 1,4-fach). 0 = aus (festes Intervall), 1 = empfohlen, 2 = doppelt so stark – mehr wählen, wenn deine Pflanzen vor der Erinnerung regelmäßig schon trocken sind, weniger, wenn sie noch feucht sind."}},
+            "phone": {"title": "Handy-Benachrichtigungen", "description": "Aufgelistet werden nur Handys mit der Companion-App – nur diese unterstützen Buttons, dringende Meldungen und „Nicht stören“. Damit Meldungen während „Nicht stören“ warten, aktiviere in der Companion-App den Sensor „Do Not Disturb“ (Einstellungen → Companion-App → Sensoren verwalten).",
+                      "sections": {
+                        "recipients": {"name": "Empfänger", "data": {"devices": "Handys"}},
+                        "topics_section": {"name": "Was melden", "data": {"topics": "Themen"}},
+                        "levels": {"name": "Stufen", "data": {"info": "Hinweise", "warning": "Warnungen", "critical": "Kritisch", "summary_time": "Uhrzeit der täglichen Zusammenfassung", "critical_repeat_hours": "Kritisch wiederholen alle … Stunden (0 = nie)", "critical_breaks_dnd": "Kritisch durchbricht „Nicht stören“"},
+                                   "data_description": {"critical_breaks_dnd": "Kritische Meldungen kommen als Alarm, der auch bei „Nicht stören“ klingelt."}},
+                        "quiet": {"name": "Ruhe", "data": {"quiet_start": "Ruhezeit von", "quiet_end": "Ruhezeit bis", "respect_dnd": "„Nicht stören“ des Handys beachten"},
+                                  "data_description": {"quiet_start": "Hinweise und Warnungen warten bis zum Ende der Ruhezeit; Kritisches kommt immer durch. Leer lassen = keine Ruhezeit.", "respect_dnd": "Hinweise und Warnungen warten, bis „Nicht stören“ am Handy endet."}},
+                        "buttons_section": {"name": "Buttons", "data": {"buttons": "Buttons in der Benachrichtigung"},
+                                            "data_description": {"buttons": "Gegossen / Gedüngt, In 1 Std., Morgen."}}}},
+            "announce": {"title": "Ansagen", "description": "Sprachassistenten sagen mit Signalton an. Music-Assistant-Player senken für die Ansage die Musik ab; andere Lautsprecher nutzen die Sprachausgabe.",
+                         "sections": {
+                           "targets": {"name": "Ziele", "data": {"satellites": "Sprachassistenten", "speakers": "Lautsprecher", "where": "Wo ansagen"}},
+                           "topics_section": {"name": "Was ansagen", "data": {"topics": "Themen"}},
+                           "levels": {"name": "Stufen", "data": {"info": "Hinweise", "warning": "Warnungen", "critical": "Kritisch", "summary_time": "Uhrzeit der täglichen Zusammenfassung"}},
+                           "quiet": {"name": "Ruhe", "data": {"quiet_start": "Ruhezeit von", "quiet_end": "Ruhezeit bis", "critical_in_quiet": "Kritisches auch in der Ruhezeit ansagen"},
+                                     "data_description": {"quiet_start": "Ansagen warten bis zum Ende der Ruhezeit. Leer lassen = keine Ruhezeit."}},
+                           "sound": {"name": "Ton", "data": {"volume": "Lautstärke", "tts_engine": "Sprachausgabe"},
+                                     "data_description": {"volume": "Leer = unverändert. Gilt für normale Lautsprecher und wird danach zurückgesetzt; Music Assistant nutzt seine eigene Ansage-Lautstärke.", "tts_engine": "Für Lautsprecher; Sprachassistenten nutzen ihre eigene Stimme."}}}}
+        },
         "climate": "Stärke der Raumklima-Korrektur",
         "climate_desc": "0 = aus, 1 = Standard, 2 = stark. Warme, trockene Luft verkürzt das Gießintervall bei Pflanzen ohne Bodensensor.",
         "plant": "Pflanze", "add": "Pflanze hinzufügen", "reconf": "Pflanze bearbeiten",
@@ -170,7 +232,7 @@ T = {
             "temperature_max": "Temperatur-Maximum", "watering_interval": "Gießintervall",
             "watering_amount": "Gießmenge", "fertilizer_interval": "Düngeintervall",
             "fertilizer_winter_interval": "Düngeintervall Winter", "fertilizer_amount": "Düngermenge",
-            "winter_rest": "Winterruhe", "photo": "Foto", "plant_size": "Pflanzengröße", "checklist": "Pflanzenpflege",
+            "winter_rest": "Winterruhe", "photo": "Foto", "plant_size": "Pflanzengröße", "hints": "Hinweise", "notifications": "Benachrichtigungen", "checklist": "Pflanzenpflege",
         },
         "svc_name": "Pflegeaufgabe erledigt", "svc_desc": "Markiert Gießen oder Düngen für die gewählten Pflanzen als erledigt und startet den Zeitplan neu.",
         "svc_ent": "Pflanzen-Entities", "svc_ent_d": "Beliebige Entity der Pflanze.", "svc_dev": "Pflanzen-Geräte",
@@ -214,10 +276,7 @@ def build(lang: str) -> dict:
             "step": {"user": {"title": "Plant Butler", "description": t["hub_desc"]}},
             "abort": {"single_instance_allowed": t["single"]},
         },
-        "options": {
-            "step": {"init": {"title": "Plant Butler", "data": {"climate_strength": t["climate"]},
-                              "data_description": {"climate_strength": t["climate_desc"]}}},
-        },
+        "options": {"step": t["options"]},
         "config_subentries": {
             "plant": {
                 "entry_type": t["plant"],
@@ -241,6 +300,9 @@ def build(lang: str) -> dict:
     "substrate": {"options": lv["substrate"]},
             "feeding": {"options": lv["feeding"]},
             "fertilizer_type": {"options": lv["fertilizer_type"]},
+            "notify_mode": {"options": lv["notify_mode"]},
+            "topics": {"options": lv["topics"]},
+            "announce_where": {"options": lv["announce_where"]},
             "pot_material": {
         "en": {"plastic": "Plastic / glazed ceramic", "terracotta": "Terracotta (unglazed clay)"},
         "de": {"plastic": "Kunststoff / glasierte Keramik", "terracotta": "Terrakotta (unglasierter Ton)"},
@@ -285,12 +347,13 @@ def build(lang: str) -> dict:
                            "state_attributes": {k: {"name": v} for k, v in lv["status_attr"].items()}},
                 "light_condition": {"name": e["light_condition"], "state": lv["light_cond"]},
                 "temperature_condition": {"name": e["temperature_condition"], "state": lv["temp_cond"]},
+                "hints": named("hints"),
                 "next_watering": named("next_watering"),
                 "next_fertilizing": named("next_fertilizing"),
                 "dli": named("dli"),
                 "light_level": {"name": e["light_level"], "state": lv["light"]},
             },
-            "switch": {"winter_rest": named("winter_rest")},
+            "switch": {"winter_rest": named("winter_rest"), "notifications": named("notifications")},
             "todo": {"checklist": named("checklist")},
         },
         "services": {

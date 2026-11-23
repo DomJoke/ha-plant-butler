@@ -96,6 +96,9 @@
           "too_cold": "mdi:snowflake-thermometer",
           "too_hot": "mdi:sun-thermometer"
         }
+      },
+      "hints": {
+        "default": "mdi:information-outline"
       }
     },
     "switch": {
@@ -103,6 +106,12 @@
         "default": "mdi:snowflake-off",
         "state": {
           "on": "mdi:snowflake"
+        }
+      },
+      "notifications": {
+        "default": "mdi:bell-off-outline",
+        "state": {
+          "on": "mdi:bell-ring-outline"
         }
       }
     },

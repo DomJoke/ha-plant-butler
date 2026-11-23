@@ -66,6 +66,7 @@ from .logic import (
     moisture_slope_per_day,
     worst_severity,
 )
+from .notifications import Notifier
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -139,6 +140,7 @@ def default_state(now: datetime) -> dict[str, Any]:
         "winter_rest": False,
         "applied_area": None,
         "notified": {},
+        "notify_enabled": True,
     }
 
 
@@ -231,6 +233,11 @@ class PlantRuntime:
         ):
             # Re-run the care assistant for the new level/location
             overrides.update(suggest_watering(self.settings))
+        self._changed()
+
+    async def async_set_notifications(self, value: bool) -> None:
+        """Mute or unmute notifications and announcements for this plant."""
+        self.state["notify_enabled"] = value
         self._changed()
 
     async def async_set_winter_rest(self, value: bool) -> None:
@@ -579,11 +586,17 @@ class PlantRuntime:
         """Fire an event for new or escalated problems."""
         notified: dict[str, str] = self.state["notified"]
         current = {p.key: p.severity for p in problems}
+        notifier = self.hub.notifier
+        for key in set(notified) - set(current):
+            if notifier is not None:
+                notifier.async_problem_resolved(self, key)
         for key, severity in current.items():
             previous = notified.get(key)
             if previous is None or SEVERITIES.index(severity) > SEVERITIES.index(
                 previous
             ):
+                if notifier is not None:
+                    notifier.async_problem_changed(self, key, severity)
                 self.hass.bus.async_fire(
                     EVENT_NOTIFICATION,
                     {
@@ -612,6 +625,7 @@ class ButlerHub:
         self.store_data: dict[str, Any] = {"plants": {}}
         self.plants: dict[str, PlantRuntime] = {}
         self._listeners: list[Callable[[], None]] = []
+        self.notifier: Notifier | None = None
 
     async def async_load(self) -> None:
         """Load persisted data and create plant runtimes."""
@@ -627,12 +641,15 @@ class ButlerHub:
             del self.store_data["plants"][stale]
         for sid, sub in subentries.items():
             self.plants[sid] = PlantRuntime(self.hass, self, sub)
+        self.notifier = Notifier(self.hass, self)
 
     @callback
     def async_start(self) -> None:
         """Start all plants."""
         for plant in self.plants.values():
             plant.async_start()
+        if self.notifier is not None:
+            self.notifier.async_start()
         self.async_schedule_save()
 
     @callback
@@ -640,6 +657,8 @@ class ButlerHub:
         """Stop all plants."""
         for plant in self.plants.values():
             plant.async_stop()
+        if self.notifier is not None:
+            self.notifier.async_stop()
 
     async def async_save_now(self) -> None:
         """Persist immediately."""
