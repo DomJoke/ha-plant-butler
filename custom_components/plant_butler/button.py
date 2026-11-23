@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 from homeassistant.components.button import ButtonEntity
-from homeassistant.const import EntityCategory
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
 
@@ -68,7 +67,6 @@ class ResetLearningButton(PlantEntity, ButtonEntity):
     """Forget everything learned for this plant."""
 
     _platform_domain = "button"
-    _attr_entity_category = EntityCategory.CONFIG
 
     def __init__(self, plant: PlantRuntime) -> None:
         """Initialize."""

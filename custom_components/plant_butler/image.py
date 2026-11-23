@@ -50,6 +50,24 @@ class PlantPhoto(PlantEntity, ImageEntity):
         if photo.startswith(("http://", "https://")):
             self._attr_image_url = photo
 
+    async def async_added_to_hass(self) -> None:
+        """Use the file's modification time as 'last updated'."""
+        await super().async_added_to_hass()
+        path = local_photo_path(self.hass, self._photo)
+        if path is None:
+            return
+
+        def _mtime() -> float | None:
+            try:
+                return path.stat().st_mtime
+            except OSError:
+                return None
+
+        mtime = await self.hass.async_add_executor_job(_mtime)
+        if mtime is not None:
+            self._attr_image_last_updated = dt_util.utc_from_timestamp(mtime)
+            self.async_write_ha_state()
+
     async def async_image(self) -> bytes | None:
         """Return the image bytes for local photos."""
         if isinstance(self._attr_image_url, str):
