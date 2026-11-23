@@ -183,16 +183,18 @@
   "entity": {
     "binary_sensor": {
       "needs_water": {
-        "name": "Braucht Wasser"
+        "name": "Braucht Wasser",
+        "state": {
+          "on": "Ja",
+          "off": "Nein"
+        }
       },
       "needs_fertilizer": {
-        "name": "Braucht Dünger"
-      },
-      "light_problem": {
-        "name": "Lichtproblem"
-      },
-      "temperature_problem": {
-        "name": "Temperaturproblem"
+        "name": "Braucht Dünger",
+        "state": {
+          "on": "Ja",
+          "off": "Nein"
+        }
       }
     },
     "button": {
@@ -276,9 +278,72 @@
         "name": "Status",
         "state": {
           "ok": "OK",
-          "info": "Info",
+          "info": "Hinweis",
           "warning": "Warnung",
           "critical": "Kritisch"
+        },
+        "state_attributes": {
+          "summary": {
+            "name": "Zusammenfassung"
+          },
+          "plant_name": {
+            "name": "Pflanze"
+          },
+          "area": {
+            "name": "Raum"
+          },
+          "photo": {
+            "name": "Foto"
+          },
+          "notes": {
+            "name": "Notizen"
+          },
+          "problems": {
+            "name": "Problem-Schlüssel"
+          },
+          "problem_severities": {
+            "name": "Problem-Stufen"
+          },
+          "needs_water": {
+            "name": "Braucht Wasser"
+          },
+          "needs_fertilizer": {
+            "name": "Braucht Dünger"
+          },
+          "winter_rest": {
+            "name": "Winterruhe"
+          },
+          "sensors": {
+            "name": "Sensoren"
+          },
+          "targets": {
+            "name": "Sollwerte"
+          },
+          "care": {
+            "name": "Pflege"
+          },
+          "light": {
+            "name": "Licht"
+          },
+          "species": {
+            "name": "Art"
+          }
+        }
+      },
+      "light_condition": {
+        "name": "Lichtverhältnisse",
+        "state": {
+          "ok": "Passend",
+          "too_dark": "Zu dunkel",
+          "too_bright": "Zu hell"
+        }
+      },
+      "temperature_condition": {
+        "name": "Temperaturverhältnisse",
+        "state": {
+          "ok": "Passend",
+          "too_cold": "Zu kalt",
+          "too_hot": "Zu warm"
         }
       },
       "next_watering": {

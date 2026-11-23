@@ -81,6 +81,8 @@ def _plants_for_call(hass: HomeAssistant, call: ServiceCall) -> list[PlantRuntim
     return plants
 
 
+REMOVED_ENTITY_SUFFIXES = ("_light_problem", "_temperature_problem")
+
 CARD_URL_BASE = f"/{DOMAIN}_static"
 CARD_FILE = "plant-butler-card.js"
 
@@ -141,6 +143,12 @@ async def async_setup_entry(hass: HomeAssistant, entry: PlantButlerConfigEntry) 
             if plant.area_id:
                 dev_reg.async_update_device(device.id, area_id=plant.area_id)
             plant.state["applied_area"] = plant.area_id
+
+    # Entities replaced in 0.4: problem binary sensors -> condition sensors
+    ent_reg = er.async_get(hass)
+    for reg_entry in er.async_entries_for_config_entry(ent_reg, entry.entry_id):
+        if reg_entry.unique_id.endswith(REMOVED_ENTITY_SUFFIXES):
+            ent_reg.async_remove(reg_entry.entity_id)
 
     entry.runtime_data = hub
     await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)

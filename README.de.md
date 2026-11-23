@@ -9,7 +9,7 @@
 
 Home-Assistant-Integration für die Pflanzenpflege: Jede Pflanze ist ein Gerät mit Sollwerten aus einer Pflanzendatenbank, optionalen Sensoren, einem Pflege-Assistenten für Gießmenge und Düngerdosis, Gieß- und Düngeplan, Warnstufen und einer Checkliste, die sich selbst zurücksetzt.
 
-> Status: **0.3** – Checklisten-Karte, Dashboard und Benachrichtigungs-Blueprint folgen.
+> Status: **0.4** – Benachrichtigungs-Blueprint folgt.
 
 ## Funktionen
 
@@ -62,6 +62,28 @@ Im Betrieb passen Raumklima (warme, trockene Luft → kürzer) und Winterruhe (�
 Die Werte sind Richtwerte. Bodensensoren messen je nach Hersteller unterschiedlich – passe „Gießen ab“ an deine Messung an.
 
 Sichtbarkeit: Sollwerte (Selects, Zahlen, Winterruhe) sind *Konfigurations*-Entities, Lichtstufe, DLI und die Licht-/Temperaturproblem-Sensoren *Diagnose*-Entities – beide erscheinen nicht in automatisch erzeugten Dashboards. Temperatur-Min/-Max, Feuchte-Maximum und das Winter-Düngeintervall sind **standardmäßig deaktiviert**; aktiviere sie auf der Geräteseite, wenn du sie fein einstellen willst.
+
+## Pflanzen-Dashboard
+
+Plant Butler bringt eine **Dashboard-Strategie** mit: Das Dashboard wird bei jedem Öffnen neu erzeugt – neue Pflanzen und Räume erscheinen automatisch. Neues Dashboard anlegen, im Raw-Konfigurationseditor eintragen:
+
+```yaml
+strategy:
+  type: custom:plant-butler
+```
+
+Ansichten: **Übersicht** (alle Pflanzen nach Raum, Räume einklappbar) und **Fällig** (nur Pflanzen mit fälligen Aufgaben zum Abhaken plus To-do-Liste).
+
+## Statusstufen
+
+| Status | Bedeutung |
+| --- | --- |
+| OK | Nichts zu tun |
+| Hinweis | Gut zu wissen oder bald zu tun: heute gießen, düngen fällig, Standort etwas dunkel, Erde etwas nass |
+| Warnung | Sollte erledigt werden: Gießen über 1 Tag überfällig, Temperatur außerhalb des Bereichs, Licht 3 Tage unpassend |
+| Kritisch | Sofort handeln: Erde sehr trocken oder Gießen lange überfällig, Temperatur weit außerhalb |
+
+Das Attribut `summary` des Status-Sensors nennt die Gründe im Klartext.
 
 ## Pflanzenkarte
 

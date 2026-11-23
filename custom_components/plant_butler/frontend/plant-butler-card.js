@@ -13,7 +13,7 @@
  * Plain web component without build step; served by the integration.
  */
 
-const CARD_VERSION = "0.3.0";
+const CARD_VERSION = "0.4.0";
 const DOMAIN = "plant_butler";
 
 const LIGHT_LEVELS = [
@@ -27,7 +27,7 @@ const LIGHT_LEVELS = [
 
 const STRINGS = {
   en: {
-    status: { ok: "OK", info: "Info", warning: "Warning", critical: "Critical" },
+    status: { ok: "OK", info: "Notice", warning: "Warning", critical: "Critical" },
     problem: {
       needs_water: "Needs water",
       too_wet: "Too wet",
@@ -66,7 +66,7 @@ const STRINGS = {
     units: { ml_per_l: "ml/l", ml: "ml", sticks: "pcs", g: "g" },
   },
   de: {
-    status: { ok: "OK", info: "Info", warning: "Warnung", critical: "Kritisch" },
+    status: { ok: "OK", info: "Hinweis", warning: "Warnung", critical: "Kritisch" },
     problem: {
       needs_water: "Braucht Wasser",
       too_wet: "Zu nass",
@@ -160,7 +160,7 @@ class PlantButlerCard extends HTMLElement {
     if (!config || !config.entity) {
       throw new Error("Please set 'entity' to the status sensor of a plant");
     }
-    this._config = { show_bars: true, show_tasks: true, compact: false, ...config };
+    this._config = { show_bars: true, show_tasks: true, compact: false, show_area: true, ...config };
     this._signature = "";
     if (this._hass) this._render();
   }
@@ -303,9 +303,12 @@ class PlantButlerCard extends HTMLElement {
           ${avatar}
           <div class="title">
             <div class="name">${esc(name)}</div>
-            <div class="sub">${esc(a.area || "")}${
-              a.winter_rest ? ` · <ha-icon icon="mdi:snowflake"></ha-icon> ${esc(t.winter)}` : ""
-            }</div>
+            <div class="sub">${[
+              this._config.show_area && a.area ? esc(a.area) : "",
+              a.winter_rest ? `<ha-icon icon="mdi:snowflake"></ha-icon> ${esc(t.winter)}` : "",
+            ]
+              .filter(Boolean)
+              .join(" · ")}</div>
           </div>
           <span class="pill" style="--c:${color}">${esc(t.status[status])}</span>
         </div>
@@ -624,6 +627,417 @@ class PlantButlerCardEditor extends HTMLElement {
   }
 }
 
+
+// ===========================================================================
+// Overview card: all plants grouped by room, collapsible, updates itself.
+// ===========================================================================
+
+const OV_STRINGS = {
+  en: {
+    plants: (n) => (n === 1 ? "1 plant" : `${n} plants`),
+    due: (n) => `${n} due`,
+    water: "need water",
+    fertilize: "need fertilizer",
+    warnings: "warnings",
+    noRoom: "No room",
+    noPlants: "No plants yet – add them under Settings → Devices & services → Plant Butler → Add plant.",
+    nothingDue: "All done – no plant needs water or fertilizer right now.",
+    overview: "Overview",
+    dueView: "Due",
+    todo: "To-do list",
+    title: "Plants",
+  },
+  de: {
+    plants: (n) => (n === 1 ? "1 Pflanze" : `${n} Pflanzen`),
+    due: (n) => `${n} fällig`,
+    water: "brauchen Wasser",
+    fertilize: "brauchen Dünger",
+    warnings: "Warnungen",
+    noRoom: "Ohne Raum",
+    noPlants: "Noch keine Pflanzen – füge sie unter Einstellungen → Geräte & Dienste → Plant Butler → Pflanze hinzufügen hinzu.",
+    nothingDue: "Alles erledigt – keine Pflanze braucht gerade Wasser oder Dünger.",
+    overview: "Übersicht",
+    dueView: "Fällig",
+    todo: "To-do-Liste",
+    title: "Pflanzen",
+  },
+};
+
+const SEVERITY_ORDER = ["ok", "info", "warning", "critical"];
+const COLLAPSE_KEY = "plant-butler-collapsed-rooms";
+
+const langOf = (hass) =>
+  ((hass && ((hass.locale && hass.locale.language) || hass.language)) || "en").slice(0, 2);
+const ovStrings = (hass) => OV_STRINGS[langOf(hass)] || OV_STRINGS.en;
+
+/** All Plant Butler plants: status entity, name, room, state. */
+const findPlants = (hass) => {
+  const plants = [];
+  for (const entry of Object.values(hass.entities || {})) {
+    if (entry.platform !== DOMAIN || entry.translation_key !== "status") continue;
+    const st = hass.states[entry.entity_id];
+    if (!st) continue;
+    const device = entry.device_id && hass.devices ? hass.devices[entry.device_id] : null;
+    const areaId = entry.area_id || (device && device.area_id) || null;
+    const area = areaId && hass.areas ? hass.areas[areaId] : null;
+    plants.push({
+      entity: entry.entity_id,
+      name: st.attributes.plant_name || st.attributes.friendly_name || entry.entity_id,
+      areaId: areaId || "",
+      areaName: area ? area.name : st.attributes.area || "",
+      status: st.state,
+      due: !!(st.attributes.needs_water || st.attributes.needs_fertilizer),
+      water: !!st.attributes.needs_water,
+      fertilize: !!st.attributes.needs_fertilizer,
+    });
+  }
+  return plants;
+};
+
+const loadCollapsed = () => {
+  try {
+    return new Set(JSON.parse(window.localStorage.getItem(COLLAPSE_KEY) || "[]"));
+  } catch (err) {
+    return new Set();
+  }
+};
+const saveCollapsed = (set) => {
+  try {
+    window.localStorage.setItem(COLLAPSE_KEY, JSON.stringify([...set]));
+  } catch (err) {
+    /* storage unavailable: collapsing still works for this session */
+  }
+};
+
+class PlantButlerOverviewCard extends HTMLElement {
+  static getConfigElement() {
+    return document.createElement("plant-butler-overview-card-editor");
+  }
+
+  static getStubConfig() {
+    return { filter: "all" };
+  }
+
+  constructor() {
+    super();
+    this.attachShadow({ mode: "open" });
+    this._cards = new Map();
+    this._structure = "";
+    this._collapsed = loadCollapsed();
+  }
+
+  setConfig(config) {
+    this._config = {
+      filter: "all",
+      compact: false,
+      collapsible: true,
+      group_by_room: true,
+      show_summary: true,
+      ...config,
+    };
+    this._structure = "";
+    if (this._hass) this._update();
+  }
+
+  set hass(hass) {
+    this._hass = hass;
+    this._update();
+  }
+
+  getCardSize() {
+    return 6;
+  }
+
+  getGridOptions() {
+    return { columns: "full", rows: "auto" };
+  }
+
+  _plants() {
+    let plants = findPlants(this._hass);
+    if (this._config.filter === "due") plants = plants.filter((p) => p.due);
+    if (this._config.area) plants = plants.filter((p) => p.areaId === this._config.area);
+    return plants;
+  }
+
+  _groups(plants) {
+    const t = ovStrings(this._hass);
+    const groups = new Map();
+    for (const plant of plants) {
+      const key = this._config.group_by_room ? plant.areaId : "_all";
+      if (!groups.has(key)) {
+        groups.set(key, {
+          key,
+          name: this._config.group_by_room ? plant.areaName || t.noRoom : "",
+          plants: [],
+        });
+      }
+      groups.get(key).plants.push(plant);
+    }
+    const list = [...groups.values()];
+    list.forEach((g) => g.plants.sort((a, b) => a.name.localeCompare(b.name)));
+    // Rooms alphabetically, plants without room last
+    list.sort((a, b) => (a.key === "") - (b.key === "") || a.name.localeCompare(b.name));
+    return list;
+  }
+
+  _cardFor(plant) {
+    const compact = !!this._config.compact;
+    const key = `${plant.entity}|${compact}`;
+    let card = this._cards.get(key);
+    if (!card) {
+      card = document.createElement("plant-butler-card");
+      card.setConfig({ entity: plant.entity, compact, show_area: !this._config.group_by_room });
+      this._cards.set(key, card);
+    }
+    card.hass = this._hass;
+    return card;
+  }
+
+  _update() {
+    if (!this._hass || !this._config) return;
+    const plants = this._plants();
+    const groups = this._groups(plants);
+    const t = ovStrings(this._hass);
+    // Rebuild the DOM only when plants, rooms or headers change
+    const structure = JSON.stringify([
+      langOf(this._hass),
+      groups.map((g) => [g.key, g.name, g.plants.map((p) => [p.entity, p.status, p.due])]),
+    ]);
+    if (structure !== this._structure) {
+      this._structure = structure;
+      this._render(groups, plants, t);
+    } else {
+      for (const plant of plants) this._cardFor(plant);
+    }
+  }
+
+  _summary(plants, t) {
+    const all = this._config.filter === "due" ? findPlants(this._hass) : plants;
+    const water = all.filter((p) => p.water).length;
+    const fert = all.filter((p) => p.fertilize).length;
+    const warn = all.filter((p) => p.status === "warning" || p.status === "critical").length;
+    return `
+      <div class="summary">
+        <span><ha-icon icon="mdi:flower"></ha-icon><b>${esc(t.plants(all.length))}</b></span>
+        <span class="${water ? "hot" : ""}"><ha-icon icon="mdi:watering-can"></ha-icon><b>${water}</b> ${esc(t.water)}</span>
+        <span class="${fert ? "hot" : ""}"><ha-icon icon="mdi:sprout"></ha-icon><b>${fert}</b> ${esc(t.fertilize)}</span>
+        <span class="${warn ? "bad" : ""}"><ha-icon icon="mdi:alert-outline"></ha-icon><b>${warn}</b> ${esc(t.warnings)}</span>
+      </div>`;
+  }
+
+  _render(groups, plants, t) {
+    const root = this.shadowRoot;
+    const summary = this._config.show_summary ? this._summary(plants, t) : "";
+    if (!plants.length) {
+      const text = this._config.filter === "due" ? t.nothingDue : t.noPlants;
+      root.innerHTML = `<style>${OV_STYLE}</style>${summary}<ha-card class="empty">${esc(text)}</ha-card>`;
+      return;
+    }
+    const collapsible = this._config.collapsible && this._config.group_by_room;
+    root.innerHTML = `<style>${OV_STYLE}</style>${summary}${groups
+      .map((g) => {
+        const due = g.plants.filter((p) => p.due).length;
+        const worst = g.plants.reduce(
+          (w, p) => (SEVERITY_ORDER.indexOf(p.status) > SEVERITY_ORDER.indexOf(w) ? p.status : w),
+          "ok"
+        );
+        const header = this._config.group_by_room
+          ? `<summary class="${collapsible ? "" : "static"}">
+              <ha-icon class="chevron" icon="mdi:chevron-down"></ha-icon>
+              <span class="room">${esc(g.name)}</span>
+              <span class="count">${esc(t.plants(g.plants.length))}</span>
+              ${due ? `<span class="due">${esc(t.due(due))}</span>` : ""}
+              <span class="dot" style="--c:${SEVERITY_COLOR[worst]}"></span>
+            </summary>`
+          : "";
+        const open = !collapsible || !this._collapsed.has(g.key);
+        return `<details data-key="${esc(g.key)}" ${open ? "open" : ""}>${header}<div class="grid"></div></details>`;
+      })
+      .join("")}`;
+
+    root.querySelectorAll("details").forEach((details, i) => {
+      const grid = details.querySelector(".grid");
+      for (const plant of groups[i].plants) grid.appendChild(this._cardFor(plant));
+      const summaryEl = details.querySelector("summary");
+      if (!summaryEl) return;
+      summaryEl.addEventListener("click", (ev) => {
+        if (!collapsible) {
+          ev.preventDefault();
+          return;
+        }
+        // Remember the state after the browser toggled it
+        setTimeout(() => {
+          if (details.open) this._collapsed.delete(details.dataset.key);
+          else this._collapsed.add(details.dataset.key);
+          saveCollapsed(this._collapsed);
+        });
+      });
+    });
+  }
+}
+
+const OV_STYLE = `
+  :host { display: block; }
+  .summary {
+    display: flex; flex-wrap: wrap; gap: 8px 20px; align-items: center;
+    padding: 4px 4px 12px; color: var(--primary-text-color);
+  }
+  .summary span { display: inline-flex; align-items: center; gap: 6px; }
+  .summary ha-icon { --mdc-icon-size: 20px; color: var(--secondary-text-color); }
+  .summary .hot ha-icon { color: var(--warning-color, #ffa600); }
+  .summary .bad ha-icon { color: var(--error-color, #db4437); }
+  details { margin-bottom: 12px; }
+  summary {
+    list-style: none; display: flex; align-items: center; gap: 10px; cursor: pointer;
+    padding: 10px 12px; border-radius: 12px; user-select: none;
+    background: var(--secondary-background-color, rgba(127,127,127,0.12));
+    color: var(--primary-text-color);
+  }
+  summary.static { cursor: default; }
+  summary::-webkit-details-marker { display: none; }
+  .chevron { transition: transform 0.2s; color: var(--secondary-text-color); }
+  details:not([open]) .chevron { transform: rotate(-90deg); }
+  summary.static .chevron { display: none; }
+  .room { font-size: 1.1em; font-weight: 600; }
+  .count { color: var(--secondary-text-color); font-size: 0.9em; }
+  .due {
+    font-size: 0.8em; font-weight: 600; padding: 2px 8px; border-radius: 999px;
+    background: color-mix(in srgb, var(--warning-color, #ffa600) 20%, transparent);
+  }
+  .dot { margin-left: auto; width: 10px; height: 10px; border-radius: 50%; background: var(--c); }
+  .grid {
+    display: grid; gap: 12px; padding-top: 12px;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); align-items: start;
+  }
+  .empty { padding: 16px; color: var(--secondary-text-color); }
+`;
+
+class PlantButlerOverviewCardEditor extends HTMLElement {
+  set hass(hass) {
+    this._hass = hass;
+    if (this._form) this._form.hass = hass;
+  }
+
+  setConfig(config) {
+    this._config = config;
+    if (!this._form) {
+      this._form = document.createElement("ha-form");
+      this._form.computeLabel = (schema) => {
+        const de = langOf(this._hass) === "de";
+        const labels = {
+          filter: de ? "Anzeigen" : "Show",
+          area: de ? "Nur dieser Raum (optional)" : "Only this room (optional)",
+          compact: de ? "Kompakte Karten" : "Compact cards",
+          collapsible: de ? "Räume einklappbar" : "Collapsible rooms",
+          group_by_room: de ? "Nach Raum gruppieren" : "Group by room",
+          show_summary: de ? "Zusammenfassung anzeigen" : "Show summary",
+        };
+        return labels[schema.name] || schema.name;
+      };
+      this._form.addEventListener("value-changed", (ev) =>
+        this.dispatchEvent(
+          new CustomEvent("config-changed", { detail: { config: ev.detail.value }, bubbles: true, composed: true })
+        )
+      );
+      this.appendChild(this._form);
+    }
+    const de = langOf(this._hass) === "de";
+    this._form.hass = this._hass;
+    this._form.schema = [
+      {
+        name: "filter",
+        selector: {
+          select: {
+            mode: "dropdown",
+            options: [
+              { value: "all", label: de ? "Alle Pflanzen" : "All plants" },
+              { value: "due", label: de ? "Nur fällige Pflanzen" : "Only plants with due tasks" },
+            ],
+          },
+        },
+      },
+      { name: "area", selector: { area: {} } },
+      {
+        type: "grid",
+        name: "",
+        schema: [
+          { name: "group_by_room", selector: { boolean: {} } },
+          { name: "collapsible", selector: { boolean: {} } },
+          { name: "compact", selector: { boolean: {} } },
+          { name: "show_summary", selector: { boolean: {} } },
+        ],
+      },
+    ];
+    this._form.data = {
+      filter: "all",
+      compact: false,
+      collapsible: true,
+      group_by_room: true,
+      show_summary: true,
+      ...config,
+    };
+  }
+}
+
+// ===========================================================================
+// Dashboard strategy: `strategy: {type: custom:plant-butler}`
+// Generates the views each time the dashboard is opened.
+// ===========================================================================
+
+class PlantButlerDashboardStrategy extends HTMLElement {
+  static async generate(config, hass) {
+    const t = ovStrings(hass);
+    return {
+      title: t.title,
+      views: [
+        {
+          title: t.overview,
+          path: "overview",
+          icon: "mdi:flower",
+          type: "sections",
+          max_columns: 4,
+          sections: [
+            {
+              type: "grid",
+              column_span: 4,
+              cards: [{ type: "custom:plant-butler-overview-card", grid_options: { columns: "full" } }],
+            },
+          ],
+        },
+        {
+          title: t.dueView,
+          path: "due",
+          icon: "mdi:clipboard-check-outline",
+          type: "sections",
+          max_columns: 4,
+          sections: [
+            {
+              type: "grid",
+              column_span: 3,
+              cards: [
+                {
+                  type: "custom:plant-butler-overview-card",
+                  filter: "due",
+                  compact: true,
+                  grid_options: { columns: "full" },
+                },
+              ],
+            },
+            {
+              type: "grid",
+              column_span: 1,
+              cards: [
+                { type: "heading", heading: t.todo, icon: "mdi:clipboard-check-outline" },
+                { type: "todo-list", entity: "todo.plant_butler", hide_create: true },
+              ],
+            },
+          ],
+        },
+      ],
+    };
+  }
+}
+
 if (!customElements.get("plant-butler-card")) {
   customElements.define("plant-butler-card", PlantButlerCard);
   customElements.define("plant-butler-card-editor", PlantButlerCardEditor);
@@ -636,4 +1050,19 @@ if (!customElements.get("plant-butler-card")) {
     documentationURL: "https://github.com/DomJoke/ha-plant-butler",
   });
   console.info(`%c PLANT-BUTLER-CARD %c ${CARD_VERSION} `, "background:#43a047;color:#fff", "");
+}
+if (!customElements.get("plant-butler-overview-card")) {
+  customElements.define("plant-butler-overview-card", PlantButlerOverviewCard);
+  customElements.define("plant-butler-overview-card-editor", PlantButlerOverviewCardEditor);
+  window.customCards = window.customCards || [];
+  window.customCards.push({
+    type: "plant-butler-overview-card",
+    name: "Plant Butler – Overview",
+    description: "All plants grouped by room, collapsible, updates itself.",
+    preview: false,
+    documentationURL: "https://github.com/DomJoke/ha-plant-butler",
+  });
+}
+if (!customElements.get("ll-strategy-dashboard-plant-butler")) {
+  customElements.define("ll-strategy-dashboard-plant-butler", PlantButlerDashboardStrategy);
 }
