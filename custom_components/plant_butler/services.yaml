@@ -18,3 +18,45 @@ mark_done:
             - water
             - fertilize
           translation_key: task
+
+watering_feedback:
+  fields:
+    entity_id:
+      selector:
+        entity:
+          integration: plant_butler
+          multiple: true
+    device_id:
+      selector:
+        device:
+          integration: plant_butler
+          multiple: true
+    answer:
+      selector:
+        select:
+          options:
+            - moist
+            - ok
+            - dry
+          translation_key: feedback
+    amount:
+      selector:
+        select:
+          options:
+            - too_much
+            - ok
+            - too_little
+          translation_key: feedback_amount
+
+undo_watering:
+  fields:
+    entity_id:
+      selector:
+        entity:
+          integration: plant_butler
+          multiple: true
+    device_id:
+      selector:
+        device:
+          integration: plant_butler
+          multiple: true

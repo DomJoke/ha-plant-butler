@@ -23,10 +23,16 @@
       "general": {
         "title": "Allgemein",
         "data": {
-          "climate_strength": "Stärke der Raumklima-Korrektur"
+          "learning_strength": "Lernstärke",
+          "learn_interval": "Gießintervall lernen",
+          "learn_amount": "Gießmenge lernen",
+          "climate_level": "Raumklima-Korrektur"
         },
         "data_description": {
-          "climate_strength": "Nur für Pflanzen ohne Bodenfeuchtesensor. Plant Butler schätzt aus Raumtemperatur und Luftfeuchte, wie schnell die Erde austrocknet: Warme, trockene Luft verkürzt das Gießintervall, kühle, feuchte Luft verlängert es (höchstens 0,6- bis 1,4-fach). 0 = aus (festes Intervall), 1 = empfohlen, 2 = doppelt so stark – mehr wählen, wenn deine Pflanzen vor der Erinnerung regelmäßig schon trocken sind, weniger, wenn sie noch feucht sind."
+          "learning_strength": "Wie schnell sich Plant Butler an deine Antworten anpasst. Gelernte Werte bleiben zwischen halbem und doppeltem berechnetem Intervall und zwischen 50 % und 150 % der berechneten Menge.",
+          "learn_interval": "Nach dem Gießen fragt Plant Butler, wie die Erde war (noch feucht / leicht trocken / sehr trocken), und passt das Gießintervall jeder Pflanze an. Pflanzen mit Bodensensor lernen zusätzlich aus der gemessenen Austrocknungszeit.",
+          "learn_amount": "Nach dem Gießen fragt Plant Butler, ob die Menge gepasst hat (zu viel / passt / zu wenig), und passt die Gießmenge jeder Pflanze an. Pflanzen mit Bodensensor lernen zusätzlich aus der gemessenen Feuchte. Ein Häkchen entfernen verwendet wieder die berechneten Werte – das Gelernte bleibt gespeichert und ist beim Einschalten sofort zurück. Zum vorübergehenden Pausieren (z. B. Urlaub) gibt es den Schalter „Dazulernen pausiert“.",
+          "climate_level": "Nur für Pflanzen ohne Bodenfeuchtesensor. Plant Butler schätzt aus Raumtemperatur und Luftfeuchte, wie schnell die Erde austrocknet: Warme, trockene Luft verkürzt das Gießintervall, kühle, feuchte Luft verlängert es (höchstens 0,6- bis 1,4-fach). „Stark“ wählen, wenn deine Pflanzen vor der Erinnerung regelmäßig schon trocken sind, „Wenig“, wenn sie noch feucht sind, „Aus“ für ein festes Intervall."
         }
       },
       "phone": {
@@ -322,6 +328,35 @@
         "all": "Alle ausgewählten"
       }
     },
+    "learning_strength": {
+      "options": {
+        "gentle": "Sanft (±5 %, wenn 3 von 4 Antworten übereinstimmen)",
+        "normal": "Normal (±10 %, wenn 2 von 3 übereinstimmen)",
+        "strong": "Stark (±15 %, sofort)"
+      }
+    },
+    "feedback_amount": {
+      "options": {
+        "too_much": "Zu viel – Wasser im Untersetzer / lief unten raus",
+        "ok": "Passt",
+        "too_little": "Zu wenig – Erde nicht ganz durchfeuchtet"
+      }
+    },
+    "climate_level": {
+      "options": {
+        "off": "Aus",
+        "low": "Wenig",
+        "normal": "Normal",
+        "strong": "Stark"
+      }
+    },
+    "feedback": {
+      "options": {
+        "moist": "Noch feucht",
+        "ok": "Leicht trocken",
+        "dry": "Sehr trocken"
+      }
+    },
     "task": {
       "options": {
         "water": "Gießen",
@@ -352,6 +387,12 @@
       },
       "mark_fertilized": {
         "name": "Gedüngt"
+      },
+      "undo_watering": {
+        "name": "Letztes Gießen rückgängig"
+      },
+      "reset_learning": {
+        "name": "Gelerntes zurücksetzen"
       }
     },
     "image": {
@@ -490,7 +531,7 @@
       "light_condition": {
         "name": "Lichtverhältnisse",
         "state": {
-          "ok": "Passend",
+          "ok": "OK",
           "too_dark": "Zu dunkel",
           "too_bright": "Zu hell"
         }
@@ -498,13 +539,19 @@
       "temperature_condition": {
         "name": "Temperaturverhältnisse",
         "state": {
-          "ok": "Passend",
+          "ok": "OK",
           "too_cold": "Zu kalt",
           "too_hot": "Zu warm"
         }
       },
       "hints": {
         "name": "Hinweise"
+      },
+      "learned_interval": {
+        "name": "Gelerntes Gießintervall"
+      },
+      "learned_amount": {
+        "name": "Gelernte Gießmenge"
       },
       "next_watering": {
         "name": "Nächstes Gießen"
@@ -533,6 +580,9 @@
       },
       "notifications": {
         "name": "Benachrichtigungen"
+      },
+      "learning_paused": {
+        "name": "Dazulernen pausiert"
       }
     },
     "todo": {
@@ -542,6 +592,42 @@
     }
   },
   "services": {
+    "watering_feedback": {
+      "name": "Rückmeldung zum Gießen",
+      "description": "Rückmeldung zum letzten Gießen. Passt das gelernte Gießintervall und/oder die Gießmenge an.",
+      "fields": {
+        "entity_id": {
+          "name": "Pflanzen-Entities",
+          "description": "Beliebige Entity der Pflanze."
+        },
+        "device_id": {
+          "name": "Pflanzen-Geräte",
+          "description": "Die Pflanzen-Geräte."
+        },
+        "answer": {
+          "name": "Antwort",
+          "description": "Wie war die Erde vor dem Gießen?"
+        },
+        "amount": {
+          "name": "Menge",
+          "description": "Hat die Gießmenge gepasst?"
+        }
+      }
+    },
+    "undo_watering": {
+      "name": "Letztes Gießen rückgängig",
+      "description": "Stellt den Zustand vor dem letzten Gießen wieder her (innerhalb von 24 Stunden).",
+      "fields": {
+        "entity_id": {
+          "name": "Pflanzen-Entities",
+          "description": "Beliebige Entity der Pflanze."
+        },
+        "device_id": {
+          "name": "Pflanzen-Geräte",
+          "description": "Die Pflanzen-Geräte."
+        }
+      }
+    },
     "mark_done": {
       "name": "Pflegeaufgabe erledigt",
       "description": "Markiert Gießen oder Düngen für die gewählten Pflanzen als erledigt und startet den Zeitplan neu.",

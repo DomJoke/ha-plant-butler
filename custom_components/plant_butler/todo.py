@@ -19,7 +19,6 @@ from .care import fertilizer_per_watering_ml
 from .const import (
     CONF_FERTILIZER_AMOUNT,
     CONF_FERTILIZER_UNIT,
-    CONF_WATERING_AMOUNT,
     DOMAIN,
     TASK_FERTILIZE,
     TASK_WATER,
@@ -88,7 +87,7 @@ class PlantChecklist(TodoListEntity):
         if task == TASK_WATER:
             due, last = ev.needs_water, plant.state["last_watered"]
             when, overdue = ev.next_watering, ev.water_overdue_days
-            amount = settings.get(CONF_WATERING_AMOUNT)
+            amount = plant.watering_amount_effective()
             amount_text = f"{_fmt(float(amount))} ml" if amount else None
         else:
             due, last = ev.needs_fertilizer, plant.state["last_fertilized"]

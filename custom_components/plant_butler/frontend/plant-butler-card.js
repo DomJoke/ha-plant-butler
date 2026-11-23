@@ -13,7 +13,7 @@
  * Plain web component without build step; served by the integration.
  */
 
-const CARD_VERSION = "0.4.0";
+const CARD_VERSION = "0.7.0";
 const DOMAIN = "plant_butler";
 
 const LIGHT_LEVELS = [
@@ -63,6 +63,12 @@ const STRINGS = {
     markDone: "Mark as done",
     notFound: "Entity not found",
     perWatering: "per watering",
+    learned: (n) => `learned: ${n > 0 ? "+" : "−"}${Math.abs(n)} ${Math.abs(n) === 1 ? "day" : "days"}`,
+    feedbackQuestion: "How was the soil before watering?",
+    feedback: { moist: "Still moist", ok: "Slightly dry", dry: "Very dry" },
+    amountQuestion: "How was the amount?",
+    amount: { too_much: "Too much", ok: "Just right", too_little: "Too little" },
+    undo: "Undo",
     units: { ml_per_l: "ml/l", ml: "ml", sticks: "pcs", g: "g" },
   },
   de: {
@@ -102,6 +108,12 @@ const STRINGS = {
     markDone: "Als erledigt markieren",
     notFound: "Entität nicht gefunden",
     perWatering: "pro Gießen",
+    learned: (n) => `gelernt: ${n > 0 ? "+" : "−"}${Math.abs(n)} ${Math.abs(n) === 1 ? "Tag" : "Tage"}`,
+    feedbackQuestion: "Wie war die Erde vor dem Gießen?",
+    feedback: { moist: "Noch feucht", ok: "Leicht trocken", dry: "Sehr trocken" },
+    amountQuestion: "Wie war die Gießmenge?",
+    amount: { too_much: "Zu viel", ok: "Passt", too_little: "Zu wenig" },
+    undo: "Rückgängig",
     units: { ml_per_l: "ml/l", ml: "ml", sticks: "Stk.", g: "g" },
   },
 };
@@ -228,6 +240,7 @@ class PlantButlerCard extends HTMLElement {
       parts.push(s ? `${s.state}|${s.last_updated}` : "-");
     }
     parts.push(this._t === STRINGS.de ? "de" : "en");
+    parts.push(this._feedbackUntil && Date.now() < this._feedbackUntil ? `fb${[...this._fbDone].join()}` : "");
     return parts.join(";");
   }
 
@@ -253,9 +266,67 @@ class PlantButlerCard extends HTMLElement {
         entity_id: this._config.entity,
         task,
       });
+      if (task === "water") this._openFeedback();
     } finally {
       button.disabled = false;
     }
+  }
+
+  _openFeedback() {
+    this._fbDone = new Set();
+    this._extendFeedback();
+  }
+
+  _extendFeedback() {
+    this._feedbackUntil = Date.now() + 30000;
+    clearTimeout(this._feedbackTimer);
+    this._feedbackTimer = setTimeout(() => this._closeFeedback(), 30000);
+    this._render();
+  }
+
+  _closeFeedback() {
+    this._feedbackUntil = 0;
+    clearTimeout(this._feedbackTimer);
+    this._render();
+  }
+
+  async _sendFeedback(kind, value) {
+    this._fbDone.add(kind);
+    this._extendFeedback();
+    await this._hass.callService(DOMAIN, "watering_feedback", {
+      entity_id: this._config.entity,
+      [kind]: value,
+    });
+  }
+
+  async _undo() {
+    this._closeFeedback();
+    await this._hass.callService(DOMAIN, "undo_watering", { entity_id: this._config.entity });
+  }
+
+  _renderFeedback(a) {
+    if (!this._feedbackUntil || Date.now() > this._feedbackUntil) return "";
+    const t = this._t;
+    const learning = (a.care && a.care.learning) || {};
+    const done = this._fbDone || new Set();
+    const active = !learning.paused;
+    const askInterval = active && learning.learn_interval && !done.has("answer");
+    const askAmount =
+      active && learning.learn_amount && learning.awaiting_amount && !done.has("amount");
+    const row = (kind, question, keys, labels) => `
+        <div class="fb-q">${esc(question)}</div>
+        <div class="fb-row">${keys
+          .map(
+            (k) =>
+              `<button class="fb" data-kind="${kind}" data-answer="${k}">${esc(labels[k])}</button>`
+          )
+          .join("")}</div>`;
+    return `
+      <div class="feedback">
+        ${askInterval ? row("answer", t.feedbackQuestion, ["moist", "ok", "dry"], t.feedback) : ""}
+        ${askAmount ? row("amount", t.amountQuestion, ["too_much", "ok", "too_little"], t.amount) : ""}
+        <div class="fb-row fb-undo"><button class="fb undo" data-undo="1"><ha-icon icon="mdi:undo-variant"></ha-icon>${esc(t.undo)}</button></div>
+      </div>`;
   }
 
   // ---------------------------------------------------------------- rendering
@@ -315,6 +386,7 @@ class PlantButlerCard extends HTMLElement {
         ${problems ? `<div class="problems">${problems}</div>` : ""}
         ${bars}
         ${tasks}
+        ${this._renderFeedback(a)}
       </ha-card>`;
 
     this.shadowRoot.querySelector(".header").addEventListener("click", () =>
@@ -326,6 +398,11 @@ class PlantButlerCard extends HTMLElement {
         this._markDone(button.dataset.task, button);
       })
     );
+    this.shadowRoot.querySelectorAll("button[data-answer]").forEach((el) =>
+      el.addEventListener("click", () => this._sendFeedback(el.dataset.kind, el.dataset.answer))
+    );
+    const undoButton = this.shadowRoot.querySelector("button[data-undo]");
+    if (undoButton) undoButton.addEventListener("click", () => this._undo());
     this.shadowRoot.querySelectorAll("[data-entity]").forEach((el) =>
       el.addEventListener("click", () => this._moreInfo(el.dataset.entity))
     );
@@ -457,7 +534,14 @@ class PlantButlerCard extends HTMLElement {
         label: t.water,
         amount: waterAmount,
         due: !!a.needs_water,
-        when: waterState ? this._whenText(waterState.state, a.needs_water) : "",
+        when: [
+          waterState ? this._whenText(waterState.state, a.needs_water) : "",
+          care.learning && care.learning.learn_interval && care.learning.interval_delta_days
+            ? t.learned(care.learning.interval_delta_days)
+            : "",
+        ]
+          .filter(Boolean)
+          .join(" · "),
         entity: ents.next_watering,
       })
     );
@@ -571,6 +655,21 @@ const STYLE = `
   .task.due .check { color: var(--primary-color); opacity: 1; }
   .check:hover { background: color-mix(in srgb, var(--primary-color) 12%, transparent); opacity: 1; }
   .check:disabled { opacity: 0.3; cursor: progress; }
+  .feedback {
+    margin-top: 8px; padding: 10px 12px; border-radius: 12px;
+    background: color-mix(in srgb, var(--primary-color) 10%, transparent);
+  }
+  .fb-q { font-size: 0.9em; color: var(--primary-text-color); margin-bottom: 8px; }
+  .fb-row { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px; }
+  .fb-row.fb-undo { margin-bottom: 0; }
+  .fb {
+    border: 1px solid var(--divider-color); background: var(--card-background-color, #fff);
+    color: var(--primary-text-color); border-radius: 999px; padding: 6px 12px; cursor: pointer;
+    font: inherit; font-size: 0.85em; display: inline-flex; align-items: center; gap: 4px;
+  }
+  .fb:hover { border-color: var(--primary-color); }
+  .fb.undo { color: var(--secondary-text-color); }
+  .fb ha-icon { --mdc-icon-size: 16px; }
 `;
 
 class PlantButlerCardEditor extends HTMLElement {

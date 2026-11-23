@@ -23,10 +23,16 @@
       "general": {
         "title": "General",
         "data": {
-          "climate_strength": "Strength of the room climate correction"
+          "learning_strength": "Learning strength",
+          "learn_interval": "Learn watering interval",
+          "learn_amount": "Learn watering amount",
+          "climate_level": "Room climate correction"
         },
         "data_description": {
-          "climate_strength": "Only for plants without a soil moisture sensor. Plant Butler uses room temperature and humidity to estimate how fast the soil dries out: warm, dry air shortens the watering interval, cool, humid air lengthens it (at most 0.6× to 1.4×). 0 = off (fixed interval), 1 = recommended, 2 = twice as strong – choose more if your plants are regularly dry before the reminder, less if they are still moist."
+          "learning_strength": "How quickly Plant Butler adapts to your answers. Learned values stay between half and double the calculated interval and between 50 % and 150 % of the calculated amount.",
+          "learn_interval": "After watering, Plant Butler asks how the soil was (still moist / slightly dry / very dry) and adjusts each plant's watering interval. Plants with a soil sensor also learn from the measured drying time.",
+          "learn_amount": "After watering, Plant Butler asks whether the amount was right (too much / just right / too little) and adjusts each plant's watering amount. Plants with a soil sensor also learn from the measured moisture. Turning a checkbox off applies the calculated values again – everything learned stays saved and is back when you switch it on. To pause temporarily (e.g. holidays), use the switch 'Learning paused'.",
+          "climate_level": "Only for plants without a soil moisture sensor. Plant Butler uses room temperature and humidity to estimate how fast the soil dries out: warm, dry air shortens the watering interval, cool, humid air lengthens it (at most 0.6× to 1.4×). Choose 'Strong' if your plants are regularly dry before the reminder, 'Low' if they are still moist, 'Off' for a fixed interval."
         }
       },
       "phone": {
@@ -322,6 +328,35 @@
         "all": "All selected"
       }
     },
+    "learning_strength": {
+      "options": {
+        "gentle": "Gentle (±5 %, when 3 of 4 answers agree)",
+        "normal": "Normal (±10 %, when 2 of 3 agree)",
+        "strong": "Strong (±15 %, immediately)"
+      }
+    },
+    "feedback_amount": {
+      "options": {
+        "too_much": "Too much – water in the saucer / ran out at the bottom",
+        "ok": "Just right",
+        "too_little": "Too little – soil not fully moist"
+      }
+    },
+    "climate_level": {
+      "options": {
+        "off": "Off",
+        "low": "Low",
+        "normal": "Normal",
+        "strong": "Strong"
+      }
+    },
+    "feedback": {
+      "options": {
+        "moist": "Still moist",
+        "ok": "Slightly dry",
+        "dry": "Very dry"
+      }
+    },
     "task": {
       "options": {
         "water": "Water",
@@ -352,6 +387,12 @@
       },
       "mark_fertilized": {
         "name": "Fertilized"
+      },
+      "undo_watering": {
+        "name": "Undo last watering"
+      },
+      "reset_learning": {
+        "name": "Reset learned values"
       }
     },
     "image": {
@@ -490,7 +531,7 @@
       "light_condition": {
         "name": "Light conditions",
         "state": {
-          "ok": "Suitable",
+          "ok": "OK",
           "too_dark": "Too dark",
           "too_bright": "Too bright"
         }
@@ -498,13 +539,19 @@
       "temperature_condition": {
         "name": "Temperature conditions",
         "state": {
-          "ok": "Suitable",
+          "ok": "OK",
           "too_cold": "Too cold",
           "too_hot": "Too warm"
         }
       },
       "hints": {
         "name": "Hints"
+      },
+      "learned_interval": {
+        "name": "Learned watering interval"
+      },
+      "learned_amount": {
+        "name": "Learned watering amount"
       },
       "next_watering": {
         "name": "Next watering"
@@ -533,6 +580,9 @@
       },
       "notifications": {
         "name": "Notifications"
+      },
+      "learning_paused": {
+        "name": "Learning paused"
       }
     },
     "todo": {
@@ -542,6 +592,42 @@
     }
   },
   "services": {
+    "watering_feedback": {
+      "name": "Watering feedback",
+      "description": "Feedback on the last watering. Adjusts the learned watering interval and/or amount.",
+      "fields": {
+        "entity_id": {
+          "name": "Plant entities",
+          "description": "Any entity of the plant."
+        },
+        "device_id": {
+          "name": "Plant devices",
+          "description": "The plant devices."
+        },
+        "answer": {
+          "name": "Answer",
+          "description": "How was the soil before watering?"
+        },
+        "amount": {
+          "name": "Amount",
+          "description": "Was the watering amount right?"
+        }
+      }
+    },
+    "undo_watering": {
+      "name": "Undo last watering",
+      "description": "Restores the state from before the last watering (within 24 hours).",
+      "fields": {
+        "entity_id": {
+          "name": "Plant entities",
+          "description": "Any entity of the plant."
+        },
+        "device_id": {
+          "name": "Plant devices",
+          "description": "The plant devices."
+        }
+      }
+    },
     "mark_done": {
       "name": "Mark care task done",
       "description": "Marks watering or fertilizing as done for the given plants and restarts the schedule.",

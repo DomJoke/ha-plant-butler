@@ -20,6 +20,12 @@
       },
       "mark_fertilized": {
         "default": "mdi:sprout"
+      },
+      "undo_watering": {
+        "default": "mdi:undo-variant"
+      },
+      "reset_learning": {
+        "default": "mdi:restore"
       }
     },
     "number": {
@@ -99,6 +105,12 @@
       },
       "hints": {
         "default": "mdi:information-outline"
+      },
+      "learned_interval": {
+        "default": "mdi:school-outline"
+      },
+      "learned_amount": {
+        "default": "mdi:cup-water"
       }
     },
     "switch": {
@@ -113,6 +125,12 @@
         "state": {
           "on": "mdi:bell-ring-outline"
         }
+      },
+      "learning_paused": {
+        "default": "mdi:school-outline",
+        "state": {
+          "on": "mdi:pause-circle-outline"
+        }
       }
     },
     "todo": {
@@ -124,6 +142,12 @@
   "services": {
     "mark_done": {
       "service": "mdi:check-circle-outline"
+    },
+    "watering_feedback": {
+      "service": "mdi:comment-question-outline"
+    },
+    "undo_watering": {
+      "service": "mdi:undo-variant"
     }
   }
 }

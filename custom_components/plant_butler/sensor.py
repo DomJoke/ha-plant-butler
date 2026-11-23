@@ -10,7 +10,7 @@ from homeassistant.components.sensor import (
     SensorEntity,
     SensorStateClass,
 )
-from homeassistant.const import EntityCategory
+from homeassistant.const import PERCENTAGE, EntityCategory
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
 
@@ -57,6 +57,9 @@ async def async_setup_entry(
         entities.append(LightConditionSensor(plant))
         if plant.sensor(CONF_TEMPERATURE_SENSOR):
             entities.append(TemperatureConditionSensor(plant))
+        entities.append(LearnedIntervalSensor(plant))
+        if plant.sensor(CONF_MOISTURE_SENSOR):
+            entities.append(LearnedAmountSensor(plant))
         if plant.sensor(CONF_ILLUMINANCE_SENSOR):
             # Without a light sensor the level is just the location dropdown
             entities.append(LightLevelSensor(plant))
@@ -137,14 +140,19 @@ class PlantStatusSensor(PlantSensor):
                 "temperature_max": s.get(CONF_TEMPERATURE_MAX),
             },
             "care": {
-                "watering_amount": s.get(CONF_WATERING_AMOUNT),
+                "watering_amount": plant.watering_amount_effective(),
                 "fertilizer_amount": s.get(CONF_FERTILIZER_AMOUNT),
                 "fertilizer_unit": s.get(CONF_FERTILIZER_UNIT),
                 "last_watered": plant.state["last_watered"],
                 "last_fertilized": plant.state["last_fertilized"],
                 "watering_interval_effective": ev.watering_interval_effective,
                 "pot_volume_l": round(vol, 1) if (vol := pot_volume(s)) else None,
-                "fertilizer_per_watering_ml": fertilizer_per_watering_ml(s),
+                "fertilizer_per_watering_ml": fertilizer_per_watering_ml(
+                    {**s, CONF_WATERING_AMOUNT: plant.watering_amount_effective()}
+                ),
+                "learning": {
+                    k: v for k, v in plant.learning_summary().items() if k != "history"
+                },
                 "climate_factor": ev.climate_factor,
             },
             "light": {
@@ -316,4 +324,65 @@ class HintsSensor(PlantSensor):
         return {
             "status": self.plant.evaluation.status,
             "problems": {p.key: p.severity for p in self.plant.evaluation.problems},
+        }
+
+
+class LearnedIntervalSensor(PlantSensor):
+    """How much the learned experience changes the watering interval."""
+
+    _attr_native_unit_of_measurement = PERCENTAGE
+    _attr_state_class = SensorStateClass.MEASUREMENT
+    _unrecorded_attributes = frozenset({"history"})
+
+    def __init__(self, plant: PlantRuntime) -> None:
+        """Initialize."""
+        super().__init__(plant, "learned_interval")
+
+    @property
+    def native_value(self) -> int:
+        """Return the change in percent (+12 = 12 % longer)."""
+        return self.plant.learning_summary()["interval_change_percent"]
+
+    @property
+    def extra_state_attributes(self) -> dict[str, Any]:
+        """Return the learning details."""
+        summary = self.plant.learning_summary()
+        return {
+            key: summary[key]
+            for key in (
+                "strength",
+                "learn_interval",
+                "learn_amount",
+                "paused",
+                "interval_factor",
+                "interval_base_days",
+                "interval_effective_days",
+                "interval_delta_days",
+                "awaiting_feedback",
+                "history",
+            )
+        }
+
+
+class LearnedAmountSensor(PlantSensor):
+    """How much the soil sensor experience changes the watering amount."""
+
+    _attr_native_unit_of_measurement = PERCENTAGE
+    _attr_state_class = SensorStateClass.MEASUREMENT
+
+    def __init__(self, plant: PlantRuntime) -> None:
+        """Initialize."""
+        super().__init__(plant, "learned_amount")
+
+    @property
+    def native_value(self) -> int:
+        """Return the change in percent."""
+        return self.plant.learning_summary()["amount_change_percent"]
+
+    @property
+    def extra_state_attributes(self) -> dict[str, Any]:
+        """Return the effective amount."""
+        return {
+            "amount_factor": self.plant.learning["amount_factor"],
+            "watering_amount_effective": self.plant.watering_amount_effective(),
         }

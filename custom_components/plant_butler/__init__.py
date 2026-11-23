@@ -25,10 +25,14 @@ from homeassistant.helpers.storage import Store
 from homeassistant.helpers.typing import ConfigType
 
 from .const import (
+    AMOUNT_ANSWERS,
     CONF_ILLUMINANCE_SENSOR,
     CONF_SPECIES,
     DOMAIN,
+    FEEDBACK_ANSWERS,
+    SERVICE_FEEDBACK,
     SERVICE_MARK_DONE,
+    SERVICE_UNDO,
     SPECIES_CUSTOM,
     STORAGE_VERSION,
     TASKS,
@@ -48,6 +52,22 @@ PLATFORMS: list[Platform] = [
 ]
 
 CONFIG_SCHEMA = cv.config_entry_only_config_schema(DOMAIN)
+
+TARGET_SCHEMA = {
+    vol.Optional(ATTR_ENTITY_ID): cv.entity_ids,
+    vol.Optional(ATTR_DEVICE_ID): vol.All(cv.ensure_list, [cv.string]),
+}
+FEEDBACK_SCHEMA = vol.All(
+    vol.Schema(
+        {
+            **TARGET_SCHEMA,
+            vol.Optional("answer"): vol.In(FEEDBACK_ANSWERS),
+            vol.Optional("amount"): vol.In(AMOUNT_ANSWERS),
+        }
+    ),
+    cv.has_at_least_one_key("answer", "amount"),
+)
+UNDO_SCHEMA = vol.Schema(TARGET_SCHEMA)
 
 MARK_DONE_SCHEMA = vol.Schema(
     {
@@ -112,9 +132,24 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
         for plant in _plants_for_call(hass, call):
             await plant.async_mark_done(call.data["task"])
 
+    async def feedback(call: ServiceCall) -> None:
+        for plant in _plants_for_call(hass, call):
+            if "answer" in call.data:
+                await plant.async_feedback(call.data["answer"])
+            if "amount" in call.data:
+                await plant.async_amount_feedback(call.data["amount"])
+
+    async def undo(call: ServiceCall) -> None:
+        for plant in _plants_for_call(hass, call):
+            await plant.async_undo_watering()
+
     hass.services.async_register(
         DOMAIN, SERVICE_MARK_DONE, mark_done, schema=MARK_DONE_SCHEMA
     )
+    hass.services.async_register(
+        DOMAIN, SERVICE_FEEDBACK, feedback, schema=FEEDBACK_SCHEMA
+    )
+    hass.services.async_register(DOMAIN, SERVICE_UNDO, undo, schema=UNDO_SCHEMA)
     return True
 
 
@@ -124,6 +159,13 @@ async def async_setup_entry(hass: HomeAssistant, entry: PlantButlerConfigEntry) 
     await hub.async_load()
     db = await async_get_species_db(hass)
     dev_reg = dr.async_get(hass)
+    dev_reg.async_get_or_create(
+        config_entry_id=entry.entry_id,
+        identifiers={(DOMAIN, entry.entry_id)},
+        name="Plant Butler",
+        manufacturer="Plant Butler",
+        entry_type=dr.DeviceEntryType.SERVICE,
+    )
 
     for plant in hub.plants.values():
         species_id = plant.subentry.data.get(CONF_SPECIES, SPECIES_CUSTOM)

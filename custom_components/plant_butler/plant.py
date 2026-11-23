@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import copy
 import logging
 from collections import deque
 from collections.abc import Callable
@@ -23,12 +24,17 @@ from homeassistant.util import slugify
 
 from .care import suggest_watering
 from .const import (
+    CLIMATE_LEVELS,
     CONF_AREA,
+    CONF_CLIMATE_LEVEL,
     CONF_CLIMATE_STRENGTH,
     CONF_FERTILIZER_INTERVAL,
     CONF_FERTILIZER_WINTER_INTERVAL,
     CONF_HUMIDITY_SENSOR,
     CONF_ILLUMINANCE_SENSOR,
+    CONF_LEARN_AMOUNT,
+    CONF_LEARN_INTERVAL,
+    CONF_LEARNING_STRENGTH,
     CONF_LIGHT_NEED,
     CONF_LOCATION_LIGHT,
     CONF_MOISTURE_MAX,
@@ -40,10 +46,13 @@ from .const import (
     CONF_TEMPERATURE_MIN,
     CONF_TEMPERATURE_SENSOR,
     CONF_WATER_NEED,
+    CONF_WATERING_AMOUNT,
     CONF_WATERING_INTERVAL,
     DEFAULT_CLIMATE_STRENGTH,
+    DEFAULT_LEARNING_STRENGTH,
     DOMAIN,
     EVENT_NOTIFICATION,
+    FEEDBACK_WINDOW_HOURS,
     MOISTURE_HYSTERESIS,
     SENSOR_KEYS,
     SEVERITIES,
@@ -54,9 +63,19 @@ from .const import (
     STORAGE_VERSION,
     TASK_FERTILIZE,
     TASK_WATER,
+    UNDO_WINDOW_HOURS,
     WATER_LEVELS,
     WATERING_DETECT_RISE,
     WINTER_WATER_FACTOR,
+)
+from .learning import (
+    AMOUNT_FACTOR_MAX,
+    AMOUNT_FACTOR_MIN,
+    AMOUNT_TARGET,
+    ANSWER_KIND,
+    apply_vote,
+    default_learning,
+    target_factor,
 )
 from .logic import (
     climate_factor,
@@ -141,6 +160,7 @@ def default_state(now: datetime) -> dict[str, Any]:
         "applied_area": None,
         "notified": {},
         "notify_enabled": True,
+        "learning": default_learning(),
     }
 
 
@@ -160,6 +180,8 @@ class PlantRuntime:
         )
         for key, value in default_state(dt_util.utcnow()).items():
             state.setdefault(key, value)
+        for key, value in default_learning().items():
+            state["learning"].setdefault(key, value)
         self.state: dict[str, Any] = state
         self.slug = slugify(subentry.data.get(CONF_NAME) or subentry.title) or "plant"
         self.device_id: str | None = None
@@ -298,6 +320,8 @@ class PlantRuntime:
     @callback
     def _async_tick(self, now: datetime) -> None:
         self._advance(dt_util.utcnow())
+        if self.sensor(CONF_MOISTURE_SENSOR):
+            self._learn_amount(dt_util.utcnow())
         self._changed()
 
     @callback
@@ -310,20 +334,64 @@ class PlantRuntime:
             if moisture is not None:
                 self._samples.append((now, moisture))
                 self._detect_watering(now, moisture)
+                cycle = self.learning.get("cycle")
+                start = _parse(cycle["start"]) if cycle else None
+                if start and now - start <= timedelta(hours=3):
+                    cycle["peak"] = max(cycle.get("peak") or 0, moisture)
         self._changed()
 
     # ------------------------------------------------------------------ actions
-    async def async_mark_done(self, task: str) -> None:
+    async def async_mark_done(self, task: str, source: str = "manual") -> None:
         """Mark a care task as done now."""
         now = dt_util.utcnow()
         self._advance(now)
         if task == TASK_WATER:
-            self._mark_watered(now)
+            self._start_watering(now, source)
         elif task == TASK_FERTILIZE:
             self.state["last_fertilized"] = _iso(now)
             self.state["fert_progress"] = 0.0
             self.state["fert_due_since"] = None
         self._changed()
+
+    def _start_watering(self, now: datetime, source: str) -> None:
+        """Remember the state for undo and the cycle for learning, then water."""
+        learning = self.learning
+        snapshot = {
+            key: copy.deepcopy(self.state[key])
+            for key in (
+                "last_watered",
+                "water_progress",
+                "progress_updated",
+                "water_due_since",
+                "moisture_dry",
+            )
+        }
+        snapshot["learning"] = copy.deepcopy(
+            {k: v for k, v in learning.items() if k != "undo"}
+        )
+        learning["undo"] = {"at": _iso(now), "state": snapshot}
+        previous = _parse(self.state["last_watered"])
+        learning["awaiting"] = {
+            "at": _iso(now),
+            "elapsed_days": round((now - previous).total_seconds() / 86400, 2)
+            if previous
+            else None,
+            "base_days": round(self.watering_interval_now(learned=False), 2),
+            "source": source,
+        }
+        learning["awaiting_amount"] = (
+            {"at": _iso(now), "amount": self.watering_amount_effective()}
+            if self.collects_amount
+            else None
+        )
+        learning["cycle"] = {
+            "start": _iso(now),
+            "peak": None,
+            "counted": False,
+            "amount_checked": False,
+            "over_checked": False,
+        }
+        self._mark_watered(now)
 
     def _mark_watered(self, now: datetime) -> None:
         self.state["last_watered"] = _iso(now)
@@ -341,8 +409,230 @@ class PlantRuntime:
         if last and now - last < WATERED_GRACE:
             return
         _LOGGER.debug("%s: watering detected by soil sensor", self.name)
-        self._mark_watered(now)
+        self._start_watering(now, "sensor")
         self._samples.append((now, moisture))
+
+    async def async_feedback(self, answer: str) -> bool:
+        """'How was the soil before watering?' -> adjust the interval."""
+        now = dt_util.utcnow()
+        learning = self.learning
+        awaiting = learning.get("awaiting")
+        at = _parse(awaiting["at"]) if awaiting else None
+        if (
+            not awaiting
+            or at is None
+            or now - at > timedelta(hours=FEEDBACK_WINDOW_HOURS)
+        ):
+            return False
+        learning["awaiting"] = None
+        entry: dict[str, Any] = {
+            "at": _iso(now),
+            "answer": answer,
+            "elapsed_days": awaiting["elapsed_days"],
+            "base_days": awaiting["base_days"],
+            "applied": False,
+        }
+        if awaiting["elapsed_days"] and self.collects_interval:
+            old_days = round(self.watering_interval_now())
+            target = target_factor(
+                awaiting["elapsed_days"], awaiting["base_days"], answer
+            )
+            learning["interval_factor"], learning["votes"] = apply_vote(
+                learning["interval_factor"],
+                target,
+                learning["votes"],
+                self.learning_strength,
+                kind=ANSWER_KIND[answer],
+            )
+            entry.update(
+                applied=True,
+                target=round(target, 3),
+                factor=learning["interval_factor"],
+            )
+            self._announce_change(old_days)
+        learning["history"] = [*learning["history"], entry][-10:]
+        self._changed()
+        return True
+
+    async def async_amount_feedback(self, answer: str) -> bool:
+        """'How was the amount?' -> adjust the watering amount."""
+        now = dt_util.utcnow()
+        learning = self.learning
+        awaiting = learning.get("awaiting_amount")
+        at = _parse(awaiting["at"]) if awaiting else None
+        if (
+            not awaiting
+            or at is None
+            or now - at > timedelta(hours=FEEDBACK_WINDOW_HOURS)
+        ):
+            return False
+        learning["awaiting_amount"] = None
+        entry: dict[str, Any] = {
+            "at": _iso(now),
+            "answer": f"amount_{answer}",
+            "applied": False,
+        }
+        if self.collects_amount:
+            old_amount = self.watering_amount_effective()
+            ratio, kind = AMOUNT_TARGET[answer]
+            learning["amount_factor"], learning["amount_votes"] = apply_vote(
+                learning["amount_factor"],
+                learning["amount_factor"] * ratio,
+                learning["amount_votes"],
+                self.learning_strength,
+                AMOUNT_FACTOR_MIN,
+                AMOUNT_FACTOR_MAX,
+                kind=kind,
+            )
+            entry.update(applied=True, factor=learning["amount_factor"])
+            new_amount = self.watering_amount_effective()
+            if (
+                old_amount
+                and new_amount
+                and new_amount != old_amount
+                and self.hub.notifier
+            ):
+                self.hub.notifier.async_amount_info(
+                    self, int(old_amount), int(new_amount)
+                )
+        learning["history"] = [*learning["history"], entry][-10:]
+        self._changed()
+        return True
+
+    def _announce_change(self, old_days: int) -> None:
+        new_days = round(self.watering_interval_now())
+        if new_days != old_days and self.hub.notifier is not None:
+            self.hub.notifier.async_learning_info(self, old_days, new_days)
+
+    def _learn_from_dry(self, now: datetime) -> None:
+        """Soil sensor: the measured drying time is the real interval."""
+        cycle = self.learning.get("cycle")
+        if not cycle or cycle.get("counted") or not self.collects_interval:
+            return
+        start = _parse(cycle["start"])
+        if start is None:
+            return
+        cycle["counted"] = True
+        days = (now - start).total_seconds() / 86400
+        if days < 0.5:
+            return
+        old_days = round(self.watering_interval_now())
+        base = self.watering_interval_now(learned=False)
+        target = min(max(days / base, 0.5), 2.0)
+        learning = self.learning
+        learning["interval_factor"], learning["votes"] = apply_vote(
+            learning["interval_factor"],
+            target,
+            learning["votes"],
+            self.learning_strength,
+        )
+        learning["history"] = [
+            *learning["history"],
+            {
+                "at": _iso(now),
+                "answer": "sensor",
+                "elapsed_days": round(days, 2),
+                "base_days": round(base, 2),
+                "applied": True,
+                "target": round(target, 3),
+                "factor": learning["interval_factor"],
+            },
+        ][-10:]
+        self._announce_change(old_days)
+
+    def _learn_amount(self, now: datetime) -> None:
+        """Soil sensor: did the watering reach the target range?"""
+        cycle = self.learning.get("cycle")
+        if (
+            not cycle
+            or not self.collects_amount
+            or not self.settings.get(CONF_WATERING_AMOUNT)
+        ):
+            return
+        start = _parse(cycle["start"])
+        if start is None:
+            return
+        settings = self.settings
+        mmin = float(settings[CONF_MOISTURE_MIN])
+        mmax = float(settings[CONF_MOISTURE_MAX])
+        learning = self.learning
+        target = None
+        if not cycle["amount_checked"] and now - start >= timedelta(hours=3):
+            cycle["amount_checked"] = True
+            peak = cycle.get("peak")
+            if peak is not None and peak < (mmin + mmax) / 2:
+                target = learning["amount_factor"] * 1.2  # did not get moist enough
+        if not cycle["over_checked"] and now - start >= timedelta(hours=24):
+            cycle["over_checked"] = True
+            moisture = self._read(CONF_MOISTURE_SENSOR)
+            if moisture is not None and moisture > mmax:
+                target = learning["amount_factor"] * 0.8  # still soaking a day later
+        if target is not None:
+            learning["amount_factor"], learning["amount_votes"] = apply_vote(
+                learning["amount_factor"],
+                target,
+                learning["amount_votes"],
+                self.learning_strength,
+                AMOUNT_FACTOR_MIN,
+                AMOUNT_FACTOR_MAX,
+            )
+
+    def can_undo_watering(self) -> bool:
+        """Whether the last watering can still be undone."""
+        undo = self.learning.get("undo")
+        at = _parse(undo["at"]) if undo else None
+        return at is not None and dt_util.utcnow() - at < timedelta(
+            hours=UNDO_WINDOW_HOURS
+        )
+
+    async def async_undo_watering(self) -> bool:
+        """Restore the state from before the last watering."""
+        if not self.can_undo_watering():
+            return False
+        snapshot = self.learning["undo"]["state"]
+        for key, value in snapshot.items():
+            if key != "learning":
+                self.state[key] = value
+        self.state["learning"] = {
+            **snapshot["learning"],
+            "undo": None,
+            "awaiting": None,
+        }
+        self._samples.clear()
+        if self.hub.notifier is not None:
+            self.hub.notifier.async_clear_feedback(self)
+        self._advance(dt_util.utcnow())
+        self._changed()
+        return True
+
+    async def async_reset_learning(self) -> None:
+        """Forget everything learned for this plant."""
+        self.state["learning"] = default_learning()
+        self._changed()
+
+    def learning_summary(self) -> dict[str, Any]:
+        """Learned values for entities and the card."""
+        base = self.watering_interval_now(learned=False)
+        effective = self.watering_interval_now()
+        return {
+            "strength": self.learning_strength,
+            "learn_interval": self.learn_interval,
+            "learn_amount": self.learn_amount,
+            "awaiting_amount": self.learning.get("awaiting_amount") is not None,
+            "paused": self.hub.learning_paused,
+            "interval_factor": self.learning["interval_factor"],
+            "amount_factor": self.learning["amount_factor"],
+            "interval_change_percent": round(
+                (self.learning["interval_factor"] - 1) * 100
+            ),
+            "amount_change_percent": round((self.learning["amount_factor"] - 1) * 100),
+            "interval_base_days": round(base, 1),
+            "interval_effective_days": round(effective, 1),
+            "interval_delta_days": round(effective) - round(base),
+            "awaiting_feedback": self.learning.get("awaiting") is not None,
+            "can_undo": self.can_undo_watering(),
+            "history": self.learning["history"],
+        }
 
     # -------------------------------------------------------------- calculation
     def _read(self, key: str) -> float | None:
@@ -367,18 +657,75 @@ class PlantRuntime:
 
     def climate_factor(self) -> float:
         """Return the current climate factor."""
-        strength = self.hub.options.get(CONF_CLIMATE_STRENGTH, DEFAULT_CLIMATE_STRENGTH)
+        options = self.hub.options
+        if CONF_CLIMATE_LEVEL in options:
+            strength = CLIMATE_LEVELS.get(options[CONF_CLIMATE_LEVEL], 1.0)
+        else:  # settings saved before 0.7 stored a number
+            strength = float(
+                options.get(CONF_CLIMATE_STRENGTH, DEFAULT_CLIMATE_STRENGTH)
+            )
         return climate_factor(
             self._read(CONF_TEMPERATURE_SENSOR),
             self._read(CONF_HUMIDITY_SENSOR),
-            float(strength),
+            strength,
         )
 
-    def watering_interval_now(self) -> float:
+    # ---------------------------------------------------------------- learning
+    @property
+    def learning(self) -> dict[str, Any]:
+        """Persisted learning state."""
+        return self.state["learning"]
+
+    @property
+    def learning_strength(self) -> str:
+        """gentle / normal / strong (from the general settings)."""
+        return self.hub.options.get(CONF_LEARNING_STRENGTH, DEFAULT_LEARNING_STRENGTH)
+
+    @property
+    def learn_interval(self) -> bool:
+        """Whether the learned interval is applied."""
+        return bool(self.hub.options.get(CONF_LEARN_INTERVAL, True))
+
+    @property
+    def learn_amount(self) -> bool:
+        """Whether the learned amount is applied."""
+        return bool(self.hub.options.get(CONF_LEARN_AMOUNT, True))
+
+    @property
+    def collects_interval(self) -> bool:
+        """Whether interval experience is collected right now."""
+        return self.learn_interval and not self.hub.learning_paused
+
+    @property
+    def collects_amount(self) -> bool:
+        """Whether amount experience is collected right now (needs an amount)."""
+        return (
+            self.learn_amount
+            and not self.hub.learning_paused
+            and bool(self.settings.get(CONF_WATERING_AMOUNT))
+        )
+
+    def interval_factor(self) -> float:
+        """Learned factor on the watering interval (1.0 when disabled)."""
+        return float(self.learning["interval_factor"]) if self.learn_interval else 1.0
+
+    def amount_factor(self) -> float:
+        """Learned factor on the watering amount (1.0 when disabled)."""
+        return float(self.learning["amount_factor"]) if self.learn_amount else 1.0
+
+    def watering_interval_now(self, learned: bool = True) -> float:
         """Effective watering interval in days right now."""
         base = float(self.settings[CONF_WATERING_INTERVAL]) or 1.0
         season = WINTER_WATER_FACTOR if self.winter_rest else 1.0
-        return max(base * season * self.climate_factor(), 0.25)
+        factor = self.interval_factor() if learned else 1.0
+        return max(base * season * self.climate_factor() * factor, 0.25)
+
+    def watering_amount_effective(self) -> float | None:
+        """Watering amount in ml including the learned correction."""
+        amount = self.settings.get(CONF_WATERING_AMOUNT)
+        if not amount:
+            return None
+        return round(float(amount) * self.amount_factor() / 10) * 10
 
     def fertilizer_interval_now(self) -> float | None:
         """Effective fertilizing interval in days, None when paused/disabled."""
@@ -459,6 +806,8 @@ class PlantRuntime:
         progress = state["water_progress"]
         if ev.moisture is not None:
             if ev.moisture < mmin:
+                if not state["moisture_dry"]:
+                    self._learn_from_dry(now)
                 state["moisture_dry"] = True
             elif ev.moisture >= mmin + MOISTURE_HYSTERESIS:
                 state["moisture_dry"] = False
@@ -626,6 +975,18 @@ class ButlerHub:
         self.plants: dict[str, PlantRuntime] = {}
         self._listeners: list[Callable[[], None]] = []
         self.notifier: Notifier | None = None
+
+    @property
+    def learning_paused(self) -> bool:
+        """Global pause of learning (e.g. holidays)."""
+        return bool(self.store_data.get("learning_paused", False))
+
+    async def async_set_learning_paused(self, paused: bool) -> None:
+        """Pause or resume learning for all plants."""
+        self.store_data["learning_paused"] = paused
+        self.async_schedule_save()
+        for plant in self.plants.values():
+            plant._changed()
 
     async def async_load(self) -> None:
         """Load persisted data and create plant runtimes."""
