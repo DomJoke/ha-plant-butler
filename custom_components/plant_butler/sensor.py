@@ -350,7 +350,9 @@ class LearnedIntervalSensor(PlantSensor):
         return {
             key: summary[key]
             for key in (
-                "mode",
+                "strength",
+                "learn_interval",
+                "learn_amount",
                 "paused",
                 "interval_factor",
                 "interval_base_days",

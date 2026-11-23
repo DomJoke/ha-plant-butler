@@ -65,7 +65,9 @@ from .const import (
     CONF_HUMIDITY_SENSOR,
     CONF_ICON,
     CONF_ILLUMINANCE_SENSOR,
-    CONF_LEARNING,
+    CONF_LEARN_AMOUNT,
+    CONF_LEARN_INTERVAL,
+    CONF_LEARNING_STRENGTH,
     CONF_LIGHT_NEED,
     CONF_LOCATION_LIGHT,
     CONF_MOISTURE_MAX,
@@ -90,13 +92,13 @@ from .const import (
     DEFAULT_ANNOUNCE_OPTIONS,
     DEFAULT_CLIMATE_STRENGTH,
     DEFAULT_FERTILIZER_DOSAGE,
-    DEFAULT_LEARNING,
+    DEFAULT_LEARNING_STRENGTH,
     DEFAULT_PHONE_OPTIONS,
     DOMAIN,
     FEEDING_LEVELS,
     FERTILIZER_TYPES,
     FERTILIZER_UNITS,
-    LEARNING_LEVELS,
+    LEARNING_STRENGTHS,
     LIGHT_LEVEL_KEYS,
     MODE_IMMEDIATE,
     MODE_OFF,
@@ -320,8 +322,17 @@ class PlantButlerOptionsFlow(OptionsFlow):
         schema = vol.Schema(
             {
                 vol.Required(
-                    CONF_LEARNING, default=options.get(CONF_LEARNING, DEFAULT_LEARNING)
-                ): _mode_selector(CONF_LEARNING, LEARNING_LEVELS),
+                    CONF_LEARNING_STRENGTH,
+                    default=options.get(
+                        CONF_LEARNING_STRENGTH, DEFAULT_LEARNING_STRENGTH
+                    ),
+                ): _mode_selector(CONF_LEARNING_STRENGTH, LEARNING_STRENGTHS),
+                vol.Required(
+                    CONF_LEARN_INTERVAL, default=options.get(CONF_LEARN_INTERVAL, True)
+                ): BooleanSelector(),
+                vol.Required(
+                    CONF_LEARN_AMOUNT, default=options.get(CONF_LEARN_AMOUNT, True)
+                ): BooleanSelector(),
                 vol.Required(CONF_CLIMATE_LEVEL, default=climate): _mode_selector(
                     CONF_CLIMATE_LEVEL, list(CLIMATE_LEVELS)
                 ),

@@ -33,6 +33,13 @@ def target_factor(elapsed_days: float, base_interval: float, answer: str) -> flo
 #   ok / measured -> about this long (both directions)
 ANSWER_KIND = {"moist": "at_least", "dry": "at_most", "ok": "about"}
 
+# Amount answer -> (target relative to the current factor, kind)
+AMOUNT_TARGET = {
+    "too_much": (0.8, "at_most"),
+    "ok": (1.0, "about"),
+    "too_little": (1.2, "at_least"),
+}
+
 
 def apply_vote(
     factor: float,
@@ -71,6 +78,7 @@ def default_learning() -> dict:
         "amount_votes": [],
         "history": [],
         "awaiting": None,
+        "awaiting_amount": None,
         "cycle": None,
         "undo": None,
     }

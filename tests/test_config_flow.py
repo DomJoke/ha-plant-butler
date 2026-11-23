@@ -176,12 +176,24 @@ async def test_options_flow(hass: HomeAssistant) -> None:
         result["flow_id"], {"next_step_id": "general"}
     )
     schema = {str(k): k.default() for k in result["data_schema"].schema}
-    assert schema == {"learning": "normal", "climate_level": "normal"}
+    assert schema == {
+        "learning_strength": "normal",
+        "learn_interval": True,
+        "learn_amount": True,
+        "climate_level": "normal",
+    }
     result = await hass.config_entries.options.async_configure(
-        result["flow_id"], {"learning": "gentle", "climate_level": "low"}
+        result["flow_id"],
+        {
+            "learning_strength": "gentle",
+            "learn_interval": True,
+            "learn_amount": False,
+            "climate_level": "low",
+        },
     )
     assert result["type"] is FlowResultType.CREATE_ENTRY
     assert entry.options["climate_level"] == "low"
+    assert entry.options["learn_amount"] is False
     await hass.async_block_till_done()
 
     result = await hass.config_entries.options.async_init(entry.entry_id)
@@ -211,7 +223,7 @@ async def test_options_flow(hass: HomeAssistant) -> None:
     assert phone["topics"] == ["water", "temperature"]
     assert phone["summary_time"] == "07:30:00"
     assert phone["quiet_start"] is None  # emptied = no quiet hours
-    assert entry.options["learning"] == "gentle"  # other settings kept
+    assert entry.options["learning_strength"] == "gentle"  # other settings kept
     await hass.async_block_till_done()
 
     result = await hass.config_entries.options.async_init(entry.entry_id)
@@ -298,6 +310,12 @@ async def test_climate_strength_migration(hass: HomeAssistant) -> None:
     schema = {str(k): k.default() for k in result["data_schema"].schema}
     assert schema["climate_level"] == "low"
     result = await hass.config_entries.options.async_configure(
-        result["flow_id"], {"learning": "normal", "climate_level": "low"}
+        result["flow_id"],
+        {
+            "learning_strength": "normal",
+            "learn_interval": True,
+            "learn_amount": True,
+            "climate_level": "low",
+        },
     )
     assert "climate_strength" not in entry.options

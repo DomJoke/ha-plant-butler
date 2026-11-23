@@ -25,6 +25,7 @@ from homeassistant.helpers.storage import Store
 from homeassistant.helpers.typing import ConfigType
 
 from .const import (
+    AMOUNT_ANSWERS,
     CONF_ILLUMINANCE_SENSOR,
     CONF_SPECIES,
     DOMAIN,
@@ -56,8 +57,15 @@ TARGET_SCHEMA = {
     vol.Optional(ATTR_ENTITY_ID): cv.entity_ids,
     vol.Optional(ATTR_DEVICE_ID): vol.All(cv.ensure_list, [cv.string]),
 }
-FEEDBACK_SCHEMA = vol.Schema(
-    {**TARGET_SCHEMA, vol.Required("answer"): vol.In(FEEDBACK_ANSWERS)}
+FEEDBACK_SCHEMA = vol.All(
+    vol.Schema(
+        {
+            **TARGET_SCHEMA,
+            vol.Optional("answer"): vol.In(FEEDBACK_ANSWERS),
+            vol.Optional("amount"): vol.In(AMOUNT_ANSWERS),
+        }
+    ),
+    cv.has_at_least_one_key("answer", "amount"),
 )
 UNDO_SCHEMA = vol.Schema(TARGET_SCHEMA)
 
@@ -126,7 +134,10 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
 
     async def feedback(call: ServiceCall) -> None:
         for plant in _plants_for_call(hass, call):
-            await plant.async_feedback(call.data["answer"])
+            if "answer" in call.data:
+                await plant.async_feedback(call.data["answer"])
+            if "amount" in call.data:
+                await plant.async_amount_feedback(call.data["amount"])
 
     async def undo(call: ServiceCall) -> None:
         for plant in _plants_for_call(hass, call):

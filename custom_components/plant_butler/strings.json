@@ -23,11 +23,15 @@
       "general": {
         "title": "General",
         "data": {
-          "learning": "Learn from experience",
+          "learning_strength": "Learning strength",
+          "learn_interval": "Learn watering interval",
+          "learn_amount": "Learn watering amount",
           "climate_level": "Room climate correction"
         },
         "data_description": {
-          "learning": "After watering, Plant Butler asks how the soil was (still moist / slightly dry / very dry) and adjusts each plant's watering interval; plants with a soil sensor also learn from the measured drying time and the watering amount. 'Off' applies the calculated values again – everything learned stays saved and is back when you switch it on. To pause temporarily (e.g. holidays), use the switch 'Learning paused'.",
+          "learning_strength": "How quickly Plant Butler adapts to your answers. Learned values stay between half and double the calculated interval and between 50 % and 150 % of the calculated amount.",
+          "learn_interval": "After watering, Plant Butler asks how the soil was (still moist / slightly dry / very dry) and adjusts each plant's watering interval. Plants with a soil sensor also learn from the measured drying time.",
+          "learn_amount": "After watering, Plant Butler asks whether the amount was right (too much / just right / too little) and adjusts each plant's watering amount. Plants with a soil sensor also learn from the measured moisture. Turning a checkbox off applies the calculated values again – everything learned stays saved and is back when you switch it on. To pause temporarily (e.g. holidays), use the switch 'Learning paused'.",
           "climate_level": "Only for plants without a soil moisture sensor. Plant Butler uses room temperature and humidity to estimate how fast the soil dries out: warm, dry air shortens the watering interval, cool, humid air lengthens it (at most 0.6× to 1.4×). Choose 'Strong' if your plants are regularly dry before the reminder, 'Low' if they are still moist, 'Off' for a fixed interval."
         }
       },
@@ -324,12 +328,18 @@
         "all": "All selected"
       }
     },
-    "learning": {
+    "learning_strength": {
       "options": {
-        "off": "Off",
         "gentle": "Gentle (±5 %, when 3 of 4 answers agree)",
         "normal": "Normal (±10 %, when 2 of 3 agree)",
         "strong": "Strong (±15 %, immediately)"
+      }
+    },
+    "feedback_amount": {
+      "options": {
+        "too_much": "Too much – water in the saucer / ran out at the bottom",
+        "ok": "Just right",
+        "too_little": "Too little – soil not fully moist"
       }
     },
     "climate_level": {
@@ -584,7 +594,7 @@
   "services": {
     "watering_feedback": {
       "name": "Watering feedback",
-      "description": "How was the soil before the last watering? Adjusts the learned watering interval.",
+      "description": "Feedback on the last watering. Adjusts the learned watering interval and/or amount.",
       "fields": {
         "entity_id": {
           "name": "Plant entities",
@@ -596,7 +606,11 @@
         },
         "answer": {
           "name": "Answer",
-          "description": "How was the soil before the last watering? Adjusts the learned watering interval."
+          "description": "How was the soil before watering?"
+        },
+        "amount": {
+          "name": "Amount",
+          "description": "Was the watering amount right?"
         }
       }
     },

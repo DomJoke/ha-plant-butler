@@ -32,7 +32,9 @@ from .const import (
     CONF_FERTILIZER_WINTER_INTERVAL,
     CONF_HUMIDITY_SENSOR,
     CONF_ILLUMINANCE_SENSOR,
-    CONF_LEARNING,
+    CONF_LEARN_AMOUNT,
+    CONF_LEARN_INTERVAL,
+    CONF_LEARNING_STRENGTH,
     CONF_LIGHT_NEED,
     CONF_LOCATION_LIGHT,
     CONF_MOISTURE_MAX,
@@ -47,7 +49,7 @@ from .const import (
     CONF_WATERING_AMOUNT,
     CONF_WATERING_INTERVAL,
     DEFAULT_CLIMATE_STRENGTH,
-    DEFAULT_LEARNING,
+    DEFAULT_LEARNING_STRENGTH,
     DOMAIN,
     EVENT_NOTIFICATION,
     FEEDBACK_WINDOW_HOURS,
@@ -69,6 +71,7 @@ from .const import (
 from .learning import (
     AMOUNT_FACTOR_MAX,
     AMOUNT_FACTOR_MIN,
+    AMOUNT_TARGET,
     ANSWER_KIND,
     apply_vote,
     default_learning,
@@ -376,6 +379,11 @@ class PlantRuntime:
             "base_days": round(self.watering_interval_now(learned=False), 2),
             "source": source,
         }
+        learning["awaiting_amount"] = (
+            {"at": _iso(now), "amount": self.watering_amount_effective()}
+            if self.collects_amount
+            else None
+        )
         learning["cycle"] = {
             "start": _iso(now),
             "peak": None,
@@ -424,7 +432,7 @@ class PlantRuntime:
             "base_days": awaiting["base_days"],
             "applied": False,
         }
-        if awaiting["elapsed_days"] and self.learning_collects:
+        if awaiting["elapsed_days"] and self.collects_interval:
             old_days = round(self.watering_interval_now())
             target = target_factor(
                 awaiting["elapsed_days"], awaiting["base_days"], answer
@@ -433,7 +441,7 @@ class PlantRuntime:
                 learning["interval_factor"],
                 target,
                 learning["votes"],
-                self.learning_mode,
+                self.learning_strength,
                 kind=ANSWER_KIND[answer],
             )
             entry.update(
@@ -446,6 +454,51 @@ class PlantRuntime:
         self._changed()
         return True
 
+    async def async_amount_feedback(self, answer: str) -> bool:
+        """'How was the amount?' -> adjust the watering amount."""
+        now = dt_util.utcnow()
+        learning = self.learning
+        awaiting = learning.get("awaiting_amount")
+        at = _parse(awaiting["at"]) if awaiting else None
+        if (
+            not awaiting
+            or at is None
+            or now - at > timedelta(hours=FEEDBACK_WINDOW_HOURS)
+        ):
+            return False
+        learning["awaiting_amount"] = None
+        entry: dict[str, Any] = {
+            "at": _iso(now),
+            "answer": f"amount_{answer}",
+            "applied": False,
+        }
+        if self.collects_amount:
+            old_amount = self.watering_amount_effective()
+            ratio, kind = AMOUNT_TARGET[answer]
+            learning["amount_factor"], learning["amount_votes"] = apply_vote(
+                learning["amount_factor"],
+                learning["amount_factor"] * ratio,
+                learning["amount_votes"],
+                self.learning_strength,
+                AMOUNT_FACTOR_MIN,
+                AMOUNT_FACTOR_MAX,
+                kind=kind,
+            )
+            entry.update(applied=True, factor=learning["amount_factor"])
+            new_amount = self.watering_amount_effective()
+            if (
+                old_amount
+                and new_amount
+                and new_amount != old_amount
+                and self.hub.notifier
+            ):
+                self.hub.notifier.async_amount_info(
+                    self, int(old_amount), int(new_amount)
+                )
+        learning["history"] = [*learning["history"], entry][-10:]
+        self._changed()
+        return True
+
     def _announce_change(self, old_days: int) -> None:
         new_days = round(self.watering_interval_now())
         if new_days != old_days and self.hub.notifier is not None:
@@ -454,7 +507,7 @@ class PlantRuntime:
     def _learn_from_dry(self, now: datetime) -> None:
         """Soil sensor: the measured drying time is the real interval."""
         cycle = self.learning.get("cycle")
-        if not cycle or cycle.get("counted") or not self.learning_collects:
+        if not cycle or cycle.get("counted") or not self.collects_interval:
             return
         start = _parse(cycle["start"])
         if start is None:
@@ -468,7 +521,10 @@ class PlantRuntime:
         target = min(max(days / base, 0.5), 2.0)
         learning = self.learning
         learning["interval_factor"], learning["votes"] = apply_vote(
-            learning["interval_factor"], target, learning["votes"], self.learning_mode
+            learning["interval_factor"],
+            target,
+            learning["votes"],
+            self.learning_strength,
         )
         learning["history"] = [
             *learning["history"],
@@ -489,7 +545,7 @@ class PlantRuntime:
         cycle = self.learning.get("cycle")
         if (
             not cycle
-            or not self.learning_collects
+            or not self.collects_amount
             or not self.settings.get(CONF_WATERING_AMOUNT)
         ):
             return
@@ -516,7 +572,7 @@ class PlantRuntime:
                 learning["amount_factor"],
                 target,
                 learning["amount_votes"],
-                self.learning_mode,
+                self.learning_strength,
                 AMOUNT_FACTOR_MIN,
                 AMOUNT_FACTOR_MAX,
             )
@@ -559,7 +615,10 @@ class PlantRuntime:
         base = self.watering_interval_now(learned=False)
         effective = self.watering_interval_now()
         return {
-            "mode": self.learning_mode,
+            "strength": self.learning_strength,
+            "learn_interval": self.learn_interval,
+            "learn_amount": self.learn_amount,
+            "awaiting_amount": self.learning.get("awaiting_amount") is not None,
             "paused": self.hub.learning_paused,
             "interval_factor": self.learning["interval_factor"],
             "amount_factor": self.learning["amount_factor"],
@@ -618,27 +677,41 @@ class PlantRuntime:
         return self.state["learning"]
 
     @property
-    def learning_mode(self) -> str:
-        """off / gentle / normal / strong (from the general settings)."""
-        return self.hub.options.get(CONF_LEARNING, DEFAULT_LEARNING)
+    def learning_strength(self) -> str:
+        """gentle / normal / strong (from the general settings)."""
+        return self.hub.options.get(CONF_LEARNING_STRENGTH, DEFAULT_LEARNING_STRENGTH)
 
     @property
-    def learning_enabled(self) -> bool:
-        """Whether learned corrections are applied."""
-        return self.learning_mode != "off"
+    def learn_interval(self) -> bool:
+        """Whether the learned interval is applied."""
+        return bool(self.hub.options.get(CONF_LEARN_INTERVAL, True))
 
     @property
-    def learning_collects(self) -> bool:
-        """Whether new experience is collected right now."""
-        return self.learning_enabled and not self.hub.learning_paused
+    def learn_amount(self) -> bool:
+        """Whether the learned amount is applied."""
+        return bool(self.hub.options.get(CONF_LEARN_AMOUNT, True))
+
+    @property
+    def collects_interval(self) -> bool:
+        """Whether interval experience is collected right now."""
+        return self.learn_interval and not self.hub.learning_paused
+
+    @property
+    def collects_amount(self) -> bool:
+        """Whether amount experience is collected right now (needs an amount)."""
+        return (
+            self.learn_amount
+            and not self.hub.learning_paused
+            and bool(self.settings.get(CONF_WATERING_AMOUNT))
+        )
 
     def interval_factor(self) -> float:
         """Learned factor on the watering interval (1.0 when disabled)."""
-        return float(self.learning["interval_factor"]) if self.learning_enabled else 1.0
+        return float(self.learning["interval_factor"]) if self.learn_interval else 1.0
 
     def amount_factor(self) -> float:
         """Learned factor on the watering amount (1.0 when disabled)."""
-        return float(self.learning["amount_factor"]) if self.learning_enabled else 1.0
+        return float(self.learning["amount_factor"]) if self.learn_amount else 1.0
 
     def watering_interval_now(self, learned: bool = True) -> float:
         """Effective watering interval in days right now."""

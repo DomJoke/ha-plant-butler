@@ -66,6 +66,8 @@ const STRINGS = {
     learned: (n) => `learned: ${n > 0 ? "+" : "−"}${Math.abs(n)} ${Math.abs(n) === 1 ? "day" : "days"}`,
     feedbackQuestion: "How was the soil before watering?",
     feedback: { moist: "Still moist", ok: "Slightly dry", dry: "Very dry" },
+    amountQuestion: "How was the amount?",
+    amount: { too_much: "Too much", ok: "Just right", too_little: "Too little" },
     undo: "Undo",
     units: { ml_per_l: "ml/l", ml: "ml", sticks: "pcs", g: "g" },
   },
@@ -109,6 +111,8 @@ const STRINGS = {
     learned: (n) => `gelernt: ${n > 0 ? "+" : "−"}${Math.abs(n)} ${Math.abs(n) === 1 ? "Tag" : "Tage"}`,
     feedbackQuestion: "Wie war die Erde vor dem Gießen?",
     feedback: { moist: "Noch feucht", ok: "Leicht trocken", dry: "Sehr trocken" },
+    amountQuestion: "Wie war die Gießmenge?",
+    amount: { too_much: "Zu viel", ok: "Passt", too_little: "Zu wenig" },
     undo: "Rückgängig",
     units: { ml_per_l: "ml/l", ml: "ml", sticks: "Stk.", g: "g" },
   },
@@ -236,7 +240,7 @@ class PlantButlerCard extends HTMLElement {
       parts.push(s ? `${s.state}|${s.last_updated}` : "-");
     }
     parts.push(this._t === STRINGS.de ? "de" : "en");
-    parts.push(this._feedbackUntil && Date.now() < this._feedbackUntil ? "fb" : "");
+    parts.push(this._feedbackUntil && Date.now() < this._feedbackUntil ? `fb${[...this._fbDone].join()}` : "");
     return parts.join(";");
   }
 
@@ -269,6 +273,11 @@ class PlantButlerCard extends HTMLElement {
   }
 
   _openFeedback() {
+    this._fbDone = new Set();
+    this._extendFeedback();
+  }
+
+  _extendFeedback() {
     this._feedbackUntil = Date.now() + 30000;
     clearTimeout(this._feedbackTimer);
     this._feedbackTimer = setTimeout(() => this._closeFeedback(), 30000);
@@ -281,9 +290,13 @@ class PlantButlerCard extends HTMLElement {
     this._render();
   }
 
-  async _sendFeedback(answer) {
-    this._closeFeedback();
-    await this._hass.callService(DOMAIN, "watering_feedback", { entity_id: this._config.entity, answer });
+  async _sendFeedback(kind, value) {
+    this._fbDone.add(kind);
+    this._extendFeedback();
+    await this._hass.callService(DOMAIN, "watering_feedback", {
+      entity_id: this._config.entity,
+      [kind]: value,
+    });
   }
 
   async _undo() {
@@ -295,16 +308,24 @@ class PlantButlerCard extends HTMLElement {
     if (!this._feedbackUntil || Date.now() > this._feedbackUntil) return "";
     const t = this._t;
     const learning = (a.care && a.care.learning) || {};
-    const ask = learning.mode && learning.mode !== "off" && !learning.paused;
-    const answers = ask
-      ? ["moist", "ok", "dry"]
-          .map((k) => `<button class="fb" data-answer="${k}">${esc(t.feedback[k])}</button>`)
-          .join("")
-      : "";
+    const done = this._fbDone || new Set();
+    const active = !learning.paused;
+    const askInterval = active && learning.learn_interval && !done.has("answer");
+    const askAmount =
+      active && learning.learn_amount && learning.awaiting_amount && !done.has("amount");
+    const row = (kind, question, keys, labels) => `
+        <div class="fb-q">${esc(question)}</div>
+        <div class="fb-row">${keys
+          .map(
+            (k) =>
+              `<button class="fb" data-kind="${kind}" data-answer="${k}">${esc(labels[k])}</button>`
+          )
+          .join("")}</div>`;
     return `
       <div class="feedback">
-        ${ask ? `<div class="fb-q">${esc(t.feedbackQuestion)}</div>` : ""}
-        <div class="fb-row">${answers}<button class="fb undo" data-undo="1"><ha-icon icon="mdi:undo-variant"></ha-icon>${esc(t.undo)}</button></div>
+        ${askInterval ? row("answer", t.feedbackQuestion, ["moist", "ok", "dry"], t.feedback) : ""}
+        ${askAmount ? row("amount", t.amountQuestion, ["too_much", "ok", "too_little"], t.amount) : ""}
+        <div class="fb-row fb-undo"><button class="fb undo" data-undo="1"><ha-icon icon="mdi:undo-variant"></ha-icon>${esc(t.undo)}</button></div>
       </div>`;
   }
 
@@ -378,7 +399,7 @@ class PlantButlerCard extends HTMLElement {
       })
     );
     this.shadowRoot.querySelectorAll("button[data-answer]").forEach((el) =>
-      el.addEventListener("click", () => this._sendFeedback(el.dataset.answer))
+      el.addEventListener("click", () => this._sendFeedback(el.dataset.kind, el.dataset.answer))
     );
     const undoButton = this.shadowRoot.querySelector("button[data-undo]");
     if (undoButton) undoButton.addEventListener("click", () => this._undo());
@@ -515,7 +536,7 @@ class PlantButlerCard extends HTMLElement {
         due: !!a.needs_water,
         when: [
           waterState ? this._whenText(waterState.state, a.needs_water) : "",
-          care.learning && care.learning.mode !== "off" && care.learning.interval_delta_days
+          care.learning && care.learning.learn_interval && care.learning.interval_delta_days
             ? t.learned(care.learning.interval_delta_days)
             : "",
         ]
@@ -639,7 +660,8 @@ const STYLE = `
     background: color-mix(in srgb, var(--primary-color) 10%, transparent);
   }
   .fb-q { font-size: 0.9em; color: var(--primary-text-color); margin-bottom: 8px; }
-  .fb-row { display: flex; flex-wrap: wrap; gap: 6px; }
+  .fb-row { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px; }
+  .fb-row.fb-undo { margin-bottom: 0; }
   .fb {
     border: 1px solid var(--divider-color); background: var(--card-background-color, #fff);
     color: var(--primary-text-color); border-radius: 999px; padding: 6px 12px; cursor: pointer;

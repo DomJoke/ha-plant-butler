@@ -32,7 +32,6 @@ watering_feedback:
           integration: plant_butler
           multiple: true
     answer:
-      required: true
       selector:
         select:
           options:
@@ -40,6 +39,14 @@ watering_feedback:
             - ok
             - dry
           translation_key: feedback
+    amount:
+      selector:
+        select:
+          options:
+            - too_much
+            - ok
+            - too_little
+          translation_key: feedback_amount
 
 undo_watering:
   fields:

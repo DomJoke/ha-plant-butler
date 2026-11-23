@@ -136,7 +136,7 @@ async def test_undo_watering(
     hass: HomeAssistant, make_entry, plant_data, freezer
 ) -> None:
     """Undo restores schedule and learned values from before the watering."""
-    await _setup(hass, make_entry, plant_data, {"learning": "strong"})
+    await _setup(hass, make_entry, plant_data, {"learning_strength": "strong"})
     await _water(hass)
     await _advance(hass, freezer, timedelta(days=8))
     assert hass.states.get("binary_sensor.monstera_needs_water").state == "on"
@@ -156,7 +156,7 @@ async def test_pause_and_off(
     hass: HomeAssistant, make_entry, plant_data, freezer
 ) -> None:
     """Paused: nothing new is learned. Off: learned values are not applied but kept."""
-    entry = await _setup(hass, make_entry, plant_data, {"learning": "strong"})
+    entry = await _setup(hass, make_entry, plant_data, {"learning_strength": "strong"})
     await _water(hass)
     await _advance(hass, freezer, timedelta(days=7))
     await _water(hass)
@@ -177,11 +177,15 @@ async def test_pause_and_off(
         hass.states.get("sensor.monstera_learned_interval").attributes["paused"] is True
     )
 
-    hass.config_entries.async_update_entry(entry, options={"learning": "off"})
+    hass.config_entries.async_update_entry(
+        entry, options={"learn_interval": False, "learn_amount": False}
+    )
     await hass.async_block_till_done()
     attrs = hass.states.get("sensor.monstera_learned_interval").attributes
     assert attrs["interval_effective_days"] == attrs["interval_base_days"] == 7.0
-    hass.config_entries.async_update_entry(entry, options={"learning": "normal"})
+    hass.config_entries.async_update_entry(
+        entry, options={"learning_strength": "normal"}
+    )
     await hass.async_block_till_done()
     assert (
         hass.states.get("sensor.monstera_learned_interval").attributes[
@@ -195,7 +199,7 @@ async def test_reset_learning(
     hass: HomeAssistant, make_entry, plant_data, freezer
 ) -> None:
     """The reset button forgets everything."""
-    await _setup(hass, make_entry, plant_data, {"learning": "strong"})
+    await _setup(hass, make_entry, plant_data, {"learning_strength": "strong"})
     await _water(hass)
     await _advance(hass, freezer, timedelta(days=7))
     await _water(hass)
@@ -216,7 +220,7 @@ async def test_sensor_drying_time_and_amount(
     """A soil sensor teaches the interval and the amount without questions."""
     hass.states.async_set("sensor.soil", "20")
     plant_data["moisture_sensor"] = "sensor.soil"
-    await _setup(hass, make_entry, plant_data, {"learning": "strong"})
+    await _setup(hass, make_entry, plant_data, {"learning_strength": "strong"})
     # Watering detected by a sharp rise, but only to 38 % (target range 25-60, mid 42.5)
     freezer.tick(timedelta(minutes=5))
     hass.states.async_set("sensor.soil", "38")
@@ -252,7 +256,7 @@ async def test_phone_feedback_and_info(
     )
     calls = async_mock_service(hass, "notify", "mobile_app_dphone")
     options = {
-        "learning": "strong",
+        "learning_strength": "strong",
         "phone": {
             "devices": [phone.id],
             "topics": TOPICS,
@@ -301,3 +305,87 @@ async def test_phone_feedback_and_info(
         info[0].data["message"]
         == "Learned: I will remind you every 8 instead of 7 days."
     )
+    # then the amount question follows
+    questions = [
+        c for c in calls if c.data.get("data", {}).get("tag", "").endswith("feedback")
+    ]
+    assert questions[-1].data["message"].startswith("How was the amount?")
+    assert [a["title"] for a in questions[-1].data["data"]["actions"]] == [
+        "Too much",
+        "Just right",
+        "Too little",
+    ]
+    hass.bus.async_fire(
+        "mobile_app_notification_action",
+        {"action": f"PLANT_BUTLER|AMOUNT|{PLANT_ID}|too_little"},
+    )
+    await hass.async_block_till_done()
+    info = [
+        c for c in calls if c.data.get("data", {}).get("tag", "").endswith("learning")
+    ]
+    assert (
+        info[-1].data["message"]
+        == "Learned: watering amount from now on 330 instead of 300 ml."
+    )
+
+
+async def _amount(hass: HomeAssistant, answer: str) -> None:
+    await hass.services.async_call(
+        DOMAIN,
+        "watering_feedback",
+        {"entity_id": "sensor.monstera_status", "amount": answer},
+        blocking=True,
+    )
+
+
+def _amount_ml(hass: HomeAssistant) -> int:
+    return hass.states.get("sensor.monstera_status").attributes["care"][
+        "watering_amount"
+    ]
+
+
+async def test_amount_feedback(
+    hass: HomeAssistant, make_entry, plant_data, freezer
+) -> None:
+    """'Too little' raises the amount, 'too much' lowers it, only once per watering."""
+    await _setup(hass, make_entry, plant_data, {"learning_strength": "strong"})
+    assert _amount_ml(hass) == 300
+    await _water(hass)
+    await _amount(hass, "too_little")
+    assert _amount_ml(hass) == 330  # +10 % (half the way to +20 %)
+    await _amount(hass, "too_little")  # no open question any more
+    assert _amount_ml(hass) == 330
+    await _advance(hass, freezer, timedelta(days=7))
+    await _water(hass)
+    await _amount(hass, "too_much")
+    assert _amount_ml(hass) < 330
+    history = hass.states.get("sensor.monstera_status").attributes["care"]["learning"]
+    assert history["amount_change_percent"] != 0
+
+
+async def test_amount_checkbox_off(hass: HomeAssistant, make_entry, plant_data) -> None:
+    """With 'learn watering amount' off nothing is collected or applied."""
+    await _setup(
+        hass,
+        make_entry,
+        plant_data,
+        {"learning_strength": "strong", "learn_amount": False},
+    )
+    await _water(hass)
+    learning = hass.states.get("sensor.monstera_status").attributes["care"]["learning"]
+    assert learning["awaiting_amount"] is False
+    await _amount(hass, "too_little")
+    assert _amount_ml(hass) == 300
+
+
+async def test_feedback_service_needs_a_value(
+    hass: HomeAssistant, make_entry, plant_data
+) -> None:
+    await _setup(hass, make_entry, plant_data)
+    with pytest.raises(Exception):  # noqa: B017
+        await hass.services.async_call(
+            DOMAIN,
+            "watering_feedback",
+            {"entity_id": "sensor.monstera_status"},
+            blocking=True,
+        )
