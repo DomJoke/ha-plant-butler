@@ -368,6 +368,9 @@
           "too_hot": "Zu warm"
         }
       },
+      "hints": {
+        "name": "Hinweise"
+      },
       "next_watering": {
         "name": "Nächstes Gießen"
       },

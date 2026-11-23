@@ -368,6 +368,9 @@
           "too_hot": "Too warm"
         }
       },
+      "hints": {
+        "name": "Hints"
+      },
       "next_watering": {
         "name": "Next watering"
       },

@@ -60,7 +60,7 @@ async def test_entities_created_with_english_ids(
         "sensor.monstera_status",
         "sensor.monstera_next_watering",
         "sensor.monstera_next_fertilizing",
-        "sensor.monstera_light_level",
+        "sensor.monstera_hints",
         "binary_sensor.monstera_needs_water",
         "binary_sensor.monstera_needs_fertilizer",
         "sensor.monstera_light_condition",
@@ -90,10 +90,6 @@ async def test_entities_created_with_english_ids(
             is er.RegistryEntryDisabler.INTEGRATION
         )
     assert (
-        ent_reg.async_get("sensor.monstera_light_level").entity_category
-        is EntityCategory.DIAGNOSTIC
-    )
-    assert (
         ent_reg.async_get("select.monstera_water_need").entity_category
         is EntityCategory.CONFIG
     )
@@ -114,7 +110,12 @@ async def test_entities_created_with_english_ids(
     # No temperature sensor -> no temperature condition
     assert hass.states.get("sensor.monstera_temperature_condition") is None
     assert status.attributes["area"] == "Esszimmer"
-    assert hass.states.get("sensor.monstera_light_level").state == "partial_shade"
+    # Without a light sensor the level is only the location dropdown
+    assert hass.states.get("sensor.monstera_light_level") is None
+    assert hass.states.get("select.monstera_location_light").state == "partial_shade"
+    hints = hass.states.get("sensor.monstera_hints")
+    assert hints.state == "Location too dark"
+    assert hints.attributes["problems"] == {"too_dark": "info"}
 
 
 async def test_schedule_without_sensor(
@@ -278,6 +279,14 @@ async def test_light_sensor_dli(
         await _advance(hass, freezer, timedelta(hours=1))
     dli = hass.states.get("sensor.monstera_dli")
     assert dli is not None
+    assert (
+        er.async_get(hass).async_get("sensor.monstera_dli").entity_category
+        is EntityCategory.DIAGNOSTIC
+    )
+    assert (
+        er.async_get(hass).async_get("sensor.monstera_light_level").entity_category
+        is None
+    )
     # 1000 lux all day = 1.6 mol/m²/day -> very dark, plant needs bright indirect
     assert hass.states.get("sensor.monstera_light_level").state == "very_dark"
     assert hass.states.get("sensor.monstera_light_condition").state == "too_dark"
@@ -364,9 +373,17 @@ async def test_obsolete_entities_removed(
         config_entry=entry,
         suggested_object_id="monstera_light_problem",
     )
+    old_level = ent_reg.async_get_or_create(
+        "sensor",
+        DOMAIN,
+        f"{PLANT_ID}_light_level",
+        config_entry=entry,
+        suggested_object_id="monstera_light_level",
+    )
     assert await hass.config_entries.async_setup(entry.entry_id)
     await hass.async_block_till_done()
     assert ent_reg.async_get(old.entity_id) is None
+    assert ent_reg.async_get(old_level.entity_id) is None
     assert (
         hass.states.get("sensor.monstera_status").attributes["summary"]
         == "Location too dark"
@@ -386,3 +403,27 @@ async def test_plant_size_select(hass: HomeAssistant, make_entry, plant_data) ->
         blocking=True,
     )
     assert hass.states.get("number.monstera_watering_interval").state == "6.0"
+
+
+async def test_diagnostics(hass: HomeAssistant, make_entry, plant_data) -> None:
+    """Diagnostics contain settings, inputs and intermediate results."""
+    import json  # noqa: PLC0415
+
+    from custom_components.plant_butler.diagnostics import (  # noqa: PLC0415
+        async_get_config_entry_diagnostics,
+        async_get_device_diagnostics,
+    )
+
+    hass.states.async_set("sensor.room_temp", "21")
+    plant_data["temperature_sensor"] = "sensor.room_temp"
+    entry = await _setup(hass, make_entry, plant_data)
+    data = await async_get_config_entry_diagnostics(hass, entry)
+    json.dumps(data)  # must be serializable
+    plant = data["plants"][PLANT_ID]
+    assert plant["name"] == "Monstera"
+    assert plant["sensors"]["temperature_sensor"]["state"] == "21"
+    assert plant["calculation"]["watering_interval_now_days"] == 8.0
+    assert plant["evaluation"]["problems"] == [{"key": "too_dark", "severity": "info"}]
+    device = dr.async_get(hass).async_get_device(identifiers={(DOMAIN, PLANT_ID)})
+    single = await async_get_device_diagnostics(hass, entry, device)
+    assert single["plant"]["effective_settings"]["water_need"] == "medium"

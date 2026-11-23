@@ -50,14 +50,16 @@ async def async_setup_entry(
     for plant in entry.runtime_data.plants.values():
         entities: list[SensorEntity] = [
             PlantStatusSensor(plant),
+            HintsSensor(plant),
             NextWateringSensor(plant),
             NextFertilizingSensor(plant),
-            LightLevelSensor(plant),
         ]
         entities.append(LightConditionSensor(plant))
         if plant.sensor(CONF_TEMPERATURE_SENSOR):
             entities.append(TemperatureConditionSensor(plant))
         if plant.sensor(CONF_ILLUMINANCE_SENSOR):
+            # Without a light sensor the level is just the location dropdown
+            entities.append(LightLevelSensor(plant))
             entities.append(DliSensor(plant))
         async_add_entities(entities, config_subentry_id=plant.id)
 
@@ -231,8 +233,6 @@ class DliSensor(PlantSensor):
 class LightLevelSensor(PlantSensor):
     """Actual light level (from sensor or chosen location)."""
 
-    _attr_entity_category = EntityCategory.DIAGNOSTIC
-
     _attr_device_class = SensorDeviceClass.ENUM
     _attr_options = LIGHT_LEVEL_KEYS
 
@@ -282,3 +282,38 @@ class TemperatureConditionSensor(PlantSensor):
         if ev.temperature is None:
             return None
         return ev.temperature_problem or "ok"
+
+
+class HintsSensor(PlantSensor):
+    """The reasons behind the status in plain words."""
+
+    def __init__(self, plant: PlantRuntime) -> None:
+        """Initialize."""
+        super().__init__(plant, "hints")
+
+    @property
+    def native_value(self) -> str:
+        """Return the readable reasons (Home Assistant limits states to 255)."""
+        text = problem_summary(
+            [p.key for p in self.plant.evaluation.problems], self.hass.config.language
+        )
+        return text if len(text) <= 255 else text[:254] + "…"
+
+    @property
+    def icon(self) -> str:
+        """Icon by status."""
+        status = self.plant.evaluation.status
+        return {
+            "ok": "mdi:check-circle-outline",
+            "info": "mdi:information-outline",
+            "warning": "mdi:alert-outline",
+            "critical": "mdi:alert-octagon-outline",
+        }.get(status, "mdi:information-outline")
+
+    @property
+    def extra_state_attributes(self) -> dict[str, Any]:
+        """Return each reason with its level."""
+        return {
+            "status": self.plant.evaluation.status,
+            "problems": {p.key: p.severity for p in self.plant.evaluation.problems},
+        }

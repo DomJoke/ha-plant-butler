@@ -69,7 +69,8 @@ These are guide values. Soil sensors read differently depending on the manufactu
 | --- | --- |
 | `sensor.monstera_status` | OK / notice / warning / critical; attribute `summary` explains why (e.g. "Location too dark"); further attributes for cards |
 | `sensor.monstera_next_watering` / `sensor.monstera_next_fertilizing` | Due time (timestamp) |
-| `sensor.monstera_light_level` / `sensor.monstera_dli` | Actual light level / daily light integral today (light sensor only) |
+| `sensor.monstera_hints` | The reasons behind the status in plain words, e.g. "Location too dark" or "All good" |
+| `sensor.monstera_light_level` / `sensor.monstera_dli` | Measured light level / daily light integral today (light sensor only; without one, the location dropdown is the light level) |
 | `binary_sensor.monstera_needs_water` / `_needs_fertilizer` | Yes / No |
 | `sensor.monstera_light_condition` | Suitable / too dark / too bright |
 | `sensor.monstera_temperature_condition` | Suitable / too cold / too warm (room temperature sensor only) |
@@ -79,7 +80,7 @@ These are guide values. Soil sensors read differently depending on the manufactu
 | `switch.monstera_winter_rest` | Winter rest: watering interval × 1.5, fertilizing by winter interval |
 | `image.monstera_photo` | Photo (if set) |
 
-Visibility: target values (selects, numbers, winter rest) are *configuration* entities, light level and DLI are *diagnostic* entities – both are kept out of auto-generated dashboards. Temperature min/max, moisture maximum and the winter fertilizing interval are **disabled by default**; enable them on the device page if you want to fine-tune them.
+Visibility: target values (selects, numbers, winter rest) are *configuration* entities, DLI is a *diagnostic* entity – both are kept out of auto-generated dashboards. Temperature min/max, moisture maximum and the winter fertilizing interval are **disabled by default**; enable them on the device page if you want to fine-tune them.
 
 ## Plant card
 
@@ -138,6 +139,10 @@ show_summary: true
 | Critical | Act now: soil very dry or watering long overdue, temperature far outside the range |
 
 The status sensor's `summary` attribute lists the reasons in plain words.
+
+## Diagnostics
+
+Settings → Devices & services → Plant Butler → ⋮ → **Download diagnostics** (or on a plant's device page) gives a JSON file with every setting, the current sensor values and the intermediate results (climate factor, effective interval, cycle progress, light history, problems). Attach it when reporting a calculation that looks wrong.
 
 ## Service
 

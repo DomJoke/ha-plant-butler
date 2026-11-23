@@ -74,6 +74,11 @@ strategy:
 
 Ansichten: **Übersicht** (alle Pflanzen nach Raum, Räume einklappbar) und **Fällig** (nur Pflanzen mit fälligen Aufgaben zum Abhaken plus To-do-Liste).
 
+## Hinweise und Diagnose
+
+- `sensor.<pflanze>_hints` („Hinweise“) nennt die Gründe für den Status im Klartext, z. B. „Standort zu dunkel“ oder „Alles in Ordnung“.
+- Einstellungen → Geräte & Dienste → Plant Butler → ⋮ → **Diagnose herunterladen** liefert eine Datei mit allen Einstellungen, Sensorwerten und Zwischenergebnissen der Berechnung – hilfreich, wenn ein Wert unplausibel wirkt.
+
 ## Statusstufen
 
 | Status | Bedeutung |
