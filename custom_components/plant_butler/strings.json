@@ -405,13 +405,13 @@
         "name": "Water below"
       },
       "moisture_max": {
-        "name": "Moisture max"
+        "name": "Moisture Max"
       },
       "temperature_min": {
-        "name": "Temperature min"
+        "name": "Temperature Min"
       },
       "temperature_max": {
-        "name": "Temperature max"
+        "name": "Temperature Max"
       },
       "watering_interval": {
         "name": "Watering interval"

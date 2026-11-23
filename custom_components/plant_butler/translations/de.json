@@ -405,13 +405,13 @@
         "name": "Gießen ab"
       },
       "moisture_max": {
-        "name": "Feuchte max"
+        "name": "Feuchtigkeit Max"
       },
       "temperature_min": {
-        "name": "Temperatur min"
+        "name": "Temperatur Min"
       },
       "temperature_max": {
-        "name": "Temperatur max"
+        "name": "Temperatur Max"
       },
       "watering_interval": {
         "name": "Gießintervall"
