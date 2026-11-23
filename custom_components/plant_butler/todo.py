@@ -15,6 +15,7 @@ from homeassistant.exceptions import ServiceValidationError
 from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
 from homeassistant.util import dt as dt_util
 
+from .care import fertilizer_per_watering_ml
 from .const import (
     CONF_FERTILIZER_AMOUNT,
     CONF_FERTILIZER_UNIT,
@@ -97,6 +98,8 @@ class PlantChecklist(TodoListEntity):
                 settings.get(CONF_FERTILIZER_UNIT) or "", ""
             )
             amount_text = f"{_fmt(float(amount))} {unit}".strip() if amount else None
+            if amount_text and (total := fertilizer_per_watering_ml(settings)):
+                amount_text += f" (≈ {_fmt(total)} ml)"
         last_dt = _parse(last)
         recently_done = last_dt is not None and dt_util.utcnow() - last_dt < timedelta(
             hours=TODO_DONE_VISIBLE_HOURS

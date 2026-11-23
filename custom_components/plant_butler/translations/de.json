@@ -50,13 +50,32 @@
             "humidity_sensor": "Raumfeuchtesensor"
           }
         },
-        "profile": {
-          "title": "Pflegeprofil",
-          "description": "Sollwerte aus der Datenbank – alles änderbar. Wasserbedarf: sehr wenig = Erde ganz austrocknen lassen, mittel = gießen, wenn die oberen cm trocken sind, sehr viel = dauerhaft feucht halten.",
+        "assistant": {
+          "title": "Pflege-Assistent",
+          "description": "Aus der Datenbank vorbefüllt. Erzähl dem Assistenten vom Topf und deinem Dünger – im nächsten Schritt berechnet er Gießmenge, Intervall und Düngerdosis. Wasserbedarf: sehr wenig = Erde ganz austrocknen lassen, mittel = gießen, wenn die oberen cm trocken sind, sehr viel = dauerhaft feucht halten.",
           "data": {
             "water_need": "Wasserbedarf",
             "light_need": "Lichtbedarf",
             "location_light": "Licht am Standort (ohne Lichtsensor)",
+            "feeding": "Nährstoffbedarf",
+            "pot_diameter": "Topfdurchmesser (oben)",
+            "pot_height": "Topfhöhe",
+            "pot_material": "Topfmaterial",
+            "substrate": "Substrat",
+            "fertilizer_type": "Dünger",
+            "fertilizer_dosage": "Dosierung laut Packung"
+          },
+          "data_description": {
+            "pot_diameter": "Leer lassen, wenn unbekannt – dann wird keine Gießmenge berechnet.",
+            "pot_height": "Optional, Standard 0,9 × Durchmesser.",
+            "fertilizer_dosage": "Nur Flüssigdünger: ml pro Liter Wasser laut Packung."
+          }
+        },
+        "profile": {
+          "title": "Pflegeplan",
+          "description": "Ergebnis des Assistenten: Topf ≈ {volume} l → etwa {watering_amount} ml alle {watering_interval} Tage; Flüssigdünger pro Gießen ≈ {fertilizer_total} ml. Alles änderbar – Raumklima und Winterruhe passen das Intervall im Betrieb zusätzlich an.",
+          "data": {
+            "watering_interval": "Gießintervall",
             "temperature_min": "Mindesttemperatur",
             "temperature_max": "Höchsttemperatur",
             "watering_amount": "Gießmenge",
@@ -104,6 +123,54 @@
         "ml": "ml",
         "sticks": "Stäbchen (Stück)",
         "g": "Gramm (Granulat)"
+      }
+    },
+    "pot_material": {
+      "en": {
+        "plastic": "Plastic / glazed ceramic",
+        "terracotta": "Terracotta (unglazed clay)"
+      },
+      "de": {
+        "plastic": "Kunststoff / glasierte Keramik",
+        "terracotta": "Terrakotta (unglasierter Ton)"
+      }
+    },
+    "substrate": {
+      "en": {
+        "standard": "Potting soil",
+        "mineral": "Mineral / cactus soil"
+      },
+      "de": {
+        "standard": "Blumenerde",
+        "mineral": "Mineralisch / Kakteenerde"
+      }
+    },
+    "feeding": {
+      "en": {
+        "none": "None (e.g. carnivorous plants)",
+        "light": "Light feeder (½ package dose)",
+        "medium": "Medium (¾ package dose)",
+        "heavy": "Heavy feeder (full package dose)"
+      },
+      "de": {
+        "none": "Keinen (z. B. fleischfressende Pflanzen)",
+        "light": "Schwachzehrer (½ Packungsdosis)",
+        "medium": "Mittel (¾ Packungsdosis)",
+        "heavy": "Starkzehrer (volle Packungsdosis)"
+      }
+    },
+    "fertilizer_type": {
+      "en": {
+        "liquid": "Liquid fertilizer",
+        "sticks": "Fertilizer sticks",
+        "granules": "Slow-release granules",
+        "none": "No fertilizer"
+      },
+      "de": {
+        "liquid": "Flüssigdünger",
+        "sticks": "Düngestäbchen",
+        "granules": "Langzeitdünger (Granulat)",
+        "none": "Kein Dünger"
       }
     },
     "task": {
@@ -258,6 +325,54 @@
         "device_id": {
           "name": "Pflanzen-Geräte",
           "description": "Die Pflanzen-Geräte."
+        },
+        "pot_material": {
+          "en": {
+            "plastic": "Plastic / glazed ceramic",
+            "terracotta": "Terracotta (unglazed clay)"
+          },
+          "de": {
+            "plastic": "Kunststoff / glasierte Keramik",
+            "terracotta": "Terrakotta (unglasierter Ton)"
+          }
+        },
+        "substrate": {
+          "en": {
+            "standard": "Potting soil",
+            "mineral": "Mineral / cactus soil"
+          },
+          "de": {
+            "standard": "Blumenerde",
+            "mineral": "Mineralisch / Kakteenerde"
+          }
+        },
+        "feeding": {
+          "en": {
+            "none": "None (e.g. carnivorous plants)",
+            "light": "Light feeder (½ package dose)",
+            "medium": "Medium (¾ package dose)",
+            "heavy": "Heavy feeder (full package dose)"
+          },
+          "de": {
+            "none": "Keinen (z. B. fleischfressende Pflanzen)",
+            "light": "Schwachzehrer (½ Packungsdosis)",
+            "medium": "Mittel (¾ Packungsdosis)",
+            "heavy": "Starkzehrer (volle Packungsdosis)"
+          }
+        },
+        "fertilizer_type": {
+          "en": {
+            "liquid": "Liquid fertilizer",
+            "sticks": "Fertilizer sticks",
+            "granules": "Slow-release granules",
+            "none": "No fertilizer"
+          },
+          "de": {
+            "liquid": "Flüssigdünger",
+            "sticks": "Düngestäbchen",
+            "granules": "Langzeitdünger (Granulat)",
+            "none": "Kein Dünger"
+          }
         },
         "task": {
           "name": "Aufgabe",

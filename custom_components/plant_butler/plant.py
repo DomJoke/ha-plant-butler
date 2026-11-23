@@ -21,6 +21,7 @@ from homeassistant.helpers.storage import Store
 from homeassistant.util import dt as dt_util
 from homeassistant.util import slugify
 
+from .care import suggest_watering
 from .const import (
     CONF_AREA,
     CONF_CLIMATE_STRENGTH,
@@ -177,11 +178,18 @@ class PlantRuntime:
         overrides = self.state["overrides"]
         settings = dict(self.subentry.data)
         level = overrides.get(CONF_WATER_NEED, settings.get(CONF_WATER_NEED, "medium"))
-        mmin, mmax, interval = WATER_LEVELS.get(level, WATER_LEVELS["medium"])
+        mmin, mmax, _ = WATER_LEVELS.get(level, WATER_LEVELS["medium"])
         settings.setdefault(CONF_MOISTURE_MIN, mmin)
         settings.setdefault(CONF_MOISTURE_MAX, mmax)
-        settings.setdefault(CONF_WATERING_INTERVAL, interval)
         settings.update(overrides)
+        if CONF_WATERING_INTERVAL not in settings:
+            settings.update(
+                {
+                    k: v
+                    for k, v in suggest_watering(settings).items()
+                    if k not in settings
+                }
+            )
         return settings
 
     def sensor(self, key: str) -> str | None:
@@ -209,16 +217,14 @@ class PlantRuntime:
 
     async def async_set_setting(self, key: str, value: Any) -> None:
         """Override a setting from an entity."""
-        self.state["overrides"][key] = value
+        overrides = self.state["overrides"]
+        overrides[key] = value
         if key == CONF_WATER_NEED:
-            mmin, mmax, interval = WATER_LEVELS[value]
-            self.state["overrides"].update(
-                {
-                    CONF_MOISTURE_MIN: mmin,
-                    CONF_MOISTURE_MAX: mmax,
-                    CONF_WATERING_INTERVAL: interval,
-                }
-            )
+            mmin, mmax, _ = WATER_LEVELS[value]
+            overrides.update({CONF_MOISTURE_MIN: mmin, CONF_MOISTURE_MAX: mmax})
+        if key in (CONF_WATER_NEED, CONF_LIGHT_NEED, CONF_LOCATION_LIGHT):
+            # Re-run the care assistant for the new level/location
+            overrides.update(suggest_watering(self.settings))
         self._changed()
 
     async def async_set_winter_rest(self, value: bool) -> None:

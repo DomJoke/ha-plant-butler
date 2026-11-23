@@ -20,6 +20,14 @@ from custom_components.plant_butler.config_flow import suggest_sensors
 from custom_components.plant_butler.const import DOMAIN
 
 
+def _suggested(result) -> dict:
+    return {
+        str(k): k.description["suggested_value"]
+        for k in result["data_schema"].schema
+        if k.description and "suggested_value" in k.description
+    }
+
+
 async def test_hub_flow(hass: HomeAssistant) -> None:
     """The hub can be created once."""
     result = await hass.config_entries.flow.async_init(
@@ -64,26 +72,39 @@ async def test_add_plant_with_species_defaults(hass: HomeAssistant) -> None:
     )
     assert result["step_id"] == "sensors"
     result = await hass.config_entries.subentries.async_configure(result["flow_id"], {})
+    assert result["step_id"] == "assistant"
+    assistant = _suggested(result)
+    assert assistant["water_need"] == "very_low"
+    assert assistant["light_need"] == "full_sun"
+    assert assistant["feeding"] == "light"
+    result = await hass.config_entries.subentries.async_configure(
+        result["flow_id"],
+        assistant
+        | {
+            "location_light": "full_sun",
+            "pot_diameter": 10,
+            "pot_material": "terracotta",
+            "substrate": "mineral",
+        },
+    )
     assert result["step_id"] == "profile"
-    suggested = {
-        str(key): key.description["suggested_value"]
-        for key in result["data_schema"].schema
-        if key.description and "suggested_value" in key.description
-    }
-    assert suggested["water_need"] == "very_low"
-    assert suggested["light_need"] == "full_sun"
+    suggested = _suggested(result)
     assert suggested["temperature_min"] == 5
     assert suggested["fertilizer_interval"] == 28
+    assert suggested["fertilizer_amount"] == 2.0  # 4 ml/l * 0.5
+    assert suggested["watering_amount"] == 80
+    assert suggested["watering_interval"] == 13  # 21 days * min factor 0.6
+    assert result["description_placeholders"]["volume"] == "0.6"
 
     result = await hass.config_entries.subentries.async_configure(
-        result["flow_id"], suggested | {"location_light": "full_sun"}
+        result["flow_id"], suggested
     )
     assert result["type"] is FlowResultType.CREATE_ENTRY
     await hass.async_block_till_done()
 
     assert hass.states.get("sensor.kaktus_fenster_status").state == "ok"
     assert hass.states.get("select.kaktus_fenster_water_need").state == "very_low"
-    assert hass.states.get("number.kaktus_fenster_watering_interval").state == "21.0"
+    assert hass.states.get("number.kaktus_fenster_watering_interval").state == "13.0"
     assert (
         hass.states.get("sensor.kaktus_fenster_status").attributes["icon"]
         == "mdi:cactus"
@@ -100,14 +121,15 @@ async def test_reconfigure_plant(hass: HomeAssistant) -> None:
         result["flow_id"], {"name": "Farn", "species": "farn_schwert"}
     )
     result = await hass.config_entries.subentries.async_configure(result["flow_id"], {})
-    profile = {
-        str(k): k.description["suggested_value"]
-        for k in result["data_schema"].schema
-        if k.description and "suggested_value" in k.description
-    }
+    result = await hass.config_entries.subentries.async_configure(
+        result["flow_id"], _suggested(result) | {"pot_diameter": 17}
+    )
+    profile = _suggested(result)
+    assert profile["watering_amount"] == 170
     result = await hass.config_entries.subentries.async_configure(
         result["flow_id"], profile
     )
+    assert result["type"] is FlowResultType.CREATE_ENTRY, result
     await hass.async_block_till_done()
     subentry_id = next(iter(entry.subentries))
 
@@ -126,12 +148,14 @@ async def test_reconfigure_plant(hass: HomeAssistant) -> None:
         result["flow_id"], {"name": "Farn", "species": "farn_schwert"}
     )
     result = await hass.config_entries.subentries.async_configure(result["flow_id"], {})
-    current = {
-        str(k): k.description["suggested_value"]
-        for k in result["data_schema"].schema
-        if k.description and "suggested_value" in k.description
-    }
+    assistant = _suggested(result)
+    assert assistant["pot_diameter"] == 17  # stored pot is shown again
+    result = await hass.config_entries.subentries.async_configure(
+        result["flow_id"], assistant
+    )
+    current = _suggested(result)
     assert current["temperature_min"] == 10  # effective value shown
+    assert current["watering_amount"] == 170
     result = await hass.config_entries.subentries.async_configure(
         result["flow_id"], current | {"temperature_min": 12}
     )

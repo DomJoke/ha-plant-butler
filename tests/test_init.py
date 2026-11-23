@@ -140,7 +140,7 @@ async def test_fertilizer_and_todo_tick(
     assert hass.states.get("binary_sensor.monstera_needs_fertilizer").state == "on"
     items = await _todo_items(hass)
     fert = next(i for i in items if "Fertilize" in i["summary"])
-    assert fert["summary"] == "Monstera: Fertilize – 5 ml/l"
+    assert fert["summary"] == "Monstera: Fertilize – 5 ml/l (≈ 1.5 ml)"
 
     await hass.services.async_call(
         TODO_DOMAIN,
@@ -155,6 +155,7 @@ async def test_winter_rest_pauses_fertilizer(
     hass: HomeAssistant, make_entry, plant_data, freezer: FrozenDateTimeFactory
 ) -> None:
     """Winter rest pauses fertilizing (winter interval 0) and stretches watering."""
+    plant_data["location_light"] = "bright_indirect"
     await _setup(hass, make_entry, plant_data)
     await hass.services.async_call(
         "switch", "turn_on", {"entity_id": "switch.monstera_winter_rest"}, blocking=True
@@ -176,6 +177,7 @@ async def test_climate_shortens_interval(
     hass.states.async_set("sensor.room_hum", "40")
     plant_data["temperature_sensor"] = "sensor.room_temp"
     plant_data["humidity_sensor"] = "sensor.room_hum"
+    plant_data["location_light"] = "bright_indirect"
     await _setup(hass, make_entry, plant_data)
     attrs = hass.states.get("sensor.monstera_next_watering").attributes
     assert attrs["climate_factor"] == 0.7

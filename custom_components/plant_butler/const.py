@@ -34,6 +34,21 @@ CONF_PHOTO_UPLOAD: Final = "photo_upload"
 CONF_ICON: Final = "icon"
 CONF_NOTES: Final = "notes"
 
+# Care assistant inputs
+CONF_POT_DIAMETER: Final = "pot_diameter"
+CONF_POT_HEIGHT: Final = "pot_height"
+CONF_POT_MATERIAL: Final = "pot_material"
+CONF_SUBSTRATE: Final = "substrate"
+CONF_FERTILIZER_TYPE: Final = "fertilizer_type"
+CONF_FERTILIZER_DOSAGE: Final = "fertilizer_dosage"
+CONF_FEEDING: Final = "feeding"
+
+POT_MATERIALS: Final = ["plastic", "terracotta"]
+SUBSTRATES: Final = ["standard", "mineral"]
+FERTILIZER_TYPES: Final = ["liquid", "sticks", "granules", "none"]
+FEEDING_LEVELS: Final = ["none", "light", "medium", "heavy"]
+DEFAULT_FERTILIZER_DOSAGE: Final = 4.0
+
 # Hub options
 CONF_CLIMATE_STRENGTH: Final = "climate_strength"
 DEFAULT_CLIMATE_STRENGTH: Final = 1.0

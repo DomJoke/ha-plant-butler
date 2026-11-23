@@ -30,6 +30,24 @@ LEVELS = {
         "en": {"ok": "OK", "info": "Info", "warning": "Warning", "critical": "Critical"},
         "de": {"ok": "OK", "info": "Info", "warning": "Warnung", "critical": "Kritisch"},
     },
+    "pot_material": {
+        "en": {"plastic": "Plastic / glazed ceramic", "terracotta": "Terracotta (unglazed clay)"},
+        "de": {"plastic": "Kunststoff / glasierte Keramik", "terracotta": "Terrakotta (unglasierter Ton)"},
+    },
+    "substrate": {
+        "en": {"standard": "Potting soil", "mineral": "Mineral / cactus soil"},
+        "de": {"standard": "Blumenerde", "mineral": "Mineralisch / Kakteenerde"},
+    },
+    "feeding": {
+        "en": {"none": "None (e.g. carnivorous plants)", "light": "Light feeder (½ package dose)",
+               "medium": "Medium (¾ package dose)", "heavy": "Heavy feeder (full package dose)"},
+        "de": {"none": "Keinen (z. B. fleischfressende Pflanzen)", "light": "Schwachzehrer (½ Packungsdosis)",
+               "medium": "Mittel (¾ Packungsdosis)", "heavy": "Starkzehrer (volle Packungsdosis)"},
+    },
+    "fertilizer_type": {
+        "en": {"liquid": "Liquid fertilizer", "sticks": "Fertilizer sticks", "granules": "Slow-release granules", "none": "No fertilizer"},
+        "de": {"liquid": "Flüssigdünger", "sticks": "Düngestäbchen", "granules": "Langzeitdünger (Granulat)", "none": "Kein Dünger"},
+    },
     "task": {
         "en": {"water": "Water", "fertilize": "Fertilize"},
         "de": {"water": "Gießen", "fertilize": "Düngen"},
@@ -48,8 +66,16 @@ T = {
         "sensors_title": "Sensors (all optional)",
         "sensors_desc": "Without a soil sensor a schedule is used. Room temperature and humidity correct it for evaporation.",
         "moisture": "Soil moisture sensor", "illum": "Light sensor", "temp": "Room temperature sensor", "hum": "Room humidity sensor",
-        "profile_title": "Care profile",
-        "profile_desc": "Target values from the database – change anything you like. Water need: very low = let the soil dry out completely, medium = water when the top few cm are dry, very high = keep constantly moist.",
+        "assist_title": "Care assistant",
+        "assist_desc": "Prefilled from the database. Tell the assistant about the pot and your fertilizer – it calculates watering amount, interval and fertilizer dose in the next step. Water need: very low = let the soil dry out completely, medium = water when the top few cm are dry, very high = keep constantly moist.",
+        "feeding": "Nutrient demand", "pot_d": "Pot diameter (top)", "pot_h": "Pot height",
+        "pot_m": "Pot material", "substrate": "Substrate", "ftype": "Fertilizer", "fdose": "Fertilizer dose on the package",
+        "pot_d_d": "Leave empty if unknown – then no watering amount is calculated.",
+        "pot_h_d": "Optional, default 0.9 × diameter.",
+        "fdose_d": "Liquid fertilizer only: ml per litre of water as printed on the package.",
+        "profile_title": "Care plan",
+        "profile_desc": "Assistant result: pot ≈ {volume} l → about {watering_amount} ml every {watering_interval} days; liquid fertilizer per watering ≈ {fertilizer_total} ml. Adjust anything you like – the room climate and winter rest also adjust the interval while running.",
+        "winterval": "Watering interval",
         "water_need": "Water need", "light_need": "Light need", "location_light": "Light at the location (without light sensor)",
         "tmin": "Minimum temperature", "tmax": "Maximum temperature", "wamount": "Watering amount",
         "fint": "Fertilizing interval (0 = never)", "fwint": "Fertilizing interval in winter rest (0 = pause)",
@@ -85,8 +111,16 @@ T = {
         "sensors_title": "Sensoren (alle optional)",
         "sensors_desc": "Ohne Bodensensor wird ein Zeitplan verwendet. Raumtemperatur und -feuchte korrigieren ihn für die Verdunstung.",
         "moisture": "Bodenfeuchtesensor", "illum": "Lichtsensor", "temp": "Raumtemperatursensor", "hum": "Raumfeuchtesensor",
-        "profile_title": "Pflegeprofil",
-        "profile_desc": "Sollwerte aus der Datenbank – alles änderbar. Wasserbedarf: sehr wenig = Erde ganz austrocknen lassen, mittel = gießen, wenn die oberen cm trocken sind, sehr viel = dauerhaft feucht halten.",
+        "assist_title": "Pflege-Assistent",
+        "assist_desc": "Aus der Datenbank vorbefüllt. Erzähl dem Assistenten vom Topf und deinem Dünger – im nächsten Schritt berechnet er Gießmenge, Intervall und Düngerdosis. Wasserbedarf: sehr wenig = Erde ganz austrocknen lassen, mittel = gießen, wenn die oberen cm trocken sind, sehr viel = dauerhaft feucht halten.",
+        "feeding": "Nährstoffbedarf", "pot_d": "Topfdurchmesser (oben)", "pot_h": "Topfhöhe",
+        "pot_m": "Topfmaterial", "substrate": "Substrat", "ftype": "Dünger", "fdose": "Dosierung laut Packung",
+        "pot_d_d": "Leer lassen, wenn unbekannt – dann wird keine Gießmenge berechnet.",
+        "pot_h_d": "Optional, Standard 0,9 × Durchmesser.",
+        "fdose_d": "Nur Flüssigdünger: ml pro Liter Wasser laut Packung.",
+        "profile_title": "Pflegeplan",
+        "profile_desc": "Ergebnis des Assistenten: Topf ≈ {volume} l → etwa {watering_amount} ml alle {watering_interval} Tage; Flüssigdünger pro Gießen ≈ {fertilizer_total} ml. Alles änderbar – Raumklima und Winterruhe passen das Intervall im Betrieb zusätzlich an.",
+        "winterval": "Gießintervall",
         "water_need": "Wasserbedarf", "light_need": "Lichtbedarf", "location_light": "Licht am Standort (ohne Lichtsensor)",
         "tmin": "Mindesttemperatur", "tmax": "Höchsttemperatur", "wamount": "Gießmenge",
         "fint": "Düngeintervall (0 = nie)", "fwint": "Düngeintervall in der Winterruhe (0 = Pause)",
@@ -119,8 +153,14 @@ def build(lang: str) -> dict:
     e = t["e"]
     lv = {k: v[lang] for k, v in LEVELS.items()}
     named = lambda key: {"name": e[key]}  # noqa: E731
-    profile_fields = {
+    assistant_fields = {
         "water_need": t["water_need"], "light_need": t["light_need"], "location_light": t["location_light"],
+        "feeding": t["feeding"], "pot_diameter": t["pot_d"], "pot_height": t["pot_h"],
+        "pot_material": t["pot_m"], "substrate": t["substrate"], "fertilizer_type": t["ftype"],
+        "fertilizer_dosage": t["fdose"],
+    }
+    profile_fields = {
+        "watering_interval": t["winterval"],
         "temperature_min": t["tmin"], "temperature_max": t["tmax"], "watering_amount": t["wamount"],
         "fertilizer_interval": t["fint"], "fertilizer_winter_interval": t["fwint"],
         "fertilizer_amount": t["famount"], "fertilizer_unit": t["funit"], "photo_upload": t["upload"],
@@ -132,6 +172,9 @@ def build(lang: str) -> dict:
         "sensors": {"title": t["sensors_title"], "description": t["sensors_desc"],
                     "data": {"moisture_sensor": t["moisture"], "illuminance_sensor": t["illum"],
                              "temperature_sensor": t["temp"], "humidity_sensor": t["hum"]}},
+        "assistant": {"title": t["assist_title"], "description": t["assist_desc"], "data": assistant_fields,
+                      "data_description": {"pot_diameter": t["pot_d_d"], "pot_height": t["pot_h_d"],
+                                           "fertilizer_dosage": t["fdose_d"]}},
         "profile": {"title": t["profile_title"], "description": t["profile_desc"], "data": profile_fields},
     }
     return {
@@ -156,7 +199,29 @@ def build(lang: str) -> dict:
             "water_need": {"options": lv["water"]},
             "light_level": {"options": lv["light"]},
             "fertilizer_unit": {"options": lv["unit"]},
-            "task": {"options": lv["task"]},
+            "pot_material": {"options": lv["pot_material"]},
+            "substrate": {"options": lv["substrate"]},
+            "feeding": {"options": lv["feeding"]},
+            "fertilizer_type": {"options": lv["fertilizer_type"]},
+            "pot_material": {
+        "en": {"plastic": "Plastic / glazed ceramic", "terracotta": "Terracotta (unglazed clay)"},
+        "de": {"plastic": "Kunststoff / glasierte Keramik", "terracotta": "Terrakotta (unglasierter Ton)"},
+    },
+    "substrate": {
+        "en": {"standard": "Potting soil", "mineral": "Mineral / cactus soil"},
+        "de": {"standard": "Blumenerde", "mineral": "Mineralisch / Kakteenerde"},
+    },
+    "feeding": {
+        "en": {"none": "None (e.g. carnivorous plants)", "light": "Light feeder (½ package dose)",
+               "medium": "Medium (¾ package dose)", "heavy": "Heavy feeder (full package dose)"},
+        "de": {"none": "Keinen (z. B. fleischfressende Pflanzen)", "light": "Schwachzehrer (½ Packungsdosis)",
+               "medium": "Mittel (¾ Packungsdosis)", "heavy": "Starkzehrer (volle Packungsdosis)"},
+    },
+    "fertilizer_type": {
+        "en": {"liquid": "Liquid fertilizer", "sticks": "Fertilizer sticks", "granules": "Slow-release granules", "none": "No fertilizer"},
+        "de": {"liquid": "Flüssigdünger", "sticks": "Düngestäbchen", "granules": "Langzeitdünger (Granulat)", "none": "Kein Dünger"},
+    },
+    "task": {"options": lv["task"]},
         },
         "entity": {
             "binary_sensor": {k: named(k) for k in ["needs_water", "needs_fertilizer", "light_problem", "temperature_problem"]},
@@ -186,7 +251,25 @@ def build(lang: str) -> dict:
                 "fields": {
                     "entity_id": {"name": t["svc_ent"], "description": t["svc_ent_d"]},
                     "device_id": {"name": t["svc_dev"], "description": t["svc_dev_d"]},
-                    "task": {"name": t["svc_task"], "description": t["svc_task_d"]},
+                    "pot_material": {
+        "en": {"plastic": "Plastic / glazed ceramic", "terracotta": "Terracotta (unglazed clay)"},
+        "de": {"plastic": "Kunststoff / glasierte Keramik", "terracotta": "Terrakotta (unglasierter Ton)"},
+    },
+    "substrate": {
+        "en": {"standard": "Potting soil", "mineral": "Mineral / cactus soil"},
+        "de": {"standard": "Blumenerde", "mineral": "Mineralisch / Kakteenerde"},
+    },
+    "feeding": {
+        "en": {"none": "None (e.g. carnivorous plants)", "light": "Light feeder (½ package dose)",
+               "medium": "Medium (¾ package dose)", "heavy": "Heavy feeder (full package dose)"},
+        "de": {"none": "Keinen (z. B. fleischfressende Pflanzen)", "light": "Schwachzehrer (½ Packungsdosis)",
+               "medium": "Mittel (¾ Packungsdosis)", "heavy": "Starkzehrer (volle Packungsdosis)"},
+    },
+    "fertilizer_type": {
+        "en": {"liquid": "Liquid fertilizer", "sticks": "Fertilizer sticks", "granules": "Slow-release granules", "none": "No fertilizer"},
+        "de": {"liquid": "Flüssigdünger", "sticks": "Düngestäbchen", "granules": "Langzeitdünger (Granulat)", "none": "Kein Dünger"},
+    },
+    "task": {"name": t["svc_task"], "description": t["svc_task_d"]},
                 },
             }
         },

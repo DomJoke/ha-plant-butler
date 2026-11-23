@@ -9,6 +9,7 @@ from typing import Any
 from homeassistant.core import HomeAssistant
 
 from .const import (
+    CONF_FEEDING,
     CONF_FERTILIZER_INTERVAL,
     CONF_FERTILIZER_WINTER_INTERVAL,
     CONF_ICON,
@@ -16,9 +17,7 @@ from .const import (
     CONF_TEMPERATURE_MAX,
     CONF_TEMPERATURE_MIN,
     CONF_WATER_NEED,
-    CONF_WATERING_INTERVAL,
     DOMAIN,
-    WATER_LEVELS,
 )
 
 _DB_PATH = Path(__file__).parent / "data" / "plants.json"
@@ -32,6 +31,7 @@ CUSTOM_DEFAULTS: dict[str, Any] = {
     CONF_FERTILIZER_INTERVAL: 14,
     CONF_FERTILIZER_WINTER_INTERVAL: 0,
     CONF_ICON: "mdi:flower",
+    CONF_FEEDING: "medium",
 }
 
 
@@ -69,6 +69,6 @@ def species_defaults(species: dict[str, Any] | None) -> dict[str, Any]:
                 "winter_interval_days"
             ],
             CONF_ICON: species.get("icon", "mdi:flower"),
+            CONF_FEEDING: species.get("feeding", "medium"),
         }
-    defaults[CONF_WATERING_INTERVAL] = WATER_LEVELS[defaults[CONF_WATER_NEED]][2]
     return defaults

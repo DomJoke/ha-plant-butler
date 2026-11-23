@@ -1,69 +1,87 @@
 # Plant Butler 🌿
 
-Home-Assistant-Integration für die Pflanzenpflege: Jede Pflanze ist ein Gerät mit Sollwerten aus einer Pflanzendatenbank, optionalen Sensoren, Gieß- und Düngeplan, Warnstufen und einer Checkliste, die sich selbst zurücksetzt.
+*[Deutsche Version](README.de.md)*
 
-> Status: **0.1 – Grundgerüst.** Pflanzenkarte, Dashboard und Benachrichtigungs-Blueprint folgen.
+A Home Assistant integration for plant care: every plant is a device with target values from a bundled plant database, optional sensors, a care assistant for watering amount and fertilizer dose, watering and fertilizing schedules, warning levels and a checklist that resets itself.
 
-## Funktionen
+> Status: **0.2** – plant card, dashboard and notification blueprint are next.
 
-- **„+ Pflanze hinzufügen“** direkt auf der Integrationsseite (Config-Subentries), mit Raum aus deinen HA-Bereichen.
-- **Pflanzendatenbank** mit 118 gängigen Zimmer-, Balkon- und Kräuterpflanzen. Die Art wählen füllt alle Sollwerte vor; „Benutzerdefiniert“ für alles andere.
-- **Sensoren optional**: Bodenfeuchte, Licht, Raumtemperatur, Raumfeuchte. Beim Raum werden passende Sensoren vorgeschlagen.
-- **Gießen**
-  - mit Bodensensor: Schwelle „Gießen ab“ mit Hysterese, Prognose aus dem Trend, Gießen wird am Feuchteanstieg automatisch erkannt;
-  - ohne Bodensensor: Intervall der Wasserstufe, korrigiert durch das Raumklima (Dampfdruckdefizit aus Temperatur und Luftfeuchte) und die Winterruhe.
-- **Licht**: sechs Stufen für Soll und Ist (Sehr dunkel … Direkte Sonne). Mit Lichtsensor wird die Tageslichtsumme (DLI) berechnet, ohne Sensor wählst du den Standort per Dropdown.
-- **Düngen** mit Intervall, eigenem Winterintervall (0 = Pause), Menge und Düngerart.
-- **Status** OK / Info / Warnung / Kritisch mit Liste der Ursachen.
-- **Checkliste** `todo.plant_butler`: fällige Aufgaben erscheinen automatisch, Abhaken setzt den Zeitplan zurück, erledigte Einträge verschwinden nach 24 h.
-- **Ereignis** `plant_butler_notification` bei neuen oder eskalierenden Problemen (für Benachrichtigungen).
-- Entity-IDs immer englisch, Oberfläche deutsch oder englisch.
+## Features
+
+- **"+ Add plant"** right on the integration page (config subentries), with the room taken from your Home Assistant areas.
+- **Plant database** with 118 common house, balcony and herb plants. Picking a species prefills all target values; "Custom" for anything else.
+- **Care assistant** while adding a plant: from pot size, pot material, substrate and your fertilizer it calculates watering amount, watering interval and fertilizer dose (see below).
+- **Optional sensors**: soil moisture, light, room temperature, room humidity. Matching sensors of the chosen room are suggested.
+- **Watering**
+  - with a soil sensor: "water below" threshold with hysteresis, forecast from the trend, watering is detected automatically from the moisture rise;
+  - without a soil sensor: the interval from the assistant, adjusted at runtime by the room climate (vapour pressure deficit from temperature and humidity) and winter rest.
+- **Light**: six levels for target and actual (very dark … direct sun). With a light sensor the daily light integral (DLI) is calculated; without one you pick the location's light from a dropdown.
+- **Fertilizing** with interval, separate winter interval (0 = pause), amount and fertilizer type.
+- **Status** ok / info / warning / critical with a list of causes.
+- **Checklist** `todo.plant_butler`: due tasks appear automatically, ticking resets the schedule, done items disappear after 24 h.
+- **Event** `plant_butler_notification` for new or escalating problems.
+- Entity IDs are always English; the UI is available in English and German.
 
 ## Installation (HACS)
 
-1. HACS → ⋮ → *Benutzerdefinierte Repositories* → `https://github.com/DomJoke/ha-plant-butler`, Typ *Integration*.
-2. „Plant Butler“ installieren und Home Assistant neu starten.
-3. *Einstellungen → Geräte & Dienste → Integration hinzufügen → Plant Butler*.
-4. Auf der Integrationsseite **„+ Pflanze hinzufügen“**.
+1. HACS → ⋮ → *Custom repositories* → `https://github.com/DomJoke/ha-plant-butler`, type *Integration*.
+2. Install "Plant Butler" and restart Home Assistant.
+3. *Settings → Devices & services → Add integration → Plant Butler*.
+4. On the integration page, click **"+ Add plant"**.
 
-## Entities pro Pflanze (Beispiel „Monstera“)
+## Care assistant
 
-| Entity | Bedeutung |
+The assistant uses rules of thumb for potted plants. All results are suggestions you can change in the last step or later via the plant's entities.
+
+| Value | How it is calculated |
 | --- | --- |
-| `sensor.monstera_status` | ok / info / warning / critical; Attribute für Karten (Probleme, Sollwerte, Sensoren, Pflege) |
-| `sensor.monstera_next_watering` / `sensor.monstera_next_fertilizing` | Fälligkeit (Zeitstempel) |
-| `sensor.monstera_light_level` / `sensor.monstera_dli` | Ist-Lichtstufe / Tageslichtsumme heute (nur mit Lichtsensor) |
-| `binary_sensor.monstera_needs_water` / `_needs_fertilizer` / `_light_problem` / `_temperature_problem` | Einzelne Zustände |
-| `button.monstera_mark_watered` / `_mark_fertilized` | Aufgabe erledigt |
-| `select.monstera_water_need` / `_light_need` / `_location_light` | Sollwert-Stufen, Licht am Standort |
-| `number.monstera_moisture_min` / `_moisture_max` / `_temperature_min` / `_temperature_max` / `_watering_interval` / `_watering_amount` / `_fertilizer_interval` / `_fertilizer_winter_interval` / `_fertilizer_amount` | Feinwerte |
-| `switch.monstera_winter_rest` | Winterruhe: Gießintervall × 1,5, Düngen nach Winterintervall |
-| `image.monstera_photo` | Foto (wenn hinterlegt) |
+| Pot volume | Cylinder from diameter and height (height defaults to 0.9 × diameter) × 0.8 for the tapered shape |
+| Watering amount | Pot volume × plant-available water of the substrate (potting soil 25 %, mineral/cactus soil 15 %) × share used up before watering again (very low 90 %, low 70 %, medium 50 %, high 35 %, very high 25 %), rounded to 10 ml |
+| Watering interval | Base interval of the water need level × pot size (2 l = 1.0, larger pots dry slower) × material (terracotta 0.8) × substrate (mineral 0.85) × light at the location (dark 1.25 … direct sun 0.8), limited to 0.6–1.6 |
+| Liquid fertilizer | Package dose (ml/l) × nutrient demand (light feeder ½, medium ¾, heavy feeder full); the checklist also shows the total ml for one watering |
+| Fertilizer sticks | 1–4 sticks by pot diameter, every 90 days |
+| Slow-release granules | 2.5 g per litre of substrate (scaled by nutrient demand), every 180 days |
 
-Änderst du die Wasserstufe, werden „Gießen ab“, Feuchte-Maximum und Gießintervall auf die Werte der Stufe gesetzt; danach kannst du sie fein anpassen.
+Example: a pothos in a 14 cm plastic pot in a dark spot → about 1.6 l → **190 ml every 8 days**.
 
-## Wasserstufen
+At runtime the room climate (warm, dry air → shorter) and winter rest (× 1.5) adjust the interval further. Changing the water need or light level of a plant re-runs the assistant for the interval.
 
-| Stufe | Beispiele | Gießen ab | Feuchte-Max. | Intervall ohne Sensor |
+## Water need levels
+
+| Level | Examples | Water below | Moisture max | Base interval |
 | --- | --- | --- | --- | --- |
-| Sehr wenig | Kakteen, Sukkulenten | 10 % | 35 % | 21 Tage |
-| Wenig | Zamioculcas, Bogenhanf | 15 % | 45 % | 14 Tage |
-| Mittel | Monstera, Ficus, Efeutute | 25 % | 60 % | 7 Tage |
-| Viel | Farne, Calathea | 40 % | 75 % | 4 Tage |
-| Sehr viel | Zyperngras, Balkonkräuter | 55 % | 90 % | 2 Tage |
+| Very low | cacti, succulents | 10 % | 35 % | 21 days |
+| Low | ZZ plant, snake plant | 15 % | 45 % | 14 days |
+| Medium | monstera, ficus, pothos | 25 % | 60 % | 7 days |
+| High | ferns, calathea | 40 % | 75 % | 4 days |
+| Very high | papyrus, balcony herbs | 55 % | 90 % | 2 days |
 
-Die Werte sind Richtwerte. Bodensensoren messen je nach Hersteller unterschiedlich – passe „Gießen ab“ an deine Messung an.
+These are guide values. Soil sensors read differently depending on the manufacturer – adjust "water below" to your readings.
 
-## Dienst
+## Entities per plant (example "Monstera")
+
+| Entity | Meaning |
+| --- | --- |
+| `sensor.monstera_status` | ok / info / warning / critical; attributes for cards (problems, targets, sensors, care) |
+| `sensor.monstera_next_watering` / `sensor.monstera_next_fertilizing` | Due time (timestamp) |
+| `sensor.monstera_light_level` / `sensor.monstera_dli` | Actual light level / daily light integral today (light sensor only) |
+| `binary_sensor.monstera_needs_water` / `_needs_fertilizer` / `_light_problem` / `_temperature_problem` | Individual states |
+| `button.monstera_mark_watered` / `_mark_fertilized` | Task done |
+| `select.monstera_water_need` / `_light_need` / `_location_light` | Target levels, light at the location |
+| `number.monstera_moisture_min` / `_moisture_max` / `_temperature_min` / `_temperature_max` / `_watering_interval` / `_watering_amount` / `_fertilizer_interval` / `_fertilizer_winter_interval` / `_fertilizer_amount` | Fine-tuning |
+| `switch.monstera_winter_rest` | Winter rest: watering interval × 1.5, fertilizing by winter interval |
+| `image.monstera_photo` | Photo (if set) |
+
+## Service
 
 ```yaml
 action: plant_butler.mark_done
 data:
-  entity_id: sensor.monstera_status   # oder device_id
-  task: water                          # oder fertilize
+  entity_id: sensor.monstera_status   # or device_id
+  task: water                          # or fertilize
 ```
 
-## Benachrichtigungen (Beispiel bis zum Blueprint)
+## Notifications (example until the blueprint is available)
 
 ```yaml
 triggers:
@@ -73,17 +91,17 @@ conditions:
   - condition: template
     value_template: "{{ trigger.event.data.severity in ['warning', 'critical'] }}"
 actions:
-  - action: notify.mobile_app_dphone
+  - action: notify.mobile_app_my_phone
     data:
       title: "🌿 {{ trigger.event.data.plant }} ({{ trigger.event.data.area }})"
       message: "{{ trigger.event.data.problem }} – {{ trigger.event.data.severity }}"
 ```
 
-## Entwicklung
+## Development
 
 ```bash
 pip install -r requirements_test.txt
 pytest
 ```
 
-Die Pflanzendatenbank liegt in `custom_components/plant_butler/data/plants.json`.
+The plant database is generated from `tools/species.tsv` with `tools/build_db.py`; translations are generated with `tools/build_translations.py`.

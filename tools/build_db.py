@@ -8,6 +8,33 @@ LIGHT = {"vd": "very_dark", "d": "dark", "ps": "partial_shade", "bi": "bright_in
          "bs": "bright_some_sun", "fs": "full_sun"}
 HUM = {"l": "low", "m": "medium", "h": "high"}
 
+# Nutrient demand: how strong the fertilizer is dosed relative to the package dosage
+HEAVY_FEEDERS = {
+    "tomate", "chili", "gurke", "erdbeere", "basilikum", "hibiskus", "zitronenbaum",
+    "orangenbaeumchen", "oleander", "geranie", "petunie", "surfinie", "fuchsie",
+    "margerite", "mandevilla", "bougainvillea", "hortensie", "rose_topf", "zyperngras",
+    "calla", "feige_echt", "buntnessel",
+}
+NO_FEEDING = {"venusfliegenfalle", "kannenpflanze"}
+LIGHT_FEEDER_ICONS = {"cactus"}
+LIGHT_FEEDERS = {
+    "orchidee", "orchidee_dendrobium", "orchidee_oncidium", "tillandsie", "bromelie",
+    "farn_schwert", "farn_frauenhaar", "farn_geweih", "farn_nest", "bogenhanf",
+    "zamioculcas", "elefantenfuss", "hoya", "ceropegia", "peperomia", "rosmarin",
+    "thymian", "oregano", "salbei", "lavendel", "olivenbaum", "fittonia", "pilea",
+}
+
+
+def feeding(sid: str, icon: str) -> str:
+    if sid in NO_FEEDING:
+        return "none"
+    if sid in HEAVY_FEEDERS:
+        return "heavy"
+    if sid in LIGHT_FEEDERS or icon in LIGHT_FEEDER_ICONS:
+        return "light"
+    return "medium"
+
+
 src, dst = Path(sys.argv[1]), Path(sys.argv[2])
 species = []
 ids = set()
@@ -30,6 +57,7 @@ for line in src.read_text(encoding="utf-8").splitlines():
         "temperature": {"min": tmin, "max": tmax},
         "humidity": HUM[c[8]],
         "fertilizer": {"interval_days": int(c[9]), "winter_interval_days": int(c[10])},
+        "feeding": feeding(sid, c[12]),
         "toxic_pets": c[11] == "1",
         "icon": "mdi:" + c[12],
     })
