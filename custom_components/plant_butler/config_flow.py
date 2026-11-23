@@ -19,10 +19,14 @@ from homeassistant.config_entries import (
     SubentryFlowResult,
 )
 from homeassistant.core import HomeAssistant, callback
+from homeassistant.data_entry_flow import section
 from homeassistant.helpers import device_registry as dr
 from homeassistant.helpers import entity_registry as er
 from homeassistant.helpers.selector import (
     AreaSelector,
+    BooleanSelector,
+    DeviceSelector,
+    DeviceSelectorConfig,
     EntitySelector,
     EntitySelectorConfig,
     FileSelector,
@@ -36,6 +40,7 @@ from homeassistant.helpers.selector import (
     SelectSelectorMode,
     TextSelector,
     TextSelectorConfig,
+    TimeSelector,
 )
 from homeassistant.util import slugify
 
@@ -79,19 +84,27 @@ from .const import (
     CONF_WATER_NEED,
     CONF_WATERING_AMOUNT,
     CONF_WATERING_INTERVAL,
+    DEFAULT_ANNOUNCE_OPTIONS,
     DEFAULT_CLIMATE_STRENGTH,
     DEFAULT_FERTILIZER_DOSAGE,
+    DEFAULT_PHONE_OPTIONS,
     DOMAIN,
     FEEDING_LEVELS,
     FERTILIZER_TYPES,
     FERTILIZER_UNITS,
     LIGHT_LEVEL_KEYS,
+    MODE_IMMEDIATE,
+    MODE_OFF,
+    MODE_SUMMARY,
+    OPT_ANNOUNCE,
+    OPT_PHONE,
     PLANT_SIZES,
     POT_MATERIALS,
     SENSOR_KEYS,
     SPECIES_CUSTOM,
     SUBENTRY_TYPE_PLANT,
     SUBSTRATES,
+    TOPICS,
     WATER_LEVEL_KEYS,
 )
 from .species import async_get_species_db, species_defaults, species_name
@@ -230,15 +243,62 @@ class PlantButlerConfigFlow(ConfigFlow, domain=DOMAIN):
         return self.async_show_form(step_id="user")
 
 
+def _flatten(user_input: dict[str, Any]) -> dict[str, Any]:
+    """Merge the values of form sections into one dict."""
+    flat: dict[str, Any] = {}
+    for value in (
+        user_input.values()
+        if all(isinstance(v, dict) for v in user_input.values())
+        else [user_input]
+    ):
+        flat.update(value)
+    return flat
+
+
+def _mode_selector(key: str, modes: list[str]) -> SelectSelector:
+    return SelectSelector(
+        SelectSelectorConfig(
+            options=modes, translation_key=key, mode=SelectSelectorMode.DROPDOWN
+        )
+    )
+
+
+def _topics_selector() -> SelectSelector:
+    return SelectSelector(
+        SelectSelectorConfig(
+            options=TOPICS,
+            translation_key="topics",
+            multiple=True,
+            mode=SelectSelectorMode.LIST,
+        )
+    )
+
+
 class PlantButlerOptionsFlow(OptionsFlow):
-    """Hub options."""
+    """Settings page: general, phone notifications, announcements."""
 
     async def async_step_init(
         self, user_input: dict[str, Any] | None = None
     ) -> ConfigFlowResult:
-        """Manage options."""
+        """Show the settings menu."""
+        return self.async_show_menu(
+            step_id="init", menu_options=["general", OPT_PHONE, OPT_ANNOUNCE]
+        )
+
+    def _save(self, key: str | None, values: dict[str, Any]) -> ConfigFlowResult:
+        options = dict(self.config_entry.options)
+        if key is None:
+            options.update(values)
+        else:
+            options[key] = values
+        return self.async_create_entry(data=options)
+
+    async def async_step_general(
+        self, user_input: dict[str, Any] | None = None
+    ) -> ConfigFlowResult:
+        """General settings."""
         if user_input is not None:
-            return self.async_create_entry(data=user_input)
+            return self._save(None, user_input)
         schema = vol.Schema(
             {
                 vol.Required(
@@ -249,7 +309,221 @@ class PlantButlerOptionsFlow(OptionsFlow):
                 ): _number(0, 2, 0.1),
             }
         )
-        return self.async_show_form(step_id="init", data_schema=schema)
+        return self.async_show_form(step_id="general", data_schema=schema)
+
+    async def async_step_phone(
+        self, user_input: dict[str, Any] | None = None
+    ) -> ConfigFlowResult:
+        """Phone notifications (Companion app)."""
+        if user_input is not None:
+            values = _flatten(user_input)
+            for key in ("quiet_start", "quiet_end"):
+                values.setdefault(key, None)
+            return self._save(OPT_PHONE, {**DEFAULT_PHONE_OPTIONS, **values})
+        current = {
+            **DEFAULT_PHONE_OPTIONS,
+            **self.config_entry.options.get(OPT_PHONE, {}),
+        }
+        immediate_summary = [MODE_OFF, MODE_SUMMARY, MODE_IMMEDIATE]
+        schema = vol.Schema(
+            {
+                vol.Required("recipients"): section(
+                    vol.Schema(
+                        {
+                            vol.Optional(
+                                "devices", default=current["devices"]
+                            ): DeviceSelector(
+                                DeviceSelectorConfig(
+                                    integration="mobile_app", multiple=True
+                                )
+                            ),
+                        }
+                    ),
+                    {"collapsed": False},
+                ),
+                vol.Required("topics_section"): section(
+                    vol.Schema(
+                        {
+                            vol.Optional(
+                                "topics", default=current["topics"]
+                            ): _topics_selector()
+                        }
+                    ),
+                    {"collapsed": False},
+                ),
+                vol.Required("levels"): section(
+                    vol.Schema(
+                        {
+                            vol.Required(
+                                "info", default=current["info"]
+                            ): _mode_selector("notify_mode", immediate_summary),
+                            vol.Required(
+                                "warning", default=current["warning"]
+                            ): _mode_selector("notify_mode", immediate_summary),
+                            vol.Required(
+                                "critical", default=current["critical"]
+                            ): _mode_selector(
+                                "notify_mode", [MODE_OFF, MODE_IMMEDIATE]
+                            ),
+                            vol.Required(
+                                "summary_time", default=current["summary_time"]
+                            ): TimeSelector(),
+                            vol.Required(
+                                "critical_repeat_hours",
+                                default=current["critical_repeat_hours"],
+                            ): _number(0, 48, 1, "h"),
+                            vol.Required(
+                                "critical_breaks_dnd",
+                                default=current["critical_breaks_dnd"],
+                            ): BooleanSelector(),
+                        }
+                    ),
+                    {"collapsed": False},
+                ),
+                vol.Required("quiet"): section(
+                    vol.Schema(
+                        {
+                            vol.Optional(
+                                "quiet_start",
+                                description={"suggested_value": current["quiet_start"]},
+                            ): TimeSelector(),
+                            vol.Optional(
+                                "quiet_end",
+                                description={"suggested_value": current["quiet_end"]},
+                            ): TimeSelector(),
+                            vol.Required(
+                                "respect_dnd", default=current["respect_dnd"]
+                            ): BooleanSelector(),
+                        }
+                    ),
+                    {"collapsed": False},
+                ),
+                vol.Required("buttons_section"): section(
+                    vol.Schema(
+                        {
+                            vol.Required(
+                                "buttons", default=current["buttons"]
+                            ): BooleanSelector()
+                        }
+                    ),
+                    {"collapsed": True},
+                ),
+            }
+        )
+        return self.async_show_form(step_id=OPT_PHONE, data_schema=schema)
+
+    async def async_step_announce(
+        self, user_input: dict[str, Any] | None = None
+    ) -> ConfigFlowResult:
+        """Announcements on voice assistants and speakers."""
+        if user_input is not None:
+            values = _flatten(user_input)
+            for key in ("volume", "tts_engine", "quiet_start", "quiet_end"):
+                values.setdefault(key, None)
+            return self._save(OPT_ANNOUNCE, {**DEFAULT_ANNOUNCE_OPTIONS, **values})
+        current = {
+            **DEFAULT_ANNOUNCE_OPTIONS,
+            **self.config_entry.options.get(OPT_ANNOUNCE, {}),
+        }
+        tts_default = current["tts_engine"] or next(
+            iter(sorted(self.hass.states.async_entity_ids("tts"))), None
+        )
+        schema = vol.Schema(
+            {
+                vol.Required("targets"): section(
+                    vol.Schema(
+                        {
+                            vol.Optional(
+                                "satellites", default=current["satellites"]
+                            ): EntitySelector(
+                                EntitySelectorConfig(
+                                    domain="assist_satellite", multiple=True
+                                )
+                            ),
+                            vol.Optional(
+                                "speakers", default=current["speakers"]
+                            ): EntitySelector(
+                                EntitySelectorConfig(
+                                    domain="media_player", multiple=True
+                                )
+                            ),
+                            vol.Required(
+                                "where", default=current["where"]
+                            ): _mode_selector("announce_where", ["room", "all"]),
+                        }
+                    ),
+                    {"collapsed": False},
+                ),
+                vol.Required("topics_section"): section(
+                    vol.Schema(
+                        {
+                            vol.Optional(
+                                "topics", default=current["topics"]
+                            ): _topics_selector()
+                        }
+                    ),
+                    {"collapsed": False},
+                ),
+                vol.Required("levels"): section(
+                    vol.Schema(
+                        {
+                            vol.Required(
+                                "info", default=current["info"]
+                            ): _mode_selector("notify_mode", [MODE_OFF, MODE_SUMMARY]),
+                            vol.Required(
+                                "warning", default=current["warning"]
+                            ): _mode_selector(
+                                "notify_mode", [MODE_OFF, MODE_SUMMARY, MODE_IMMEDIATE]
+                            ),
+                            vol.Required(
+                                "critical", default=current["critical"]
+                            ): _mode_selector(
+                                "notify_mode", [MODE_OFF, MODE_IMMEDIATE]
+                            ),
+                            vol.Required(
+                                "summary_time", default=current["summary_time"]
+                            ): TimeSelector(),
+                        }
+                    ),
+                    {"collapsed": False},
+                ),
+                vol.Required("quiet"): section(
+                    vol.Schema(
+                        {
+                            vol.Optional(
+                                "quiet_start",
+                                description={"suggested_value": current["quiet_start"]},
+                            ): TimeSelector(),
+                            vol.Optional(
+                                "quiet_end",
+                                description={"suggested_value": current["quiet_end"]},
+                            ): TimeSelector(),
+                            vol.Required(
+                                "critical_in_quiet",
+                                default=current["critical_in_quiet"],
+                            ): BooleanSelector(),
+                        }
+                    ),
+                    {"collapsed": False},
+                ),
+                vol.Required("sound"): section(
+                    vol.Schema(
+                        {
+                            vol.Optional(
+                                "volume",
+                                description={"suggested_value": current["volume"]},
+                            ): _number(0, 100, 5, "%"),
+                            vol.Optional(
+                                "tts_engine",
+                                description={"suggested_value": tts_default},
+                            ): EntitySelector(EntitySelectorConfig(domain="tts")),
+                        }
+                    ),
+                    {"collapsed": True},
+                ),
+            }
+        )
+        return self.async_show_form(step_id=OPT_ANNOUNCE, data_schema=schema)
 
 
 class PlantSubentryFlow(ConfigSubentryFlow):

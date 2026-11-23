@@ -50,11 +50,14 @@ async def area(hass: HomeAssistant) -> ar.AreaEntry:
 def make_entry(hass: HomeAssistant):
     """Create a hub entry with one plant."""
 
-    def _make(data: dict[str, Any]) -> MockConfigEntry:
+    def _make(
+        data: dict[str, Any], options: dict[str, Any] | None = None
+    ) -> MockConfigEntry:
         entry = MockConfigEntry(
             domain=DOMAIN,
             title="Plant Butler",
             data={},
+            options=options or {},
             subentries_data=[
                 ConfigSubentryDataWithId(
                     data=data,

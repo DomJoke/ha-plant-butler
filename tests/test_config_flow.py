@@ -167,14 +167,79 @@ async def test_reconfigure_plant(hass: HomeAssistant) -> None:
 
 
 async def test_options_flow(hass: HomeAssistant) -> None:
-    """Climate strength can be changed."""
+    """Settings page: menu with general, phone and announcement settings."""
     entry = await _hub(hass)
     result = await hass.config_entries.options.async_init(entry.entry_id)
+    assert result["type"] is FlowResultType.MENU
+    assert result["menu_options"] == ["general", "phone", "announce"]
+    result = await hass.config_entries.options.async_configure(
+        result["flow_id"], {"next_step_id": "general"}
+    )
     result = await hass.config_entries.options.async_configure(
         result["flow_id"], {"climate_strength": 0.5}
     )
     assert result["type"] is FlowResultType.CREATE_ENTRY
     assert entry.options["climate_strength"] == 0.5
+    await hass.async_block_till_done()
+
+    result = await hass.config_entries.options.async_init(entry.entry_id)
+    result = await hass.config_entries.options.async_configure(
+        result["flow_id"], {"next_step_id": "phone"}
+    )
+    assert result["step_id"] == "phone"
+    result = await hass.config_entries.options.async_configure(
+        result["flow_id"],
+        {
+            "recipients": {"devices": []},
+            "topics_section": {"topics": ["water", "temperature"]},
+            "levels": {
+                "info": "off",
+                "warning": "immediate",
+                "critical": "immediate",
+                "summary_time": "07:30:00",
+                "critical_repeat_hours": 2,
+                "critical_breaks_dnd": True,
+            },
+            "quiet": {"respect_dnd": False},
+            "buttons_section": {"buttons": True},
+        },
+    )
+    assert result["type"] is FlowResultType.CREATE_ENTRY
+    phone = entry.options["phone"]
+    assert phone["topics"] == ["water", "temperature"]
+    assert phone["summary_time"] == "07:30:00"
+    assert phone["quiet_start"] is None  # emptied = no quiet hours
+    assert entry.options["climate_strength"] == 0.5  # other settings kept
+    await hass.async_block_till_done()
+
+    result = await hass.config_entries.options.async_init(entry.entry_id)
+    result = await hass.config_entries.options.async_configure(
+        result["flow_id"], {"next_step_id": "announce"}
+    )
+    assert result["step_id"] == "announce"
+    result = await hass.config_entries.options.async_configure(
+        result["flow_id"],
+        {
+            "targets": {"satellites": [], "speakers": [], "where": "all"},
+            "topics_section": {"topics": ["water"]},
+            "levels": {
+                "info": "summary",
+                "warning": "immediate",
+                "critical": "immediate",
+                "summary_time": "08:00:00",
+            },
+            "quiet": {
+                "quiet_start": "21:00:00",
+                "quiet_end": "08:00:00",
+                "critical_in_quiet": False,
+            },
+            "sound": {"volume": 40},
+        },
+    )
+    assert result["type"] is FlowResultType.CREATE_ENTRY
+    assert entry.options["announce"]["where"] == "all"
+    assert entry.options["announce"]["volume"] == 40
+    assert entry.options["phone"]["summary_time"] == "07:30:00"
 
 
 async def test_suggest_sensors(hass: HomeAssistant) -> None:

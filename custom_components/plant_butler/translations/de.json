@@ -14,11 +14,123 @@
     "step": {
       "init": {
         "title": "Plant Butler",
+        "menu_options": {
+          "general": "Allgemein",
+          "phone": "Handy-Benachrichtigungen",
+          "announce": "Ansagen (Sprachassistenten & Lautsprecher)"
+        }
+      },
+      "general": {
+        "title": "Allgemein",
         "data": {
           "climate_strength": "Stärke der Raumklima-Korrektur"
         },
         "data_description": {
-          "climate_strength": "0 = aus, 1 = Standard, 2 = stark. Warme, trockene Luft verkürzt das Gießintervall bei Pflanzen ohne Bodensensor."
+          "climate_strength": "Nur für Pflanzen ohne Bodenfeuchtesensor. Plant Butler schätzt aus Raumtemperatur und Luftfeuchte, wie schnell die Erde austrocknet: Warme, trockene Luft verkürzt das Gießintervall, kühle, feuchte Luft verlängert es (höchstens 0,6- bis 1,4-fach). 0 = aus (festes Intervall), 1 = empfohlen, 2 = doppelt so stark – mehr wählen, wenn deine Pflanzen vor der Erinnerung regelmäßig schon trocken sind, weniger, wenn sie noch feucht sind."
+        }
+      },
+      "phone": {
+        "title": "Handy-Benachrichtigungen",
+        "description": "Aufgelistet werden nur Handys mit der Companion-App – nur diese unterstützen Buttons, dringende Meldungen und „Nicht stören“. Damit Meldungen während „Nicht stören“ warten, aktiviere in der Companion-App den Sensor „Do Not Disturb“ (Einstellungen → Companion-App → Sensoren verwalten).",
+        "sections": {
+          "recipients": {
+            "name": "Empfänger",
+            "data": {
+              "devices": "Handys"
+            }
+          },
+          "topics_section": {
+            "name": "Was melden",
+            "data": {
+              "topics": "Themen"
+            }
+          },
+          "levels": {
+            "name": "Stufen",
+            "data": {
+              "info": "Hinweise",
+              "warning": "Warnungen",
+              "critical": "Kritisch",
+              "summary_time": "Uhrzeit der täglichen Zusammenfassung",
+              "critical_repeat_hours": "Kritisch wiederholen alle … Stunden (0 = nie)",
+              "critical_breaks_dnd": "Kritisch durchbricht „Nicht stören“"
+            },
+            "data_description": {
+              "critical_breaks_dnd": "Kritische Meldungen kommen als Alarm, der auch bei „Nicht stören“ klingelt."
+            }
+          },
+          "quiet": {
+            "name": "Ruhe",
+            "data": {
+              "quiet_start": "Ruhezeit von",
+              "quiet_end": "Ruhezeit bis",
+              "respect_dnd": "„Nicht stören“ des Handys beachten"
+            },
+            "data_description": {
+              "quiet_start": "Hinweise und Warnungen warten bis zum Ende der Ruhezeit; Kritisches kommt immer durch. Leer lassen = keine Ruhezeit.",
+              "respect_dnd": "Hinweise und Warnungen warten, bis „Nicht stören“ am Handy endet."
+            }
+          },
+          "buttons_section": {
+            "name": "Buttons",
+            "data": {
+              "buttons": "Buttons in der Benachrichtigung"
+            },
+            "data_description": {
+              "buttons": "Gegossen / Gedüngt, In 1 Std., Morgen."
+            }
+          }
+        }
+      },
+      "announce": {
+        "title": "Ansagen",
+        "description": "Sprachassistenten sagen mit Signalton an. Music-Assistant-Player senken für die Ansage die Musik ab; andere Lautsprecher nutzen die Sprachausgabe.",
+        "sections": {
+          "targets": {
+            "name": "Ziele",
+            "data": {
+              "satellites": "Sprachassistenten",
+              "speakers": "Lautsprecher",
+              "where": "Wo ansagen"
+            }
+          },
+          "topics_section": {
+            "name": "Was ansagen",
+            "data": {
+              "topics": "Themen"
+            }
+          },
+          "levels": {
+            "name": "Stufen",
+            "data": {
+              "info": "Hinweise",
+              "warning": "Warnungen",
+              "critical": "Kritisch",
+              "summary_time": "Uhrzeit der täglichen Zusammenfassung"
+            }
+          },
+          "quiet": {
+            "name": "Ruhe",
+            "data": {
+              "quiet_start": "Ruhezeit von",
+              "quiet_end": "Ruhezeit bis",
+              "critical_in_quiet": "Kritisches auch in der Ruhezeit ansagen"
+            },
+            "data_description": {
+              "quiet_start": "Ansagen warten bis zum Ende der Ruhezeit. Leer lassen = keine Ruhezeit."
+            }
+          },
+          "sound": {
+            "name": "Ton",
+            "data": {
+              "volume": "Lautstärke",
+              "tts_engine": "Sprachausgabe"
+            },
+            "data_description": {
+              "volume": "Leer = unverändert. Gilt für normale Lautsprecher und wird danach zurückgesetzt; Music Assistant nutzt seine eigene Ansage-Lautstärke.",
+              "tts_engine": "Für Lautsprecher; Sprachassistenten nutzen ihre eigene Stimme."
+            }
+          }
         }
       }
     }
@@ -185,6 +297,29 @@
         "sticks": "Düngestäbchen",
         "granules": "Langzeitdünger (Granulat)",
         "none": "Kein Dünger"
+      }
+    },
+    "notify_mode": {
+      "options": {
+        "off": "Aus",
+        "summary": "Tägliche Zusammenfassung",
+        "immediate": "Sofort"
+      }
+    },
+    "topics": {
+      "options": {
+        "water": "Gießen fällig",
+        "fertilize": "Düngen fällig",
+        "wet": "Erde zu nass",
+        "temperature": "Temperatur",
+        "light": "Licht",
+        "sensor": "Sensor nicht erreichbar"
+      }
+    },
+    "announce_where": {
+      "options": {
+        "room": "Nur im Raum der Pflanze (hat er keine: alle ausgewählten)",
+        "all": "Alle ausgewählten"
       }
     },
     "task": {
@@ -395,6 +530,9 @@
     "switch": {
       "winter_rest": {
         "name": "Winterruhe"
+      },
+      "notifications": {
+        "name": "Benachrichtigungen"
       }
     },
     "todo": {

@@ -108,3 +108,53 @@ TODO_DONE_VISIBLE_HOURS: Final = 24
 
 SERVICE_MARK_DONE: Final = "mark_done"
 EVENT_NOTIFICATION: Final = "plant_butler_notification"
+
+# ---------------------------------------------------------------- notifications
+OPT_PHONE: Final = "phone"
+OPT_ANNOUNCE: Final = "announce"
+
+TOPICS: Final = ["water", "fertilize", "wet", "temperature", "light", "sensor"]
+PROBLEM_TOPIC: Final = {
+    "needs_water": "water",
+    "needs_fertilizer": "fertilize",
+    "too_wet": "wet",
+    "too_cold": "temperature",
+    "too_hot": "temperature",
+    "too_dark": "light",
+    "too_bright": "light",
+    "sensor_unavailable": "sensor",
+}
+MODE_OFF: Final = "off"
+MODE_IMMEDIATE: Final = "immediate"
+MODE_SUMMARY: Final = "summary"
+
+DEFAULT_PHONE_OPTIONS: Final = {
+    "devices": [],
+    "topics": TOPICS,
+    "info": MODE_SUMMARY,
+    "warning": MODE_IMMEDIATE,
+    "critical": MODE_IMMEDIATE,
+    "summary_time": "08:00:00",
+    "critical_repeat_hours": 4,
+    "critical_breaks_dnd": False,
+    "quiet_start": "22:00:00",
+    "quiet_end": "07:00:00",
+    "respect_dnd": True,
+    "buttons": True,
+}
+DEFAULT_ANNOUNCE_OPTIONS: Final = {
+    "satellites": [],
+    "speakers": [],
+    "where": "room",
+    "topics": TOPICS,
+    "info": MODE_SUMMARY,
+    "warning": MODE_SUMMARY,
+    "critical": MODE_IMMEDIATE,
+    "summary_time": "08:00:00",
+    "quiet_start": "21:00:00",
+    "quiet_end": "08:00:00",
+    "critical_in_quiet": False,
+    "volume": None,
+    "tts_engine": None,
+}
+ACTION_PREFIX: Final = "PLANT_BUTLER"

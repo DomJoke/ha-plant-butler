@@ -107,6 +107,12 @@
         "state": {
           "on": "mdi:snowflake"
         }
+      },
+      "notifications": {
+        "default": "mdi:bell-off-outline",
+        "state": {
+          "on": "mdi:bell-ring-outline"
+        }
       }
     },
     "todo": {

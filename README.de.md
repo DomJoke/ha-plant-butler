@@ -9,7 +9,7 @@
 
 Home-Assistant-Integration für die Pflanzenpflege: Jede Pflanze ist ein Gerät mit Sollwerten aus einer Pflanzendatenbank, optionalen Sensoren, einem Pflege-Assistenten für Gießmenge und Düngerdosis, Gieß- und Düngeplan, Warnstufen und einer Checkliste, die sich selbst zurücksetzt.
 
-> Status: **0.4** – Benachrichtigungs-Blueprint folgt.
+> Status: **0.6**
 
 ## Funktionen
 
@@ -78,6 +78,16 @@ Ansichten: **Übersicht** (alle Pflanzen nach Raum, Räume einklappbar) und **F�
 
 - `sensor.<pflanze>_hints` („Hinweise“) nennt die Gründe für den Status im Klartext, z. B. „Standort zu dunkel“ oder „Alles in Ordnung“.
 - Einstellungen → Geräte & Dienste → Plant Butler → ⋮ → **Diagnose herunterladen** liefert eine Datei mit allen Einstellungen, Sensorwerten und Zwischenergebnissen der Berechnung – hilfreich, wenn ein Wert unplausibel wirkt.
+
+## Benachrichtigungen und Ansagen
+
+Einstellungen → Geräte & Dienste → Plant Butler → ⚙ **Konfigurieren**:
+
+- **Allgemein** – Stärke der Raumklima-Korrektur (auf der Seite erklärt).
+- **Handy-Benachrichtigungen** – Empfänger (alle Handys mit Companion-App werden automatisch aufgelistet), Themen, je Stufe *Aus / Tägliche Zusammenfassung / Sofort*, Uhrzeit, Wiederholung bei Kritisch, „Kritisch durchbricht Nicht stören“, Ruhezeit, „Nicht stören“ des Handys beachten, Buttons.
+- **Ansagen** – Sprachassistenten und Lautsprecher (automatisch aufgelistet), *nur im Raum der Pflanze* oder *alle ausgewählten*, gleiche Themen und Stufen, Ruhezeit, Lautstärke, Sprachausgabe. Music-Assistant-Player senken für die Ansage die Musik ab.
+
+Buttons in der Benachrichtigung: **Gegossen / Gedüngt**, **In 1 Std.**, **Morgen**. Jede Pflanze hat auf ihrer Geräteseite einen Schalter **Benachrichtigungen** zum Stummschalten.
 
 ## Statusstufen
 

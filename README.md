@@ -9,7 +9,7 @@
 
 A Home Assistant integration for plant care: every plant is a device with target values from a bundled plant database, optional sensors, a care assistant for watering amount and fertilizer dose, watering and fertilizing schedules, warning levels and a checklist that resets itself.
 
-> Status: **0.4** – notification blueprint is next.
+> Status: **0.6**
 
 ## Features
 
@@ -153,21 +153,21 @@ data:
   task: water                          # or fertilize
 ```
 
-## Notifications (example until the blueprint is available)
+## Notifications and announcements
 
-```yaml
-triggers:
-  - trigger: event
-    event_type: plant_butler_notification
-conditions:
-  - condition: template
-    value_template: "{{ trigger.event.data.severity in ['warning', 'critical'] }}"
-actions:
-  - action: notify.mobile_app_my_phone
-    data:
-      title: "🌿 {{ trigger.event.data.plant }} ({{ trigger.event.data.area }})"
-      message: "{{ trigger.event.data.problem }} – {{ trigger.event.data.severity }}"
-```
+Settings → Devices & services → Plant Butler → ⚙ **Configure** opens the settings page:
+
+- **General** – strength of the room climate correction (explained on the page).
+- **Phone notifications** – recipients (all Companion app phones are listed automatically), topics (watering, fertilizing, soil too wet, temperature, light, sensor unavailable), per level *off / daily summary / immediately*, summary time, critical repeat interval, whether critical overrides do-not-disturb, quiet hours, respecting the phone's do-not-disturb, buttons.
+- **Announcements** – voice assistants and speakers (listed automatically), *only in the plant's room* or *all selected*, the same topics and levels, quiet hours, volume, text-to-speech engine. Music Assistant players lower the music for the announcement.
+
+Behaviour:
+
+- Each plant and problem has its own notification; a new one replaces the old one, and it disappears from the phone when the problem is solved (e.g. ticked off on the card).
+- Buttons: **Watered / Fertilized** marks the task done, **In 1 h** and **Tomorrow** remind again if the task is still open.
+- Notices and warnings wait during quiet hours and, if enabled, while the phone is in do-not-disturb (enable the *Do Not Disturb* sensor in the Companion app); critical messages always come through.
+- Every plant has a **Notifications** switch on its device page to mute it.
+- The event `plant_butler_notification` (plant, area, problem, severity) is still fired for own automations.
 
 ## Development
 

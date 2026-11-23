@@ -20,7 +20,10 @@ async def async_setup_entry(
 ) -> None:
     """Set up switches."""
     for plant in entry.runtime_data.plants.values():
-        async_add_entities([WinterRestSwitch(plant)], config_subentry_id=plant.id)
+        async_add_entities(
+            [WinterRestSwitch(plant), NotificationsSwitch(plant)],
+            config_subentry_id=plant.id,
+        )
 
 
 class WinterRestSwitch(PlantEntity, SwitchEntity):
@@ -45,3 +48,27 @@ class WinterRestSwitch(PlantEntity, SwitchEntity):
     async def async_turn_off(self, **kwargs: Any) -> None:
         """Disable winter rest."""
         await self.plant.async_set_winter_rest(False)
+
+
+class NotificationsSwitch(PlantEntity, SwitchEntity):
+    """Phone notifications and announcements for this plant."""
+
+    _platform_domain = "switch"
+    _attr_entity_category = EntityCategory.CONFIG
+
+    def __init__(self, plant: PlantRuntime) -> None:
+        """Initialize."""
+        super().__init__(plant, "notifications")
+
+    @property
+    def is_on(self) -> bool:
+        """Return whether notifications are enabled."""
+        return bool(self.plant.state.get("notify_enabled", True))
+
+    async def async_turn_on(self, **kwargs: Any) -> None:
+        """Enable notifications."""
+        await self.plant.async_set_notifications(True)
+
+    async def async_turn_off(self, **kwargs: Any) -> None:
+        """Mute notifications."""
+        await self.plant.async_set_notifications(False)
