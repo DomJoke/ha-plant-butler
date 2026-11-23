@@ -56,4 +56,6 @@ Im Betrieb passen Raumklima (warme, trockene Luft → kürzer) und Winterruhe (�
 
 Die Werte sind Richtwerte. Bodensensoren messen je nach Hersteller unterschiedlich – passe „Gießen ab“ an deine Messung an.
 
+Sichtbarkeit: Sollwerte (Selects, Zahlen, Winterruhe) sind *Konfigurations*-Entities, Lichtstufe, DLI und die Licht-/Temperaturproblem-Sensoren *Diagnose*-Entities – beide erscheinen nicht in automatisch erzeugten Dashboards. Temperatur-Min/-Max, Feuchte-Maximum und das Winter-Düngeintervall sind **standardmäßig deaktiviert**; aktiviere sie auf der Geräteseite, wenn du sie fein einstellen willst.
+
 Entities, Dienst und Benachrichtigungs-Beispiel: siehe [englische README](README.md).

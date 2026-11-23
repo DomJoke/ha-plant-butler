@@ -8,9 +8,11 @@ from typing import Any
 from freezegun.api import FrozenDateTimeFactory
 from homeassistant.components.todo import DOMAIN as TODO_DOMAIN
 from homeassistant.config_entries import ConfigEntryState
+from homeassistant.const import EntityCategory
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers import area_registry as ar
 from homeassistant.helpers import device_registry as dr
+from homeassistant.helpers import entity_registry as er
 from pytest_homeassistant_custom_component.common import async_fire_time_changed
 
 from custom_components.plant_butler.const import DOMAIN
@@ -67,7 +69,6 @@ async def test_entities_created_with_english_ids(
         "select.monstera_water_need",
         "select.monstera_light_need",
         "select.monstera_location_light",
-        "number.monstera_temperature_min",
         "number.monstera_watering_interval",
         "number.monstera_fertilizer_amount",
         "switch.monstera_winter_rest",
@@ -75,6 +76,26 @@ async def test_entities_created_with_english_ids(
         "todo.plant_butler",
     ):
         assert hass.states.get(entity_id) is not None, entity_id
+
+    # Rarely needed values are disabled by default, diagnostics are categorized
+    ent_reg = er.async_get(hass)
+    for entity_id in (
+        "number.monstera_temperature_min",
+        "number.monstera_temperature_max",
+        "number.monstera_fertilizer_winter_interval",
+    ):
+        assert (
+            ent_reg.async_get(entity_id).disabled_by
+            is er.RegistryEntryDisabler.INTEGRATION
+        )
+    assert (
+        ent_reg.async_get("binary_sensor.monstera_light_problem").entity_category
+        is EntityCategory.DIAGNOSTIC
+    )
+    assert (
+        ent_reg.async_get("select.monstera_water_need").entity_category
+        is EntityCategory.CONFIG
+    )
 
     # No moisture sensor -> no moisture thresholds, no DLI sensor
     assert hass.states.get("number.monstera_moisture_min") is None

@@ -72,6 +72,8 @@ These are guide values. Soil sensors read differently depending on the manufactu
 | `switch.monstera_winter_rest` | Winter rest: watering interval × 1.5, fertilizing by winter interval |
 | `image.monstera_photo` | Photo (if set) |
 
+Visibility: target values (selects, numbers, winter rest) are *configuration* entities, light level, DLI and the light/temperature problem sensors are *diagnostic* entities – both are kept out of auto-generated dashboards. Temperature min/max, moisture maximum and the winter fertilizing interval are **disabled by default**; enable them on the device page if you want to fine-tune them.
+
 ## Service
 
 ```yaml

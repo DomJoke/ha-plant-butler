@@ -8,6 +8,7 @@ from homeassistant.components.binary_sensor import (
     BinarySensorDeviceClass,
     BinarySensorEntity,
 )
+from homeassistant.const import EntityCategory
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
 
@@ -73,6 +74,8 @@ class NeedsFertilizerBinarySensor(PlantBinarySensor):
 class LightProblemBinarySensor(PlantBinarySensor):
     """On when the light does not fit the plant."""
 
+    _attr_entity_category = EntityCategory.DIAGNOSTIC
+
     _attr_device_class = BinarySensorDeviceClass.PROBLEM
 
     def __init__(self, plant: PlantRuntime) -> None:
@@ -92,6 +95,8 @@ class LightProblemBinarySensor(PlantBinarySensor):
 
 class TemperatureProblemBinarySensor(PlantBinarySensor):
     """On when the room temperature is out of range."""
+
+    _attr_entity_category = EntityCategory.DIAGNOSTIC
 
     _attr_device_class = BinarySensorDeviceClass.PROBLEM
 

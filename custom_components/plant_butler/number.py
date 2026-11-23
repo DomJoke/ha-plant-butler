@@ -57,6 +57,7 @@ NUMBERS: tuple[PlantNumberDescription, ...] = (
     ),
     PlantNumberDescription(
         key=CONF_MOISTURE_MAX,
+        entity_registry_enabled_default=False,
         native_min_value=0,
         native_max_value=100,
         native_step=1,
@@ -66,6 +67,7 @@ NUMBERS: tuple[PlantNumberDescription, ...] = (
     ),
     PlantNumberDescription(
         key=CONF_TEMPERATURE_MIN,
+        entity_registry_enabled_default=False,
         native_min_value=-20,
         native_max_value=40,
         native_step=0.5,
@@ -74,6 +76,7 @@ NUMBERS: tuple[PlantNumberDescription, ...] = (
     ),
     PlantNumberDescription(
         key=CONF_TEMPERATURE_MAX,
+        entity_registry_enabled_default=False,
         native_min_value=-20,
         native_max_value=45,
         native_step=0.5,
@@ -103,6 +106,7 @@ NUMBERS: tuple[PlantNumberDescription, ...] = (
     ),
     PlantNumberDescription(
         key=CONF_FERTILIZER_WINTER_INTERVAL,
+        entity_registry_enabled_default=False,
         native_min_value=0,
         native_max_value=180,
         native_step=1,

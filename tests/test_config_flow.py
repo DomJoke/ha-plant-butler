@@ -137,7 +137,7 @@ async def test_reconfigure_plant(hass: HomeAssistant) -> None:
     await hass.services.async_call(
         "number",
         "set_value",
-        {"entity_id": "number.farn_temperature_min", "value": 10},
+        {"entity_id": "number.farn_watering_interval", "value": 10},
         blocking=True,
     )
     result = await hass.config_entries.subentries.async_init(
@@ -154,15 +154,15 @@ async def test_reconfigure_plant(hass: HomeAssistant) -> None:
         result["flow_id"], assistant
     )
     current = _suggested(result)
-    assert current["temperature_min"] == 10  # effective value shown
+    assert current["watering_interval"] == 10  # tuned value is kept
     assert current["watering_amount"] == 170
     result = await hass.config_entries.subentries.async_configure(
-        result["flow_id"], current | {"temperature_min": 12}
+        result["flow_id"], current | {"watering_interval": 12}
     )
     assert result["type"] is FlowResultType.ABORT
     assert result["reason"] == "reconfigure_successful"
     await hass.async_block_till_done()
-    assert hass.states.get("number.farn_temperature_min").state == "12.0"
+    assert hass.states.get("number.farn_watering_interval").state == "12.0"
 
 
 async def test_options_flow(hass: HomeAssistant) -> None:

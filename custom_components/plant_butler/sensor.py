@@ -10,6 +10,7 @@ from homeassistant.components.sensor import (
     SensorEntity,
     SensorStateClass,
 )
+from homeassistant.const import EntityCategory
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
 
@@ -199,6 +200,8 @@ class NextFertilizingSensor(PlantSensor):
 class DliSensor(PlantSensor):
     """Daily light integral accumulated today."""
 
+    _attr_entity_category = EntityCategory.DIAGNOSTIC
+
     _attr_native_unit_of_measurement = "mol/(m²·d)"
     _attr_state_class = SensorStateClass.MEASUREMENT
     _attr_suggested_display_precision = 1
@@ -220,6 +223,8 @@ class DliSensor(PlantSensor):
 
 class LightLevelSensor(PlantSensor):
     """Actual light level (from sensor or chosen location)."""
+
+    _attr_entity_category = EntityCategory.DIAGNOSTIC
 
     _attr_device_class = SensorDeviceClass.ENUM
     _attr_options = LIGHT_LEVEL_KEYS
