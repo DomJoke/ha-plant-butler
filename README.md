@@ -1,4 +1,7 @@
-<img src="custom_components/plant_butler/brand/icon@2x.png" alt="Plant Butler" width="128" align="right">
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/wordmark-dark.png">
+  <img src="docs/wordmark.png" alt="Plant Butler" width="420">
+</picture>
 
 # Plant Butler 🌿
 
@@ -124,6 +127,6 @@ pip install -r requirements_test.txt
 pytest
 ```
 
-The integration icon lives in `custom_components/plant_butler/brand/` (shown by Home Assistant 2026.3 and newer); its source is `tools/brand/build.py` (all style options) and `tools/brand/export.py` (exports the chosen ring icon).
+The integration icon lives in `custom_components/plant_butler/brand/` (shown by Home Assistant 2026.3 and newer); its source is `tools/brand/build.py` (all style options), `tools/brand/export.py` (exports the chosen ring icon; the logo files are copies of the icon) and `tools/brand/export_wordmark.py` (README wordmark).
 
 The plant database is generated from `tools/species.tsv` with `tools/build_db.py`; translations are generated with `tools/build_translations.py`.

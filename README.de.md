@@ -1,4 +1,7 @@
-<img src="custom_components/plant_butler/brand/icon@2x.png" alt="Plant Butler" width="128" align="right">
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/wordmark-dark.png">
+  <img src="docs/wordmark.png" alt="Plant Butler" width="420">
+</picture>
 
 # Plant Butler 🌿
 
