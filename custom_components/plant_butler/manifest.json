@@ -1,0 +1,14 @@
+{
+  "domain": "plant_butler",
+  "name": "Plant Butler",
+  "codeowners": ["@DomJoke"],
+  "config_flow": true,
+  "dependencies": ["file_upload"],
+  "documentation": "https://github.com/DomJoke/ha-plant-butler",
+  "integration_type": "hub",
+  "iot_class": "calculated",
+  "issue_tracker": "https://github.com/DomJoke/ha-plant-butler/issues",
+  "requirements": [],
+  "single_config_entry": true,
+  "version": "0.1.0"
+}

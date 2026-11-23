@@ -1,0 +1,277 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Plant Butler",
+        "description": "Plant Butler keeps track of your plants. After setup, add plants with \"+ Add plant\" on the integration page."
+      }
+    },
+    "abort": {
+      "single_instance_allowed": "Plant Butler is already set up. Add plants on its integration page."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Plant Butler",
+        "data": {
+          "climate_strength": "Strength of the room climate correction"
+        },
+        "data_description": {
+          "climate_strength": "0 = off, 1 = default, 2 = strong. Warm, dry air shortens the watering interval for plants without a soil sensor."
+        }
+      }
+    }
+  },
+  "config_subentries": {
+    "plant": {
+      "entry_type": "Plant",
+      "initiate_flow": {
+        "user": "Add plant",
+        "reconfigure": "Edit plant"
+      },
+      "step": {
+        "user": {
+          "title": "Plant",
+          "description": "Choose the species to prefill all target values from the database, or \"Custom\" to enter them yourself.",
+          "data": {
+            "name": "Name",
+            "species": "Species",
+            "area_id": "Room"
+          }
+        },
+        "sensors": {
+          "title": "Sensors (all optional)",
+          "description": "Without a soil sensor a schedule is used. Room temperature and humidity correct it for evaporation.",
+          "data": {
+            "moisture_sensor": "Soil moisture sensor",
+            "illuminance_sensor": "Light sensor",
+            "temperature_sensor": "Room temperature sensor",
+            "humidity_sensor": "Room humidity sensor"
+          }
+        },
+        "profile": {
+          "title": "Care profile",
+          "description": "Target values from the database – change anything you like. Water need: very low = let the soil dry out completely, medium = water when the top few cm are dry, very high = keep constantly moist.",
+          "data": {
+            "water_need": "Water need",
+            "light_need": "Light need",
+            "location_light": "Light at the location (without light sensor)",
+            "temperature_min": "Minimum temperature",
+            "temperature_max": "Maximum temperature",
+            "watering_amount": "Watering amount",
+            "fertilizer_interval": "Fertilizing interval (0 = never)",
+            "fertilizer_winter_interval": "Fertilizing interval in winter rest (0 = pause)",
+            "fertilizer_amount": "Fertilizer amount",
+            "fertilizer_unit": "Fertilizer type / unit",
+            "photo_upload": "Upload photo",
+            "photo": "Photo URL or /local/ path",
+            "notes": "Notes"
+          }
+        }
+      },
+      "error": {
+        "unknown_species": "Unknown species – pick one from the list or \"Custom\"."
+      },
+      "abort": {
+        "reconfigure_successful": "Plant updated."
+      }
+    }
+  },
+  "selector": {
+    "water_need": {
+      "options": {
+        "very_low": "Very low (cacti, succulents)",
+        "low": "Low (ZZ plant, snake plant)",
+        "medium": "Medium (monstera, ficus, pothos)",
+        "high": "High (ferns, calathea)",
+        "very_high": "Very high (papyrus, herbs on the balcony)"
+      }
+    },
+    "light_level": {
+      "options": {
+        "very_dark": "Very dark",
+        "dark": "Dark",
+        "partial_shade": "Partial shade",
+        "bright_indirect": "Bright, indirect",
+        "bright_some_sun": "Bright with some sun",
+        "full_sun": "Direct sun"
+      }
+    },
+    "fertilizer_unit": {
+      "options": {
+        "ml_per_l": "ml per litre of water (liquid)",
+        "ml": "ml",
+        "sticks": "Sticks (pieces)",
+        "g": "Gram (granules)"
+      }
+    },
+    "task": {
+      "options": {
+        "water": "Water",
+        "fertilize": "Fertilize"
+      }
+    }
+  },
+  "entity": {
+    "binary_sensor": {
+      "needs_water": {
+        "name": "Needs water"
+      },
+      "needs_fertilizer": {
+        "name": "Needs fertilizer"
+      },
+      "light_problem": {
+        "name": "Light problem"
+      },
+      "temperature_problem": {
+        "name": "Temperature problem"
+      }
+    },
+    "button": {
+      "mark_watered": {
+        "name": "Watered"
+      },
+      "mark_fertilized": {
+        "name": "Fertilized"
+      }
+    },
+    "image": {
+      "photo": {
+        "name": "Photo"
+      }
+    },
+    "number": {
+      "moisture_min": {
+        "name": "Water below"
+      },
+      "moisture_max": {
+        "name": "Moisture maximum"
+      },
+      "temperature_min": {
+        "name": "Temperature minimum"
+      },
+      "temperature_max": {
+        "name": "Temperature maximum"
+      },
+      "watering_interval": {
+        "name": "Watering interval"
+      },
+      "watering_amount": {
+        "name": "Watering amount"
+      },
+      "fertilizer_interval": {
+        "name": "Fertilizing interval"
+      },
+      "fertilizer_winter_interval": {
+        "name": "Fertilizing interval winter"
+      },
+      "fertilizer_amount": {
+        "name": "Fertilizer amount"
+      }
+    },
+    "select": {
+      "water_need": {
+        "name": "Water need",
+        "state": {
+          "very_low": "Very low",
+          "low": "Low",
+          "medium": "Medium",
+          "high": "High",
+          "very_high": "Very high"
+        }
+      },
+      "light_need": {
+        "name": "Light need",
+        "state": {
+          "very_dark": "Very dark",
+          "dark": "Dark",
+          "partial_shade": "Partial shade",
+          "bright_indirect": "Bright, indirect",
+          "bright_some_sun": "Bright with some sun",
+          "full_sun": "Direct sun"
+        }
+      },
+      "location_light": {
+        "name": "Light at location",
+        "state": {
+          "very_dark": "Very dark",
+          "dark": "Dark",
+          "partial_shade": "Partial shade",
+          "bright_indirect": "Bright, indirect",
+          "bright_some_sun": "Bright with some sun",
+          "full_sun": "Direct sun"
+        }
+      }
+    },
+    "sensor": {
+      "status": {
+        "name": "Status",
+        "state": {
+          "ok": "OK",
+          "info": "Info",
+          "warning": "Warning",
+          "critical": "Critical"
+        }
+      },
+      "next_watering": {
+        "name": "Next watering"
+      },
+      "next_fertilizing": {
+        "name": "Next fertilizing"
+      },
+      "dli": {
+        "name": "Daily light"
+      },
+      "light_level": {
+        "name": "Light level",
+        "state": {
+          "very_dark": "Very dark",
+          "dark": "Dark",
+          "partial_shade": "Partial shade",
+          "bright_indirect": "Bright, indirect",
+          "bright_some_sun": "Bright with some sun",
+          "full_sun": "Direct sun"
+        }
+      }
+    },
+    "switch": {
+      "winter_rest": {
+        "name": "Winter rest"
+      }
+    },
+    "todo": {
+      "checklist": {
+        "name": "Plant care"
+      }
+    }
+  },
+  "services": {
+    "mark_done": {
+      "name": "Mark care task done",
+      "description": "Marks watering or fertilizing as done for the given plants and restarts the schedule.",
+      "fields": {
+        "entity_id": {
+          "name": "Plant entities",
+          "description": "Any entity of the plant."
+        },
+        "device_id": {
+          "name": "Plant devices",
+          "description": "The plant devices."
+        },
+        "task": {
+          "name": "Task",
+          "description": "Which task was done."
+        }
+      }
+    }
+  },
+  "exceptions": {
+    "no_plant_found": {
+      "message": "No Plant Butler plant found for the given target."
+    },
+    "unknown_task": {
+      "message": "Unknown checklist item."
+    }
+  }
+}

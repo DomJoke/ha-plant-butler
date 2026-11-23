@@ -1,0 +1,277 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Plant Butler",
+        "description": "Plant Butler kümmert sich um deine Pflanzen. Nach der Einrichtung fügst du Pflanzen auf der Integrationsseite mit „+ Pflanze hinzufügen“ hinzu."
+      }
+    },
+    "abort": {
+      "single_instance_allowed": "Plant Butler ist bereits eingerichtet. Pflanzen fügst du auf der Integrationsseite hinzu."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Plant Butler",
+        "data": {
+          "climate_strength": "Stärke der Raumklima-Korrektur"
+        },
+        "data_description": {
+          "climate_strength": "0 = aus, 1 = Standard, 2 = stark. Warme, trockene Luft verkürzt das Gießintervall bei Pflanzen ohne Bodensensor."
+        }
+      }
+    }
+  },
+  "config_subentries": {
+    "plant": {
+      "entry_type": "Pflanze",
+      "initiate_flow": {
+        "user": "Pflanze hinzufügen",
+        "reconfigure": "Pflanze bearbeiten"
+      },
+      "step": {
+        "user": {
+          "title": "Pflanze",
+          "description": "Wähle die Art, um alle Sollwerte aus der Datenbank vorzubefüllen, oder „Benutzerdefiniert“, um sie selbst einzutragen.",
+          "data": {
+            "name": "Name",
+            "species": "Art",
+            "area_id": "Raum"
+          }
+        },
+        "sensors": {
+          "title": "Sensoren (alle optional)",
+          "description": "Ohne Bodensensor wird ein Zeitplan verwendet. Raumtemperatur und -feuchte korrigieren ihn für die Verdunstung.",
+          "data": {
+            "moisture_sensor": "Bodenfeuchtesensor",
+            "illuminance_sensor": "Lichtsensor",
+            "temperature_sensor": "Raumtemperatursensor",
+            "humidity_sensor": "Raumfeuchtesensor"
+          }
+        },
+        "profile": {
+          "title": "Pflegeprofil",
+          "description": "Sollwerte aus der Datenbank – alles änderbar. Wasserbedarf: sehr wenig = Erde ganz austrocknen lassen, mittel = gießen, wenn die oberen cm trocken sind, sehr viel = dauerhaft feucht halten.",
+          "data": {
+            "water_need": "Wasserbedarf",
+            "light_need": "Lichtbedarf",
+            "location_light": "Licht am Standort (ohne Lichtsensor)",
+            "temperature_min": "Mindesttemperatur",
+            "temperature_max": "Höchsttemperatur",
+            "watering_amount": "Gießmenge",
+            "fertilizer_interval": "Düngeintervall (0 = nie)",
+            "fertilizer_winter_interval": "Düngeintervall in der Winterruhe (0 = Pause)",
+            "fertilizer_amount": "Düngermenge",
+            "fertilizer_unit": "Düngerart / Einheit",
+            "photo_upload": "Foto hochladen",
+            "photo": "Foto-URL oder /local/-Pfad",
+            "notes": "Notizen"
+          }
+        }
+      },
+      "error": {
+        "unknown_species": "Unbekannte Art – wähle eine aus der Liste oder „Benutzerdefiniert“."
+      },
+      "abort": {
+        "reconfigure_successful": "Pflanze aktualisiert."
+      }
+    }
+  },
+  "selector": {
+    "water_need": {
+      "options": {
+        "very_low": "Sehr wenig (Kakteen, Sukkulenten)",
+        "low": "Wenig (Zamioculcas, Bogenhanf)",
+        "medium": "Mittel (Monstera, Ficus, Efeutute)",
+        "high": "Viel (Farne, Calathea)",
+        "very_high": "Sehr viel (Zyperngras, Balkonkräuter)"
+      }
+    },
+    "light_level": {
+      "options": {
+        "very_dark": "Sehr dunkel",
+        "dark": "Dunkel",
+        "partial_shade": "Halbschatten",
+        "bright_indirect": "Hell, indirekt",
+        "bright_some_sun": "Hell mit etwas Sonne",
+        "full_sun": "Direkte Sonne"
+      }
+    },
+    "fertilizer_unit": {
+      "options": {
+        "ml_per_l": "ml pro Liter Gießwasser (flüssig)",
+        "ml": "ml",
+        "sticks": "Stäbchen (Stück)",
+        "g": "Gramm (Granulat)"
+      }
+    },
+    "task": {
+      "options": {
+        "water": "Gießen",
+        "fertilize": "Düngen"
+      }
+    }
+  },
+  "entity": {
+    "binary_sensor": {
+      "needs_water": {
+        "name": "Braucht Wasser"
+      },
+      "needs_fertilizer": {
+        "name": "Braucht Dünger"
+      },
+      "light_problem": {
+        "name": "Lichtproblem"
+      },
+      "temperature_problem": {
+        "name": "Temperaturproblem"
+      }
+    },
+    "button": {
+      "mark_watered": {
+        "name": "Gegossen"
+      },
+      "mark_fertilized": {
+        "name": "Gedüngt"
+      }
+    },
+    "image": {
+      "photo": {
+        "name": "Foto"
+      }
+    },
+    "number": {
+      "moisture_min": {
+        "name": "Gießen ab"
+      },
+      "moisture_max": {
+        "name": "Feuchte-Maximum"
+      },
+      "temperature_min": {
+        "name": "Temperatur-Minimum"
+      },
+      "temperature_max": {
+        "name": "Temperatur-Maximum"
+      },
+      "watering_interval": {
+        "name": "Gießintervall"
+      },
+      "watering_amount": {
+        "name": "Gießmenge"
+      },
+      "fertilizer_interval": {
+        "name": "Düngeintervall"
+      },
+      "fertilizer_winter_interval": {
+        "name": "Düngeintervall Winter"
+      },
+      "fertilizer_amount": {
+        "name": "Düngermenge"
+      }
+    },
+    "select": {
+      "water_need": {
+        "name": "Wasserbedarf",
+        "state": {
+          "very_low": "Sehr wenig",
+          "low": "Wenig",
+          "medium": "Mittel",
+          "high": "Viel",
+          "very_high": "Sehr viel"
+        }
+      },
+      "light_need": {
+        "name": "Lichtbedarf",
+        "state": {
+          "very_dark": "Sehr dunkel",
+          "dark": "Dunkel",
+          "partial_shade": "Halbschatten",
+          "bright_indirect": "Hell, indirekt",
+          "bright_some_sun": "Hell mit etwas Sonne",
+          "full_sun": "Direkte Sonne"
+        }
+      },
+      "location_light": {
+        "name": "Licht am Standort",
+        "state": {
+          "very_dark": "Sehr dunkel",
+          "dark": "Dunkel",
+          "partial_shade": "Halbschatten",
+          "bright_indirect": "Hell, indirekt",
+          "bright_some_sun": "Hell mit etwas Sonne",
+          "full_sun": "Direkte Sonne"
+        }
+      }
+    },
+    "sensor": {
+      "status": {
+        "name": "Status",
+        "state": {
+          "ok": "OK",
+          "info": "Info",
+          "warning": "Warnung",
+          "critical": "Kritisch"
+        }
+      },
+      "next_watering": {
+        "name": "Nächstes Gießen"
+      },
+      "next_fertilizing": {
+        "name": "Nächstes Düngen"
+      },
+      "dli": {
+        "name": "Tageslicht"
+      },
+      "light_level": {
+        "name": "Lichtstufe",
+        "state": {
+          "very_dark": "Sehr dunkel",
+          "dark": "Dunkel",
+          "partial_shade": "Halbschatten",
+          "bright_indirect": "Hell, indirekt",
+          "bright_some_sun": "Hell mit etwas Sonne",
+          "full_sun": "Direkte Sonne"
+        }
+      }
+    },
+    "switch": {
+      "winter_rest": {
+        "name": "Winterruhe"
+      }
+    },
+    "todo": {
+      "checklist": {
+        "name": "Pflanzenpflege"
+      }
+    }
+  },
+  "services": {
+    "mark_done": {
+      "name": "Pflegeaufgabe erledigt",
+      "description": "Markiert Gießen oder Düngen für die gewählten Pflanzen als erledigt und startet den Zeitplan neu.",
+      "fields": {
+        "entity_id": {
+          "name": "Pflanzen-Entities",
+          "description": "Beliebige Entity der Pflanze."
+        },
+        "device_id": {
+          "name": "Pflanzen-Geräte",
+          "description": "Die Pflanzen-Geräte."
+        },
+        "task": {
+          "name": "Aufgabe",
+          "description": "Welche Aufgabe erledigt wurde."
+        }
+      }
+    }
+  },
+  "exceptions": {
+    "no_plant_found": {
+      "message": "Keine Plant-Butler-Pflanze für das angegebene Ziel gefunden."
+    },
+    "unknown_task": {
+      "message": "Unbekannter Checklisten-Eintrag."
+    }
+  }
+}
