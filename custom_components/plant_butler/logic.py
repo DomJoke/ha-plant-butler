@@ -131,6 +131,8 @@ LIGHT_DRYING_FACTOR = {
 # Terracotta evaporates through the wall, mineral substrate drains faster.
 MATERIAL_DRYING_FACTOR = {"plastic": 1.0, "terracotta": 0.8}
 SUBSTRATE_DRYING_FACTOR = {"standard": 1.0, "mineral": 0.85}
+# More foliage relative to the pot uses the water up faster.
+PLANT_SIZE_FACTOR = {"small": 1.2, "normal": 1.0, "large": 0.8}
 INTERVAL_FACTOR_MIN = 0.6
 INTERVAL_FACTOR_MAX = 1.6
 # Strength relative to the package dosage of a liquid fertilizer.
@@ -160,11 +162,16 @@ def watering_amount_ml(volume_l: float, water_need: str, substrate: str) -> int:
 
 
 def watering_interval_factor(
-    volume_l: float | None, material: str, substrate: str, light: str | None
+    volume_l: float | None,
+    material: str,
+    substrate: str,
+    light: str | None,
+    plant_size: str = "normal",
 ) -> float:
     """Factor applied to the base interval of the water need level.
 
-    Larger pots hold more water and dry out more slowly (2 l = 1.0).
+    Larger pots hold more water and dry out more slowly (2 l = 1.0); a plant
+    that is large for its pot transpires more and needs water more often.
     """
     size = 1.0
     if volume_l:
@@ -174,6 +181,7 @@ def watering_interval_factor(
         * MATERIAL_DRYING_FACTOR.get(material, 1.0)
         * SUBSTRATE_DRYING_FACTOR.get(substrate, 1.0)
         * LIGHT_DRYING_FACTOR.get(light or "bright_indirect", 1.0)
+        * PLANT_SIZE_FACTOR.get(plant_size, 1.0)
     )
     return round(min(max(factor, INTERVAL_FACTOR_MIN), INTERVAL_FACTOR_MAX), 3)
 

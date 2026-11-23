@@ -1,45 +1,120 @@
 {
   "entity": {
     "binary_sensor": {
-      "needs_water": { "default": "mdi:water-off-outline", "state": { "on": "mdi:water-alert" } },
-      "needs_fertilizer": { "default": "mdi:sprout-outline", "state": { "on": "mdi:sprout" } },
-      "light_problem": { "default": "mdi:white-balance-sunny" },
-      "temperature_problem": { "default": "mdi:thermometer-check", "state": { "on": "mdi:thermometer-alert" } }
+      "needs_water": {
+        "default": "mdi:water-off-outline",
+        "state": {
+          "on": "mdi:water-alert"
+        }
+      },
+      "needs_fertilizer": {
+        "default": "mdi:sprout-outline",
+        "state": {
+          "on": "mdi:sprout"
+        }
+      }
     },
     "button": {
-      "mark_watered": { "default": "mdi:watering-can" },
-      "mark_fertilized": { "default": "mdi:sprout" }
+      "mark_watered": {
+        "default": "mdi:watering-can"
+      },
+      "mark_fertilized": {
+        "default": "mdi:sprout"
+      }
     },
     "number": {
-      "moisture_min": { "default": "mdi:water-minus" },
-      "moisture_max": { "default": "mdi:water-plus" },
-      "temperature_min": { "default": "mdi:thermometer-low" },
-      "temperature_max": { "default": "mdi:thermometer-high" },
-      "watering_interval": { "default": "mdi:calendar-sync" },
-      "watering_amount": { "default": "mdi:cup-water" },
-      "fertilizer_interval": { "default": "mdi:calendar-sync" },
-      "fertilizer_winter_interval": { "default": "mdi:snowflake" },
-      "fertilizer_amount": { "default": "mdi:beaker-outline" }
+      "moisture_min": {
+        "default": "mdi:water-minus"
+      },
+      "moisture_max": {
+        "default": "mdi:water-plus"
+      },
+      "temperature_min": {
+        "default": "mdi:thermometer-low"
+      },
+      "temperature_max": {
+        "default": "mdi:thermometer-high"
+      },
+      "watering_interval": {
+        "default": "mdi:calendar-sync"
+      },
+      "watering_amount": {
+        "default": "mdi:cup-water"
+      },
+      "fertilizer_interval": {
+        "default": "mdi:calendar-sync"
+      },
+      "fertilizer_winter_interval": {
+        "default": "mdi:snowflake"
+      },
+      "fertilizer_amount": {
+        "default": "mdi:beaker-outline"
+      }
     },
     "select": {
-      "water_need": { "default": "mdi:water" },
-      "light_need": { "default": "mdi:white-balance-sunny" },
-      "location_light": { "default": "mdi:window-closed-variant" }
+      "water_need": {
+        "default": "mdi:water"
+      },
+      "light_need": {
+        "default": "mdi:white-balance-sunny"
+      },
+      "location_light": {
+        "default": "mdi:window-closed-variant"
+      },
+      "plant_size": {
+        "default": "mdi:resize",
+        "state": {
+          "small": "mdi:sprout-outline",
+          "normal": "mdi:sprout",
+          "large": "mdi:tree"
+        }
+      }
     },
     "sensor": {
-      "next_watering": { "default": "mdi:watering-can-outline" },
-      "next_fertilizing": { "default": "mdi:sprout-outline" },
-      "dli": { "default": "mdi:sun-clock" },
-      "light_level": { "default": "mdi:white-balance-sunny" }
+      "next_watering": {
+        "default": "mdi:watering-can-outline"
+      },
+      "next_fertilizing": {
+        "default": "mdi:sprout-outline"
+      },
+      "dli": {
+        "default": "mdi:sun-clock"
+      },
+      "light_level": {
+        "default": "mdi:white-balance-sunny"
+      },
+      "light_condition": {
+        "default": "mdi:white-balance-sunny",
+        "state": {
+          "too_dark": "mdi:weather-night",
+          "too_bright": "mdi:weather-sunny-alert"
+        }
+      },
+      "temperature_condition": {
+        "default": "mdi:thermometer-check",
+        "state": {
+          "too_cold": "mdi:snowflake-thermometer",
+          "too_hot": "mdi:sun-thermometer"
+        }
+      }
     },
     "switch": {
-      "winter_rest": { "default": "mdi:snowflake-off", "state": { "on": "mdi:snowflake" } }
+      "winter_rest": {
+        "default": "mdi:snowflake-off",
+        "state": {
+          "on": "mdi:snowflake"
+        }
+      }
     },
     "todo": {
-      "checklist": { "default": "mdi:clipboard-check-outline" }
+      "checklist": {
+        "default": "mdi:clipboard-check-outline"
+      }
     }
   },
   "services": {
-    "mark_done": { "service": "mdi:check-circle-outline" }
+    "mark_done": {
+      "service": "mdi:check-circle-outline"
+    }
   }
 }

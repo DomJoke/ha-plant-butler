@@ -27,12 +27,18 @@ LEVELS = {
         "de": {"ml_per_l": "ml pro Liter Gießwasser (flüssig)", "ml": "ml", "sticks": "Stäbchen (Stück)", "g": "Gramm (Granulat)"},
     },
     "severity": {
-        "en": {"ok": "OK", "info": "Info", "warning": "Warning", "critical": "Critical"},
-        "de": {"ok": "OK", "info": "Info", "warning": "Warnung", "critical": "Kritisch"},
+        "en": {"ok": "OK", "info": "Notice", "warning": "Warning", "critical": "Critical"},
+        "de": {"ok": "OK", "info": "Hinweis", "warning": "Warnung", "critical": "Kritisch"},
     },
     "pot_material": {
         "en": {"plastic": "Plastic / glazed ceramic", "terracotta": "Terracotta (unglazed clay)"},
         "de": {"plastic": "Kunststoff / glasierte Keramik", "terracotta": "Terrakotta (unglasierter Ton)"},
+    },
+    "plant_size": {
+        "en": {"small": "Small / freshly repotted (plenty of free soil)", "normal": "Normal (plant fits the pot)",
+               "large": "Large / lush (lots of foliage, pot rather tight)"},
+        "de": {"small": "Klein / frisch umgetopft (viel freie Erde)", "normal": "Normal (Pflanze passt zum Topf)",
+               "large": "Groß / üppig (viel Laub, Topf eher knapp)"},
     },
     "substrate": {
         "en": {"standard": "Potting soil", "mineral": "Mineral / cactus soil"},
@@ -47,6 +53,28 @@ LEVELS = {
     "fertilizer_type": {
         "en": {"liquid": "Liquid fertilizer", "sticks": "Fertilizer sticks", "granules": "Slow-release granules", "none": "No fertilizer"},
         "de": {"liquid": "Flüssigdünger", "sticks": "Düngestäbchen", "granules": "Langzeitdünger (Granulat)", "none": "Kein Dünger"},
+    },
+    "yesno": {
+        "en": {"on": "Yes", "off": "No"},
+        "de": {"on": "Ja", "off": "Nein"},
+    },
+    "light_cond": {
+        "en": {"ok": "Suitable", "too_dark": "Too dark", "too_bright": "Too bright"},
+        "de": {"ok": "Passend", "too_dark": "Zu dunkel", "too_bright": "Zu hell"},
+    },
+    "temp_cond": {
+        "en": {"ok": "Suitable", "too_cold": "Too cold", "too_hot": "Too warm"},
+        "de": {"ok": "Passend", "too_cold": "Zu kalt", "too_hot": "Zu warm"},
+    },
+    "status_attr": {
+        "en": {"summary": "Summary", "plant_name": "Plant", "area": "Room", "photo": "Photo", "notes": "Notes",
+               "problems": "Problem keys", "problem_severities": "Problem levels", "needs_water": "Needs water",
+               "needs_fertilizer": "Needs fertilizer", "winter_rest": "Winter rest", "sensors": "Sensors",
+               "targets": "Targets", "care": "Care", "light": "Light", "species": "Species"},
+        "de": {"summary": "Zusammenfassung", "plant_name": "Pflanze", "area": "Raum", "photo": "Foto", "notes": "Notizen",
+               "problems": "Problem-Schlüssel", "problem_severities": "Problem-Stufen", "needs_water": "Braucht Wasser",
+               "needs_fertilizer": "Braucht Dünger", "winter_rest": "Winterruhe", "sensors": "Sensoren",
+               "targets": "Sollwerte", "care": "Pflege", "light": "Licht", "species": "Art"},
     },
     "task": {
         "en": {"water": "Water", "fertilize": "Fertilize"},
@@ -68,7 +96,9 @@ T = {
         "moisture": "Soil moisture sensor", "illum": "Light sensor", "temp": "Room temperature sensor", "hum": "Room humidity sensor",
         "assist_title": "Care assistant",
         "assist_desc": "Prefilled from the database. Tell the assistant about the pot and your fertilizer – it calculates watering amount, interval and fertilizer dose in the next step. Water need: very low = let the soil dry out completely, medium = water when the top few cm are dry, very high = keep constantly moist.",
-        "feeding": "Nutrient demand", "pot_d": "Pot diameter (top)", "pot_h": "Pot height",
+        "feeding": "Nutrient demand", "psize": "Plant size relative to the pot",
+        "psize_d": "A plant with lots of foliage for its pot needs water more often (interval −20 %), a small one less often (+20 %).",
+        "pot_d": "Pot diameter (top)", "pot_h": "Pot height",
         "pot_m": "Pot material", "substrate": "Substrate", "ftype": "Fertilizer", "fdose": "Fertilizer dose on the package",
         "pot_d_d": "Leave empty if unknown – then no watering amount is calculated.",
         "pot_h_d": "Optional, default 0.9 × diameter.",
@@ -86,14 +116,14 @@ T = {
         "e": {
             "status": "Status", "next_watering": "Next watering", "next_fertilizing": "Next fertilizing",
             "dli": "Daily light", "light_level": "Light level",
-            "needs_water": "Needs water", "needs_fertilizer": "Needs fertilizer", "light_problem": "Light problem",
-            "temperature_problem": "Temperature problem", "mark_watered": "Watered", "mark_fertilized": "Fertilized",
+            "needs_water": "Needs water", "needs_fertilizer": "Needs fertilizer", "light_condition": "Light conditions",
+            "temperature_condition": "Temperature conditions", "mark_watered": "Watered", "mark_fertilized": "Fertilized",
             "water_need": "Water need", "light_need": "Light need", "location_light": "Light at location",
             "moisture_min": "Water below", "moisture_max": "Moisture maximum", "temperature_min": "Temperature minimum",
             "temperature_max": "Temperature maximum", "watering_interval": "Watering interval",
             "watering_amount": "Watering amount", "fertilizer_interval": "Fertilizing interval",
             "fertilizer_winter_interval": "Fertilizing interval winter", "fertilizer_amount": "Fertilizer amount",
-            "winter_rest": "Winter rest", "photo": "Photo", "checklist": "Plant care",
+            "winter_rest": "Winter rest", "photo": "Photo", "plant_size": "Plant size", "checklist": "Plant care",
         },
         "svc_name": "Mark care task done", "svc_desc": "Marks watering or fertilizing as done for the given plants and restarts the schedule.",
         "svc_ent": "Plant entities", "svc_ent_d": "Any entity of the plant.", "svc_dev": "Plant devices",
@@ -113,7 +143,9 @@ T = {
         "moisture": "Bodenfeuchtesensor", "illum": "Lichtsensor", "temp": "Raumtemperatursensor", "hum": "Raumfeuchtesensor",
         "assist_title": "Pflege-Assistent",
         "assist_desc": "Aus der Datenbank vorbefüllt. Erzähl dem Assistenten vom Topf und deinem Dünger – im nächsten Schritt berechnet er Gießmenge, Intervall und Düngerdosis. Wasserbedarf: sehr wenig = Erde ganz austrocknen lassen, mittel = gießen, wenn die oberen cm trocken sind, sehr viel = dauerhaft feucht halten.",
-        "feeding": "Nährstoffbedarf", "pot_d": "Topfdurchmesser (oben)", "pot_h": "Topfhöhe",
+        "feeding": "Nährstoffbedarf", "psize": "Pflanzengröße im Verhältnis zum Topf",
+        "psize_d": "Eine Pflanze mit viel Laub für ihren Topf braucht öfter Wasser (Intervall −20 %), eine kleine seltener (+20 %).",
+        "pot_d": "Topfdurchmesser (oben)", "pot_h": "Topfhöhe",
         "pot_m": "Topfmaterial", "substrate": "Substrat", "ftype": "Dünger", "fdose": "Dosierung laut Packung",
         "pot_d_d": "Leer lassen, wenn unbekannt – dann wird keine Gießmenge berechnet.",
         "pot_h_d": "Optional, Standard 0,9 × Durchmesser.",
@@ -131,14 +163,14 @@ T = {
         "e": {
             "status": "Status", "next_watering": "Nächstes Gießen", "next_fertilizing": "Nächstes Düngen",
             "dli": "Tageslicht", "light_level": "Lichtstufe",
-            "needs_water": "Braucht Wasser", "needs_fertilizer": "Braucht Dünger", "light_problem": "Lichtproblem",
-            "temperature_problem": "Temperaturproblem", "mark_watered": "Gegossen", "mark_fertilized": "Gedüngt",
+            "needs_water": "Braucht Wasser", "needs_fertilizer": "Braucht Dünger", "light_condition": "Lichtverhältnisse",
+            "temperature_condition": "Temperaturverhältnisse", "mark_watered": "Gegossen", "mark_fertilized": "Gedüngt",
             "water_need": "Wasserbedarf", "light_need": "Lichtbedarf", "location_light": "Licht am Standort",
             "moisture_min": "Gießen ab", "moisture_max": "Feuchte-Maximum", "temperature_min": "Temperatur-Minimum",
             "temperature_max": "Temperatur-Maximum", "watering_interval": "Gießintervall",
             "watering_amount": "Gießmenge", "fertilizer_interval": "Düngeintervall",
             "fertilizer_winter_interval": "Düngeintervall Winter", "fertilizer_amount": "Düngermenge",
-            "winter_rest": "Winterruhe", "photo": "Foto", "checklist": "Pflanzenpflege",
+            "winter_rest": "Winterruhe", "photo": "Foto", "plant_size": "Pflanzengröße", "checklist": "Pflanzenpflege",
         },
         "svc_name": "Pflegeaufgabe erledigt", "svc_desc": "Markiert Gießen oder Düngen für die gewählten Pflanzen als erledigt und startet den Zeitplan neu.",
         "svc_ent": "Pflanzen-Entities", "svc_ent_d": "Beliebige Entity der Pflanze.", "svc_dev": "Pflanzen-Geräte",
@@ -155,7 +187,7 @@ def build(lang: str) -> dict:
     named = lambda key: {"name": e[key]}  # noqa: E731
     assistant_fields = {
         "water_need": t["water_need"], "light_need": t["light_need"], "location_light": t["location_light"],
-        "feeding": t["feeding"], "pot_diameter": t["pot_d"], "pot_height": t["pot_h"],
+        "feeding": t["feeding"], "plant_size": t["psize"], "pot_diameter": t["pot_d"], "pot_height": t["pot_h"],
         "pot_material": t["pot_m"], "substrate": t["substrate"], "fertilizer_type": t["ftype"],
         "fertilizer_dosage": t["fdose"],
     }
@@ -173,7 +205,7 @@ def build(lang: str) -> dict:
                     "data": {"moisture_sensor": t["moisture"], "illuminance_sensor": t["illum"],
                              "temperature_sensor": t["temp"], "humidity_sensor": t["hum"]}},
         "assistant": {"title": t["assist_title"], "description": t["assist_desc"], "data": assistant_fields,
-                      "data_description": {"pot_diameter": t["pot_d_d"], "pot_height": t["pot_h_d"],
+                      "data_description": {"plant_size": t["psize_d"], "pot_diameter": t["pot_d_d"], "pot_height": t["pot_h_d"],
                                            "fertilizer_dosage": t["fdose_d"]}},
         "profile": {"title": t["profile_title"], "description": t["profile_desc"], "data": profile_fields},
     }
@@ -200,12 +232,24 @@ def build(lang: str) -> dict:
             "light_level": {"options": lv["light"]},
             "fertilizer_unit": {"options": lv["unit"]},
             "pot_material": {"options": lv["pot_material"]},
-            "substrate": {"options": lv["substrate"]},
+            "plant_size": {
+        "en": {"small": "Small / freshly repotted (plenty of free soil)", "normal": "Normal (plant fits the pot)",
+               "large": "Large / lush (lots of foliage, pot rather tight)"},
+        "de": {"small": "Klein / frisch umgetopft (viel freie Erde)", "normal": "Normal (Pflanze passt zum Topf)",
+               "large": "Groß / üppig (viel Laub, Topf eher knapp)"},
+    },
+    "substrate": {"options": lv["substrate"]},
             "feeding": {"options": lv["feeding"]},
             "fertilizer_type": {"options": lv["fertilizer_type"]},
             "pot_material": {
         "en": {"plastic": "Plastic / glazed ceramic", "terracotta": "Terracotta (unglazed clay)"},
         "de": {"plastic": "Kunststoff / glasierte Keramik", "terracotta": "Terrakotta (unglasierter Ton)"},
+    },
+    "plant_size": {
+        "en": {"small": "Small / freshly repotted (plenty of free soil)", "normal": "Normal (plant fits the pot)",
+               "large": "Large / lush (lots of foliage, pot rather tight)"},
+        "de": {"small": "Klein / frisch umgetopft (viel freie Erde)", "normal": "Normal (Pflanze passt zum Topf)",
+               "large": "Groß / üppig (viel Laub, Topf eher knapp)"},
     },
     "substrate": {
         "en": {"standard": "Potting soil", "mineral": "Mineral / cactus soil"},
@@ -224,7 +268,7 @@ def build(lang: str) -> dict:
     "task": {"options": lv["task"]},
         },
         "entity": {
-            "binary_sensor": {k: named(k) for k in ["needs_water", "needs_fertilizer", "light_problem", "temperature_problem"]},
+            "binary_sensor": {k: {"name": e[k], "state": lv["yesno"]} for k in ["needs_water", "needs_fertilizer"]},
             "button": {k: named(k) for k in ["mark_watered", "mark_fertilized"]},
             "image": {"photo": named("photo")},
             "number": {k: named(k) for k in ["moisture_min", "moisture_max", "temperature_min", "temperature_max",
@@ -234,9 +278,13 @@ def build(lang: str) -> dict:
                 "water_need": {"name": e["water_need"], "state": {k: v.split(" (")[0] for k, v in lv["water"].items()}},
                 "light_need": {"name": e["light_need"], "state": lv["light"]},
                 "location_light": {"name": e["location_light"], "state": lv["light"]},
+                "plant_size": {"name": e["plant_size"], "state": {k: v.split(" (")[0] for k, v in lv["plant_size"].items()}},
             },
             "sensor": {
-                "status": {"name": e["status"], "state": lv["severity"]},
+                "status": {"name": e["status"], "state": lv["severity"],
+                           "state_attributes": {k: {"name": v} for k, v in lv["status_attr"].items()}},
+                "light_condition": {"name": e["light_condition"], "state": lv["light_cond"]},
+                "temperature_condition": {"name": e["temperature_condition"], "state": lv["temp_cond"]},
                 "next_watering": named("next_watering"),
                 "next_fertilizing": named("next_fertilizing"),
                 "dli": named("dli"),
@@ -254,6 +302,12 @@ def build(lang: str) -> dict:
                     "pot_material": {
         "en": {"plastic": "Plastic / glazed ceramic", "terracotta": "Terracotta (unglazed clay)"},
         "de": {"plastic": "Kunststoff / glasierte Keramik", "terracotta": "Terrakotta (unglasierter Ton)"},
+    },
+    "plant_size": {
+        "en": {"small": "Small / freshly repotted (plenty of free soil)", "normal": "Normal (plant fits the pot)",
+               "large": "Large / lush (lots of foliage, pot rather tight)"},
+        "de": {"small": "Klein / frisch umgetopft (viel freie Erde)", "normal": "Normal (Pflanze passt zum Topf)",
+               "large": "Groß / üppig (viel Laub, Topf eher knapp)"},
     },
     "substrate": {
         "en": {"standard": "Potting soil", "mineral": "Mineral / cactus soil"},

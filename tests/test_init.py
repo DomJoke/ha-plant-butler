@@ -63,12 +63,13 @@ async def test_entities_created_with_english_ids(
         "sensor.monstera_light_level",
         "binary_sensor.monstera_needs_water",
         "binary_sensor.monstera_needs_fertilizer",
-        "binary_sensor.monstera_light_problem",
+        "sensor.monstera_light_condition",
         "button.monstera_mark_watered",
         "button.monstera_mark_fertilized",
         "select.monstera_water_need",
         "select.monstera_light_need",
         "select.monstera_location_light",
+        "select.monstera_plant_size",
         "number.monstera_watering_interval",
         "number.monstera_fertilizer_amount",
         "switch.monstera_winter_rest",
@@ -89,7 +90,7 @@ async def test_entities_created_with_english_ids(
             is er.RegistryEntryDisabler.INTEGRATION
         )
     assert (
-        ent_reg.async_get("binary_sensor.monstera_light_problem").entity_category
+        ent_reg.async_get("sensor.monstera_light_level").entity_category
         is EntityCategory.DIAGNOSTIC
     )
     assert (
@@ -108,6 +109,10 @@ async def test_entities_created_with_english_ids(
     status = hass.states.get("sensor.monstera_status")
     assert status.state == "info"  # location partial_shade < need bright_indirect
     assert status.attributes["problems"] == ["too_dark"]
+    assert status.attributes["summary"] == "Location too dark"
+    assert hass.states.get("sensor.monstera_light_condition").state == "too_dark"
+    # No temperature sensor -> no temperature condition
+    assert hass.states.get("sensor.monstera_temperature_condition") is None
     assert status.attributes["area"] == "Esszimmer"
     assert hass.states.get("sensor.monstera_light_level").state == "partial_shade"
 
@@ -252,7 +257,7 @@ async def test_temperature_problem(hass: HomeAssistant, make_entry, plant_data) 
     plant_data["temperature_sensor"] = "sensor.room_temp"
     plant_data["location_light"] = "bright_indirect"
     await _setup(hass, make_entry, plant_data)
-    assert hass.states.get("binary_sensor.monstera_temperature_problem").state == "on"
+    assert hass.states.get("sensor.monstera_temperature_condition").state == "too_cold"
     assert hass.states.get("sensor.monstera_status").state == "warning"
     hass.states.async_set("sensor.room_temp", "12")
     await hass.async_block_till_done()
@@ -275,7 +280,7 @@ async def test_light_sensor_dli(
     assert dli is not None
     # 1000 lux all day = 1.6 mol/m²/day -> very dark, plant needs bright indirect
     assert hass.states.get("sensor.monstera_light_level").state == "very_dark"
-    assert hass.states.get("binary_sensor.monstera_light_problem").state == "on"
+    assert hass.states.get("sensor.monstera_light_condition").state == "too_dark"
 
 
 async def test_mark_done_service(
@@ -344,3 +349,40 @@ async def test_notification_event(
     await _advance(hass, freezer, timedelta(days=2))
     assert events[-1].data["severity"] == "warning"
     assert events[-1].data["plant"] == "Monstera"
+
+
+async def test_obsolete_entities_removed(
+    hass: HomeAssistant, make_entry, plant_data
+) -> None:
+    """Problem binary sensors from 0.3 are removed from the registry."""
+    entry = make_entry(plant_data)
+    ent_reg = er.async_get(hass)
+    old = ent_reg.async_get_or_create(
+        "binary_sensor",
+        DOMAIN,
+        f"{PLANT_ID}_light_problem",
+        config_entry=entry,
+        suggested_object_id="monstera_light_problem",
+    )
+    assert await hass.config_entries.async_setup(entry.entry_id)
+    await hass.async_block_till_done()
+    assert ent_reg.async_get(old.entity_id) is None
+    assert (
+        hass.states.get("sensor.monstera_status").attributes["summary"]
+        == "Location too dark"
+    )
+
+
+async def test_plant_size_select(hass: HomeAssistant, make_entry, plant_data) -> None:
+    """Changing the plant size re-runs the interval calculation."""
+    plant_data["location_light"] = "bright_indirect"
+    await _setup(hass, make_entry, plant_data)
+    assert hass.states.get("select.monstera_plant_size").state == "normal"
+    assert hass.states.get("number.monstera_watering_interval").state == "7.0"
+    await hass.services.async_call(
+        "select",
+        "select_option",
+        {"entity_id": "select.monstera_plant_size", "option": "large"},
+        blocking=True,
+    )
+    assert hass.states.get("number.monstera_watering_interval").state == "6.0"

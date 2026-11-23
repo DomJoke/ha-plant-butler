@@ -38,6 +38,7 @@ from .const import (
 )
 from .entity import PlantEntity
 from .plant import PlantButlerConfigEntry, PlantRuntime
+from .texts import problem_summary
 
 
 async def async_setup_entry(
@@ -53,6 +54,9 @@ async def async_setup_entry(
             NextFertilizingSensor(plant),
             LightLevelSensor(plant),
         ]
+        entities.append(LightConditionSensor(plant))
+        if plant.sensor(CONF_TEMPERATURE_SENSOR):
+            entities.append(TemperatureConditionSensor(plant))
         if plant.sensor(CONF_ILLUMINANCE_SENSOR):
             entities.append(DliSensor(plant))
         async_add_entities(entities, config_subentry_id=plant.id)
@@ -103,6 +107,9 @@ class PlantStatusSensor(PlantSensor):
         ev = plant.evaluation
         s = plant.settings
         return {
+            "summary": problem_summary(
+                [p.key for p in ev.problems], self.hass.config.language
+            ),
             "plant_name": plant.name,
             "species": s.get(CONF_SPECIES),
             "area": plant.area_name,
@@ -237,3 +244,41 @@ class LightLevelSensor(PlantSensor):
     def native_value(self) -> str | None:
         """Return the light level."""
         return self.plant.evaluation.light_level
+
+
+class LightConditionSensor(PlantSensor):
+    """Light conditions: ok, too dark or too bright."""
+
+    _attr_device_class = SensorDeviceClass.ENUM
+    _attr_options = ["ok", "too_dark", "too_bright"]
+
+    def __init__(self, plant: PlantRuntime) -> None:
+        """Initialize."""
+        super().__init__(plant, "light_condition")
+
+    @property
+    def native_value(self) -> str | None:
+        """Return the light condition (unknown until a level is known)."""
+        ev = self.plant.evaluation
+        if ev.light_problem:
+            return ev.light_problem
+        return "ok" if ev.light_level else None
+
+
+class TemperatureConditionSensor(PlantSensor):
+    """Temperature conditions: ok, too cold or too warm."""
+
+    _attr_device_class = SensorDeviceClass.ENUM
+    _attr_options = ["ok", "too_cold", "too_hot"]
+
+    def __init__(self, plant: PlantRuntime) -> None:
+        """Initialize."""
+        super().__init__(plant, "temperature_condition")
+
+    @property
+    def native_value(self) -> str | None:
+        """Return the temperature condition."""
+        ev = self.plant.evaluation
+        if ev.temperature is None:
+            return None
+        return ev.temperature_problem or "ok"

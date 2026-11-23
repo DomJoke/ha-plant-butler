@@ -58,6 +58,7 @@
             "light_need": "Lichtbedarf",
             "location_light": "Licht am Standort (ohne Lichtsensor)",
             "feeding": "Nährstoffbedarf",
+            "plant_size": "Pflanzengröße im Verhältnis zum Topf",
             "pot_diameter": "Topfdurchmesser (oben)",
             "pot_height": "Topfhöhe",
             "pot_material": "Topfmaterial",
@@ -66,6 +67,7 @@
             "fertilizer_dosage": "Dosierung laut Packung"
           },
           "data_description": {
+            "plant_size": "Eine Pflanze mit viel Laub für ihren Topf braucht öfter Wasser (Intervall −20 %), eine kleine seltener (+20 %).",
             "pot_diameter": "Leer lassen, wenn unbekannt – dann wird keine Gießmenge berechnet.",
             "pot_height": "Optional, Standard 0,9 × Durchmesser.",
             "fertilizer_dosage": "Nur Flüssigdünger: ml pro Liter Wasser laut Packung."
@@ -135,6 +137,18 @@
         "terracotta": "Terrakotta (unglasierter Ton)"
       }
     },
+    "plant_size": {
+      "en": {
+        "small": "Small / freshly repotted (plenty of free soil)",
+        "normal": "Normal (plant fits the pot)",
+        "large": "Large / lush (lots of foliage, pot rather tight)"
+      },
+      "de": {
+        "small": "Klein / frisch umgetopft (viel freie Erde)",
+        "normal": "Normal (Pflanze passt zum Topf)",
+        "large": "Groß / üppig (viel Laub, Topf eher knapp)"
+      }
+    },
     "substrate": {
       "en": {
         "standard": "Potting soil",
@@ -183,16 +197,18 @@
   "entity": {
     "binary_sensor": {
       "needs_water": {
-        "name": "Braucht Wasser"
+        "name": "Braucht Wasser",
+        "state": {
+          "on": "Ja",
+          "off": "Nein"
+        }
       },
       "needs_fertilizer": {
-        "name": "Braucht Dünger"
-      },
-      "light_problem": {
-        "name": "Lichtproblem"
-      },
-      "temperature_problem": {
-        "name": "Temperaturproblem"
+        "name": "Braucht Dünger",
+        "state": {
+          "on": "Ja",
+          "off": "Nein"
+        }
       }
     },
     "button": {
@@ -269,6 +285,14 @@
           "bright_some_sun": "Hell mit etwas Sonne",
           "full_sun": "Direkte Sonne"
         }
+      },
+      "plant_size": {
+        "name": "Pflanzengröße",
+        "state": {
+          "small": "Klein / frisch umgetopft",
+          "normal": "Normal",
+          "large": "Groß / üppig"
+        }
       }
     },
     "sensor": {
@@ -276,9 +300,72 @@
         "name": "Status",
         "state": {
           "ok": "OK",
-          "info": "Info",
+          "info": "Hinweis",
           "warning": "Warnung",
           "critical": "Kritisch"
+        },
+        "state_attributes": {
+          "summary": {
+            "name": "Zusammenfassung"
+          },
+          "plant_name": {
+            "name": "Pflanze"
+          },
+          "area": {
+            "name": "Raum"
+          },
+          "photo": {
+            "name": "Foto"
+          },
+          "notes": {
+            "name": "Notizen"
+          },
+          "problems": {
+            "name": "Problem-Schlüssel"
+          },
+          "problem_severities": {
+            "name": "Problem-Stufen"
+          },
+          "needs_water": {
+            "name": "Braucht Wasser"
+          },
+          "needs_fertilizer": {
+            "name": "Braucht Dünger"
+          },
+          "winter_rest": {
+            "name": "Winterruhe"
+          },
+          "sensors": {
+            "name": "Sensoren"
+          },
+          "targets": {
+            "name": "Sollwerte"
+          },
+          "care": {
+            "name": "Pflege"
+          },
+          "light": {
+            "name": "Licht"
+          },
+          "species": {
+            "name": "Art"
+          }
+        }
+      },
+      "light_condition": {
+        "name": "Lichtverhältnisse",
+        "state": {
+          "ok": "Passend",
+          "too_dark": "Zu dunkel",
+          "too_bright": "Zu hell"
+        }
+      },
+      "temperature_condition": {
+        "name": "Temperaturverhältnisse",
+        "state": {
+          "ok": "Passend",
+          "too_cold": "Zu kalt",
+          "too_hot": "Zu warm"
         }
       },
       "next_watering": {
@@ -334,6 +421,18 @@
           "de": {
             "plastic": "Kunststoff / glasierte Keramik",
             "terracotta": "Terrakotta (unglasierter Ton)"
+          }
+        },
+        "plant_size": {
+          "en": {
+            "small": "Small / freshly repotted (plenty of free soil)",
+            "normal": "Normal (plant fits the pot)",
+            "large": "Large / lush (lots of foliage, pot rather tight)"
+          },
+          "de": {
+            "small": "Klein / frisch umgetopft (viel freie Erde)",
+            "normal": "Normal (Pflanze passt zum Topf)",
+            "large": "Groß / üppig (viel Laub, Topf eher knapp)"
           }
         },
         "substrate": {

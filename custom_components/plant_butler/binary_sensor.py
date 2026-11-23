@@ -4,15 +4,10 @@ from __future__ import annotations
 
 from typing import Any
 
-from homeassistant.components.binary_sensor import (
-    BinarySensorDeviceClass,
-    BinarySensorEntity,
-)
-from homeassistant.const import EntityCategory
+from homeassistant.components.binary_sensor import BinarySensorEntity
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
 
-from .const import CONF_TEMPERATURE_SENSOR
 from .entity import PlantEntity
 from .plant import PlantButlerConfigEntry, PlantRuntime
 
@@ -24,14 +19,10 @@ async def async_setup_entry(
 ) -> None:
     """Set up binary sensors."""
     for plant in entry.runtime_data.plants.values():
-        entities: list[BinarySensorEntity] = [
-            NeedsWaterBinarySensor(plant),
-            NeedsFertilizerBinarySensor(plant),
-            LightProblemBinarySensor(plant),
-        ]
-        if plant.sensor(CONF_TEMPERATURE_SENSOR):
-            entities.append(TemperatureProblemBinarySensor(plant))
-        async_add_entities(entities, config_subentry_id=plant.id)
+        async_add_entities(
+            [NeedsWaterBinarySensor(plant), NeedsFertilizerBinarySensor(plant)],
+            config_subentry_id=plant.id,
+        )
 
 
 class PlantBinarySensor(PlantEntity, BinarySensorEntity):
@@ -69,47 +60,3 @@ class NeedsFertilizerBinarySensor(PlantBinarySensor):
     def is_on(self) -> bool:
         """Return true if fertilizer is needed."""
         return self.plant.evaluation.needs_fertilizer
-
-
-class LightProblemBinarySensor(PlantBinarySensor):
-    """On when the light does not fit the plant."""
-
-    _attr_entity_category = EntityCategory.DIAGNOSTIC
-
-    _attr_device_class = BinarySensorDeviceClass.PROBLEM
-
-    def __init__(self, plant: PlantRuntime) -> None:
-        """Initialize."""
-        super().__init__(plant, "light_problem")
-
-    @property
-    def is_on(self) -> bool:
-        """Return true on a light problem."""
-        return self.plant.evaluation.light_problem is not None
-
-    @property
-    def extra_state_attributes(self) -> dict[str, Any]:
-        """Return the kind of problem."""
-        return {"problem": self.plant.evaluation.light_problem}
-
-
-class TemperatureProblemBinarySensor(PlantBinarySensor):
-    """On when the room temperature is out of range."""
-
-    _attr_entity_category = EntityCategory.DIAGNOSTIC
-
-    _attr_device_class = BinarySensorDeviceClass.PROBLEM
-
-    def __init__(self, plant: PlantRuntime) -> None:
-        """Initialize."""
-        super().__init__(plant, "temperature_problem")
-
-    @property
-    def is_on(self) -> bool:
-        """Return true on a temperature problem."""
-        return self.plant.evaluation.temperature_problem is not None
-
-    @property
-    def extra_state_attributes(self) -> dict[str, Any]:
-        """Return the kind of problem."""
-        return {"problem": self.plant.evaluation.temperature_problem}

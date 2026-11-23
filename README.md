@@ -9,7 +9,7 @@
 
 A Home Assistant integration for plant care: every plant is a device with target values from a bundled plant database, optional sensors, a care assistant for watering amount and fertilizer dose, watering and fertilizing schedules, warning levels and a checklist that resets itself.
 
-> Status: **0.3** – checklist card, dashboard and notification blueprint are next.
+> Status: **0.4** – notification blueprint is next.
 
 ## Features
 
@@ -42,7 +42,7 @@ The assistant uses rules of thumb for potted plants. All results are suggestions
 | --- | --- |
 | Pot volume | Cylinder from diameter and height (height defaults to 0.9 × diameter) × 0.8 for the tapered shape |
 | Watering amount | Pot volume × plant-available water of the substrate (potting soil 25 %, mineral/cactus soil 15 %) × share used up before watering again (very low 90 %, low 70 %, medium 50 %, high 35 %, very high 25 %), rounded to 10 ml |
-| Watering interval | Base interval of the water need level × pot size (2 l = 1.0, larger pots dry slower) × material (terracotta 0.8) × substrate (mineral 0.85) × light at the location (dark 1.25 … direct sun 0.8), limited to 0.6–1.6 |
+| Watering interval | Base interval of the water need level × pot size (2 l = 1.0, larger pots dry slower) × material (terracotta 0.8) × substrate (mineral 0.85) × light at the location (dark 1.25 … direct sun 0.8) × plant size relative to the pot (small 1.2, normal 1.0, large 0.8), limited to 0.6–1.6 |
 | Liquid fertilizer | Package dose (ml/l) × nutrient demand (light feeder ½, medium ¾, heavy feeder full); the checklist also shows the total ml for one watering |
 | Fertilizer sticks | 1–4 sticks by pot diameter, every 90 days |
 | Slow-release granules | 2.5 g per litre of substrate (scaled by nutrient demand), every 180 days |
@@ -67,17 +67,19 @@ These are guide values. Soil sensors read differently depending on the manufactu
 
 | Entity | Meaning |
 | --- | --- |
-| `sensor.monstera_status` | ok / info / warning / critical; attributes for cards (problems, targets, sensors, care) |
+| `sensor.monstera_status` | OK / notice / warning / critical; attribute `summary` explains why (e.g. "Location too dark"); further attributes for cards |
 | `sensor.monstera_next_watering` / `sensor.monstera_next_fertilizing` | Due time (timestamp) |
 | `sensor.monstera_light_level` / `sensor.monstera_dli` | Actual light level / daily light integral today (light sensor only) |
-| `binary_sensor.monstera_needs_water` / `_needs_fertilizer` / `_light_problem` / `_temperature_problem` | Individual states |
+| `binary_sensor.monstera_needs_water` / `_needs_fertilizer` | Yes / No |
+| `sensor.monstera_light_condition` | Suitable / too dark / too bright |
+| `sensor.monstera_temperature_condition` | Suitable / too cold / too warm (room temperature sensor only) |
 | `button.monstera_mark_watered` / `_mark_fertilized` | Task done |
-| `select.monstera_water_need` / `_light_need` / `_location_light` | Target levels, light at the location |
+| `select.monstera_water_need` / `_light_need` / `_location_light` / `_plant_size` | Target levels, light at the location, plant size relative to the pot |
 | `number.monstera_moisture_min` / `_moisture_max` / `_temperature_min` / `_temperature_max` / `_watering_interval` / `_watering_amount` / `_fertilizer_interval` / `_fertilizer_winter_interval` / `_fertilizer_amount` | Fine-tuning |
 | `switch.monstera_winter_rest` | Winter rest: watering interval × 1.5, fertilizing by winter interval |
 | `image.monstera_photo` | Photo (if set) |
 
-Visibility: target values (selects, numbers, winter rest) are *configuration* entities, light level, DLI and the light/temperature problem sensors are *diagnostic* entities – both are kept out of auto-generated dashboards. Temperature min/max, moisture maximum and the winter fertilizing interval are **disabled by default**; enable them on the device page if you want to fine-tune them.
+Visibility: target values (selects, numbers, winter rest) are *configuration* entities, light level and DLI are *diagnostic* entities – both are kept out of auto-generated dashboards. Temperature min/max, moisture maximum and the winter fertilizing interval are **disabled by default**; enable them on the device page if you want to fine-tune them.
 
 ## Plant card
 
@@ -94,6 +96,48 @@ show_tasks: true    # optional: watering/fertilizing with tick buttons
 ![Plant cards](docs/plant-card.png)
 
 The card shows the photo (or the species icon), status, problems, soil moisture / light / room temperature / humidity against the plant's targets, and the next care tasks. Tapping the circle next to a task marks it as done (`plant_butler.mark_done`); tapping the header or a value opens the details.
+
+## Plants dashboard
+
+Plant Butler ships a **dashboard strategy**: the dashboard is generated each time it opens, so new plants and rooms appear automatically.
+
+1. *Settings → Dashboards → Add dashboard → New dashboard from scratch*, name it e.g. "Plants".
+2. Open it, ⋮ → *Edit dashboard* → ⋮ → *Raw configuration editor*, replace everything with:
+
+```yaml
+strategy:
+  type: custom:plant-butler
+```
+
+It has two views:
+
+- **Overview** – all plants grouped by room. Each room can be collapsed (remembered per browser); the header shows the number of plants, how many are due and the worst status.
+- **Due** – only plants with a due task, as compact cards to tick off, plus the `todo.plant_butler` list.
+
+![Overview](docs/overview.png)
+
+The overview is also available as a card for any dashboard:
+
+```yaml
+type: custom:plant-butler-overview-card
+filter: all          # or: due
+area: wohnzimmer     # optional: only one room
+compact: false
+collapsible: true
+group_by_room: true
+show_summary: true
+```
+
+## Status levels
+
+| Status | Meaning |
+| --- | --- |
+| OK | Nothing to do |
+| Notice | Something to know or do soon: watering due today, fertilizing due, location a bit dark (no sensor), soil a little wet |
+| Warning | Should be handled: watering more than 1 day overdue, temperature outside the range, light too low/high for 3 days |
+| Critical | Act now: soil very dry or watering long overdue, temperature far outside the range |
+
+The status sensor's `summary` attribute lists the reasons in plain words.
 
 ## Service
 
