@@ -69,6 +69,7 @@ async def test_entities_created_with_english_ids(
         "select.monstera_water_need",
         "select.monstera_light_need",
         "select.monstera_location_light",
+        "select.monstera_plant_size",
         "number.monstera_watering_interval",
         "number.monstera_fertilizer_amount",
         "switch.monstera_winter_rest",
@@ -370,3 +371,18 @@ async def test_obsolete_entities_removed(
         hass.states.get("sensor.monstera_status").attributes["summary"]
         == "Location too dark"
     )
+
+
+async def test_plant_size_select(hass: HomeAssistant, make_entry, plant_data) -> None:
+    """Changing the plant size re-runs the interval calculation."""
+    plant_data["location_light"] = "bright_indirect"
+    await _setup(hass, make_entry, plant_data)
+    assert hass.states.get("select.monstera_plant_size").state == "normal"
+    assert hass.states.get("number.monstera_watering_interval").state == "7.0"
+    await hass.services.async_call(
+        "select",
+        "select_option",
+        {"entity_id": "select.monstera_plant_size", "option": "large"},
+        blocking=True,
+    )
+    assert hass.states.get("number.monstera_watering_interval").state == "6.0"

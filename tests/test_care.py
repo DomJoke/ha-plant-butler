@@ -90,3 +90,21 @@ def test_suggest_fertilizer_and_total() -> None:
     }
     assert fertilizer_per_watering_ml({**plan, "watering_amount": 400}) == 1.0
     assert fertilizer_per_watering_ml({**plan}) is None
+
+
+def test_plant_size_factor() -> None:
+    base = watering_interval_factor(2.0, "plastic", "standard", "bright_indirect")
+    assert base == 1.0
+    assert (
+        watering_interval_factor(2.0, "plastic", "standard", "bright_indirect", "large")
+        == 0.8
+    )
+    assert (
+        watering_interval_factor(2.0, "plastic", "standard", "bright_indirect", "small")
+        == 1.2
+    )
+    values = {"water_need": "medium", "pot_diameter": 14, "location_light": "dark"}
+    assert suggest_watering(values | {"plant_size": "large"})["watering_interval"] == 7
+    assert suggest_watering(values | {"plant_size": "small"})["watering_interval"] == 10
+    # Amount depends on the pot, not on the plant size
+    assert suggest_watering(values | {"plant_size": "large"})["watering_amount"] == 190

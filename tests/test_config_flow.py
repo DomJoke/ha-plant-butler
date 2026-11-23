@@ -77,6 +77,7 @@ async def test_add_plant_with_species_defaults(hass: HomeAssistant) -> None:
     assert assistant["water_need"] == "very_low"
     assert assistant["light_need"] == "full_sun"
     assert assistant["feeding"] == "light"
+    assert assistant["plant_size"] == "normal"
     result = await hass.config_entries.subentries.async_configure(
         result["flow_id"],
         assistant

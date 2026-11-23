@@ -42,7 +42,7 @@ The assistant uses rules of thumb for potted plants. All results are suggestions
 | --- | --- |
 | Pot volume | Cylinder from diameter and height (height defaults to 0.9 × diameter) × 0.8 for the tapered shape |
 | Watering amount | Pot volume × plant-available water of the substrate (potting soil 25 %, mineral/cactus soil 15 %) × share used up before watering again (very low 90 %, low 70 %, medium 50 %, high 35 %, very high 25 %), rounded to 10 ml |
-| Watering interval | Base interval of the water need level × pot size (2 l = 1.0, larger pots dry slower) × material (terracotta 0.8) × substrate (mineral 0.85) × light at the location (dark 1.25 … direct sun 0.8), limited to 0.6–1.6 |
+| Watering interval | Base interval of the water need level × pot size (2 l = 1.0, larger pots dry slower) × material (terracotta 0.8) × substrate (mineral 0.85) × light at the location (dark 1.25 … direct sun 0.8) × plant size relative to the pot (small 1.2, normal 1.0, large 0.8), limited to 0.6–1.6 |
 | Liquid fertilizer | Package dose (ml/l) × nutrient demand (light feeder ½, medium ¾, heavy feeder full); the checklist also shows the total ml for one watering |
 | Fertilizer sticks | 1–4 sticks by pot diameter, every 90 days |
 | Slow-release granules | 2.5 g per litre of substrate (scaled by nutrient demand), every 180 days |
@@ -74,7 +74,7 @@ These are guide values. Soil sensors read differently depending on the manufactu
 | `sensor.monstera_light_condition` | Suitable / too dark / too bright |
 | `sensor.monstera_temperature_condition` | Suitable / too cold / too warm (room temperature sensor only) |
 | `button.monstera_mark_watered` / `_mark_fertilized` | Task done |
-| `select.monstera_water_need` / `_light_need` / `_location_light` | Target levels, light at the location |
+| `select.monstera_water_need` / `_light_need` / `_location_light` / `_plant_size` | Target levels, light at the location, plant size relative to the pot |
 | `number.monstera_moisture_min` / `_moisture_max` / `_temperature_min` / `_temperature_max` / `_watering_interval` / `_watering_amount` / `_fertilizer_interval` / `_fertilizer_winter_interval` / `_fertilizer_amount` | Fine-tuning |
 | `switch.monstera_winter_rest` | Winter rest: watering interval × 1.5, fertilizing by winter interval |
 | `image.monstera_photo` | Photo (if set) |

@@ -67,6 +67,7 @@ from .const import (
     CONF_NOTES,
     CONF_PHOTO,
     CONF_PHOTO_UPLOAD,
+    CONF_PLANT_SIZE,
     CONF_POT_DIAMETER,
     CONF_POT_HEIGHT,
     CONF_POT_MATERIAL,
@@ -85,6 +86,7 @@ from .const import (
     FERTILIZER_TYPES,
     FERTILIZER_UNITS,
     LIGHT_LEVEL_KEYS,
+    PLANT_SIZES,
     POT_MATERIALS,
     SENSOR_KEYS,
     SPECIES_CUSTOM,
@@ -99,6 +101,7 @@ ASSISTANT_KEYS = (
     CONF_WATER_NEED,
     CONF_LIGHT_NEED,
     CONF_LOCATION_LIGHT,
+    CONF_PLANT_SIZE,
     CONF_FEEDING,
     CONF_POT_DIAMETER,
     CONF_POT_HEIGHT,
@@ -373,6 +376,7 @@ class PlantSubentryFlow(ConfigSubentryFlow):
             return await self.async_step_profile()
 
         current: dict[str, Any] = {
+            CONF_PLANT_SIZE: "normal",
             CONF_POT_MATERIAL: "plastic",
             CONF_SUBSTRATE: "standard",
             CONF_FERTILIZER_TYPE: "liquid",
@@ -410,6 +414,9 @@ class PlantSubentryFlow(ConfigSubentryFlow):
             )
         fields.update(
             {
+                vol.Required(CONF_PLANT_SIZE): _level_selector(
+                    CONF_PLANT_SIZE, PLANT_SIZES
+                ),
                 vol.Optional(CONF_POT_DIAMETER): _number(4, 100, 1, "cm"),
                 vol.Optional(CONF_POT_HEIGHT): _number(4, 100, 1, "cm"),
                 vol.Required(CONF_POT_MATERIAL): _level_selector(

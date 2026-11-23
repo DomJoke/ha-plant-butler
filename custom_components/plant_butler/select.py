@@ -11,8 +11,10 @@ from .const import (
     CONF_ILLUMINANCE_SENSOR,
     CONF_LIGHT_NEED,
     CONF_LOCATION_LIGHT,
+    CONF_PLANT_SIZE,
     CONF_WATER_NEED,
     LIGHT_LEVEL_KEYS,
+    PLANT_SIZES,
     WATER_LEVEL_KEYS,
 )
 from .entity import PlantEntity
@@ -29,6 +31,7 @@ async def async_setup_entry(
         entities = [
             PlantSettingSelect(plant, CONF_WATER_NEED, WATER_LEVEL_KEYS),
             PlantSettingSelect(plant, CONF_LIGHT_NEED, LIGHT_LEVEL_KEYS),
+            PlantSettingSelect(plant, CONF_PLANT_SIZE, PLANT_SIZES),
         ]
         if not plant.sensor(CONF_ILLUMINANCE_SENSOR):
             entities.append(
@@ -52,7 +55,10 @@ class PlantSettingSelect(PlantEntity, SelectEntity):
     @property
     def current_option(self) -> str | None:
         """Return the current level."""
-        return self.plant.settings.get(self._key)
+        value = self.plant.settings.get(self._key)
+        if value is None and self._key == CONF_PLANT_SIZE:
+            return "normal"
+        return value
 
     async def async_select_option(self, option: str) -> None:
         """Change the level."""

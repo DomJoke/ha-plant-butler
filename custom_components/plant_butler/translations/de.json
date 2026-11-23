@@ -58,6 +58,7 @@
             "light_need": "Lichtbedarf",
             "location_light": "Licht am Standort (ohne Lichtsensor)",
             "feeding": "Nährstoffbedarf",
+            "plant_size": "Pflanzengröße im Verhältnis zum Topf",
             "pot_diameter": "Topfdurchmesser (oben)",
             "pot_height": "Topfhöhe",
             "pot_material": "Topfmaterial",
@@ -66,6 +67,7 @@
             "fertilizer_dosage": "Dosierung laut Packung"
           },
           "data_description": {
+            "plant_size": "Eine Pflanze mit viel Laub für ihren Topf braucht öfter Wasser (Intervall −20 %), eine kleine seltener (+20 %).",
             "pot_diameter": "Leer lassen, wenn unbekannt – dann wird keine Gießmenge berechnet.",
             "pot_height": "Optional, Standard 0,9 × Durchmesser.",
             "fertilizer_dosage": "Nur Flüssigdünger: ml pro Liter Wasser laut Packung."
@@ -133,6 +135,18 @@
       "de": {
         "plastic": "Kunststoff / glasierte Keramik",
         "terracotta": "Terrakotta (unglasierter Ton)"
+      }
+    },
+    "plant_size": {
+      "en": {
+        "small": "Small / freshly repotted (plenty of free soil)",
+        "normal": "Normal (plant fits the pot)",
+        "large": "Large / lush (lots of foliage, pot rather tight)"
+      },
+      "de": {
+        "small": "Klein / frisch umgetopft (viel freie Erde)",
+        "normal": "Normal (Pflanze passt zum Topf)",
+        "large": "Groß / üppig (viel Laub, Topf eher knapp)"
       }
     },
     "substrate": {
@@ -271,6 +285,14 @@
           "bright_some_sun": "Hell mit etwas Sonne",
           "full_sun": "Direkte Sonne"
         }
+      },
+      "plant_size": {
+        "name": "Pflanzengröße",
+        "state": {
+          "small": "Klein / frisch umgetopft",
+          "normal": "Normal",
+          "large": "Groß / üppig"
+        }
       }
     },
     "sensor": {
@@ -399,6 +421,18 @@
           "de": {
             "plastic": "Kunststoff / glasierte Keramik",
             "terracotta": "Terrakotta (unglasierter Ton)"
+          }
+        },
+        "plant_size": {
+          "en": {
+            "small": "Small / freshly repotted (plenty of free soil)",
+            "normal": "Normal (plant fits the pot)",
+            "large": "Large / lush (lots of foliage, pot rather tight)"
+          },
+          "de": {
+            "small": "Klein / frisch umgetopft (viel freie Erde)",
+            "normal": "Normal (Pflanze passt zum Topf)",
+            "large": "Groß / üppig (viel Laub, Topf eher knapp)"
           }
         },
         "substrate": {

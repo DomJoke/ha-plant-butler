@@ -42,8 +42,10 @@ CONF_SUBSTRATE: Final = "substrate"
 CONF_FERTILIZER_TYPE: Final = "fertilizer_type"
 CONF_FERTILIZER_DOSAGE: Final = "fertilizer_dosage"
 CONF_FEEDING: Final = "feeding"
+CONF_PLANT_SIZE: Final = "plant_size"
 
 POT_MATERIALS: Final = ["plastic", "terracotta"]
+PLANT_SIZES: Final = ["small", "normal", "large"]
 SUBSTRATES: Final = ["standard", "mineral"]
 FERTILIZER_TYPES: Final = ["liquid", "sticks", "granules", "none"]
 FEEDING_LEVELS: Final = ["none", "light", "medium", "heavy"]

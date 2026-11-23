@@ -35,6 +35,7 @@ from .const import (
     CONF_MOISTURE_MIN,
     CONF_MOISTURE_SENSOR,
     CONF_NAME,
+    CONF_PLANT_SIZE,
     CONF_TEMPERATURE_MAX,
     CONF_TEMPERATURE_MIN,
     CONF_TEMPERATURE_SENSOR,
@@ -222,7 +223,12 @@ class PlantRuntime:
         if key == CONF_WATER_NEED:
             mmin, mmax, _ = WATER_LEVELS[value]
             overrides.update({CONF_MOISTURE_MIN: mmin, CONF_MOISTURE_MAX: mmax})
-        if key in (CONF_WATER_NEED, CONF_LIGHT_NEED, CONF_LOCATION_LIGHT):
+        if key in (
+            CONF_WATER_NEED,
+            CONF_LIGHT_NEED,
+            CONF_LOCATION_LIGHT,
+            CONF_PLANT_SIZE,
+        ):
             # Re-run the care assistant for the new level/location
             overrides.update(suggest_watering(self.settings))
         self._changed()

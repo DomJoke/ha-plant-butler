@@ -58,6 +58,7 @@
             "light_need": "Light need",
             "location_light": "Light at the location (without light sensor)",
             "feeding": "Nutrient demand",
+            "plant_size": "Plant size relative to the pot",
             "pot_diameter": "Pot diameter (top)",
             "pot_height": "Pot height",
             "pot_material": "Pot material",
@@ -66,6 +67,7 @@
             "fertilizer_dosage": "Fertilizer dose on the package"
           },
           "data_description": {
+            "plant_size": "A plant with lots of foliage for its pot needs water more often (interval −20 %), a small one less often (+20 %).",
             "pot_diameter": "Leave empty if unknown – then no watering amount is calculated.",
             "pot_height": "Optional, default 0.9 × diameter.",
             "fertilizer_dosage": "Liquid fertilizer only: ml per litre of water as printed on the package."
@@ -133,6 +135,18 @@
       "de": {
         "plastic": "Kunststoff / glasierte Keramik",
         "terracotta": "Terrakotta (unglasierter Ton)"
+      }
+    },
+    "plant_size": {
+      "en": {
+        "small": "Small / freshly repotted (plenty of free soil)",
+        "normal": "Normal (plant fits the pot)",
+        "large": "Large / lush (lots of foliage, pot rather tight)"
+      },
+      "de": {
+        "small": "Klein / frisch umgetopft (viel freie Erde)",
+        "normal": "Normal (Pflanze passt zum Topf)",
+        "large": "Groß / üppig (viel Laub, Topf eher knapp)"
       }
     },
     "substrate": {
@@ -271,6 +285,14 @@
           "bright_some_sun": "Bright with some sun",
           "full_sun": "Direct sun"
         }
+      },
+      "plant_size": {
+        "name": "Plant size",
+        "state": {
+          "small": "Small / freshly repotted",
+          "normal": "Normal",
+          "large": "Large / lush"
+        }
       }
     },
     "sensor": {
@@ -399,6 +421,18 @@
           "de": {
             "plastic": "Kunststoff / glasierte Keramik",
             "terracotta": "Terrakotta (unglasierter Ton)"
+          }
+        },
+        "plant_size": {
+          "en": {
+            "small": "Small / freshly repotted (plenty of free soil)",
+            "normal": "Normal (plant fits the pot)",
+            "large": "Large / lush (lots of foliage, pot rather tight)"
+          },
+          "de": {
+            "small": "Klein / frisch umgetopft (viel freie Erde)",
+            "normal": "Normal (Pflanze passt zum Topf)",
+            "large": "Groß / üppig (viel Laub, Topf eher knapp)"
           }
         },
         "substrate": {

@@ -14,6 +14,7 @@ from .const import (
     CONF_FERTILIZER_WINTER_INTERVAL,
     CONF_LIGHT_NEED,
     CONF_LOCATION_LIGHT,
+    CONF_PLANT_SIZE,
     CONF_POT_DIAMETER,
     CONF_POT_HEIGHT,
     CONF_POT_MATERIAL,
@@ -47,7 +48,11 @@ def suggest_watering(values: dict[str, Any]) -> dict[str, Any]:
     light = values.get(CONF_LOCATION_LIGHT) or values.get(CONF_LIGHT_NEED)
     substrate = values.get(CONF_SUBSTRATE, "standard")
     factor = watering_interval_factor(
-        volume, values.get(CONF_POT_MATERIAL, "plastic"), substrate, light
+        volume,
+        values.get(CONF_POT_MATERIAL, "plastic"),
+        substrate,
+        light,
+        values.get(CONF_PLANT_SIZE) or "normal",
     )
     result: dict[str, Any] = {CONF_WATERING_INTERVAL: max(round(base * factor), 1)}
     if volume is not None:

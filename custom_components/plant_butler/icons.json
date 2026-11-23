@@ -60,6 +60,14 @@
       },
       "location_light": {
         "default": "mdi:window-closed-variant"
+      },
+      "plant_size": {
+        "default": "mdi:resize",
+        "state": {
+          "small": "mdi:sprout-outline",
+          "normal": "mdi:sprout",
+          "large": "mdi:tree"
+        }
       }
     },
     "sensor": {

@@ -40,7 +40,7 @@ Der Assistent rechnet mit Faustregeln für Topfpflanzen. Alle Ergebnisse sind Vo
 | --- | --- |
 | Topfvolumen | Zylinder aus Durchmesser und Höhe (Standard-Höhe 0,9 × Durchmesser) × 0,8 für die konische Form |
 | Gießmenge | Topfvolumen × pflanzenverfügbares Wasser im Substrat (Blumenerde 25 %, mineralisch/Kakteenerde 15 %) × Anteil, der bis zum nächsten Gießen verbraucht wird (sehr wenig 90 %, wenig 70 %, mittel 50 %, viel 35 %, sehr viel 25 %), auf 10 ml gerundet |
-| Gießintervall | Basisintervall der Wasserstufe × Topfgröße (2 l = 1,0, größere Töpfe trocknen langsamer) × Material (Terrakotta 0,8) × Substrat (mineralisch 0,85) × Licht am Standort (dunkel 1,25 … direkte Sonne 0,8), begrenzt auf 0,6–1,6 |
+| Gießintervall | Basisintervall der Wasserstufe × Topfgröße (2 l = 1,0, größere Töpfe trocknen langsamer) × Material (Terrakotta 0,8) × Substrat (mineralisch 0,85) × Licht am Standort (dunkel 1,25 … direkte Sonne 0,8) × Pflanzengröße im Verhältnis zum Topf (klein 1,2, normal 1,0, groß 0,8), begrenzt auf 0,6–1,6 |
 | Flüssigdünger | Dosierung laut Packung (ml/l) × Nährstoffbedarf (Schwachzehrer ½, mittel ¾, Starkzehrer voll); die Checkliste zeigt zusätzlich die ml pro Gießen |
 | Düngestäbchen | 1–4 Stück je nach Topfdurchmesser, alle 90 Tage |
 | Langzeitdünger (Granulat) | 2,5 g pro Liter Substrat (nach Nährstoffbedarf skaliert), alle 180 Tage |
