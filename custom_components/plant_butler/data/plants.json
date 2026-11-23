@@ -19,6 +19,7 @@
     "interval_days": 28,
     "winter_interval_days": 0
    },
+   "feeding": "light",
    "toxic_pets": true,
    "icon": "mdi:cactus"
   },
@@ -40,6 +41,7 @@
     "interval_days": 14,
     "winter_interval_days": 0
    },
+   "feeding": "medium",
    "toxic_pets": true,
    "icon": "mdi:leaf"
   },
@@ -61,6 +63,7 @@
     "interval_days": 28,
     "winter_interval_days": 0
    },
+   "feeding": "light",
    "toxic_pets": true,
    "icon": "mdi:cactus"
   },
@@ -82,6 +85,7 @@
     "interval_days": 14,
     "winter_interval_days": 14
    },
+   "feeding": "medium",
    "toxic_pets": true,
    "icon": "mdi:flower"
   },
@@ -103,6 +107,7 @@
     "interval_days": 14,
     "winter_interval_days": 0
    },
+   "feeding": "medium",
    "toxic_pets": true,
    "icon": "mdi:flower"
   },
@@ -124,6 +129,7 @@
     "interval_days": 28,
     "winter_interval_days": 0
    },
+   "feeding": "medium",
    "toxic_pets": false,
    "icon": "mdi:grass"
   },
@@ -145,6 +151,7 @@
     "interval_days": 14,
     "winter_interval_days": 0
    },
+   "feeding": "heavy",
    "toxic_pets": false,
    "icon": "mdi:sprout"
   },
@@ -166,6 +173,7 @@
     "interval_days": 14,
     "winter_interval_days": 0
    },
+   "feeding": "medium",
    "toxic_pets": true,
    "icon": "mdi:flower"
   },
@@ -187,6 +195,7 @@
     "interval_days": 21,
     "winter_interval_days": 0
    },
+   "feeding": "medium",
    "toxic_pets": false,
    "icon": "mdi:palm-tree"
   },
@@ -208,6 +217,7 @@
     "interval_days": 14,
     "winter_interval_days": 0
    },
+   "feeding": "medium",
    "toxic_pets": true,
    "icon": "mdi:leaf"
   },
@@ -229,6 +239,7 @@
     "interval_days": 28,
     "winter_interval_days": 0
    },
+   "feeding": "light",
    "toxic_pets": true,
    "icon": "mdi:grass"
   },
@@ -250,6 +261,7 @@
     "interval_days": 14,
     "winter_interval_days": 28
    },
+   "feeding": "medium",
    "toxic_pets": true,
    "icon": "mdi:tree"
   },
@@ -271,6 +283,7 @@
     "interval_days": 14,
     "winter_interval_days": 0
    },
+   "feeding": "heavy",
    "toxic_pets": false,
    "icon": "mdi:flower"
   },
@@ -292,6 +305,7 @@
     "interval_days": 28,
     "winter_interval_days": 0
    },
+   "feeding": "light",
    "toxic_pets": false,
    "icon": "mdi:flower"
   },
@@ -313,6 +327,7 @@
     "interval_days": 28,
     "winter_interval_days": 0
    },
+   "feeding": "medium",
    "toxic_pets": true,
    "icon": "mdi:tree"
   },
@@ -334,6 +349,7 @@
     "interval_days": 14,
     "winter_interval_days": 0
    },
+   "feeding": "heavy",
    "toxic_pets": true,
    "icon": "mdi:leaf"
   },
@@ -355,6 +371,7 @@
     "interval_days": 14,
     "winter_interval_days": 0
    },
+   "feeding": "heavy",
    "toxic_pets": true,
    "icon": "mdi:flower"
   },
@@ -376,6 +393,7 @@
     "interval_days": 7,
     "winter_interval_days": 0
    },
+   "feeding": "heavy",
    "toxic_pets": true,
    "icon": "mdi:chili-mild"
   },
@@ -397,6 +415,7 @@
     "interval_days": 21,
     "winter_interval_days": 0
    },
+   "feeding": "light",
    "toxic_pets": true,
    "icon": "mdi:cactus"
   },
@@ -418,6 +437,7 @@
     "interval_days": 14,
     "winter_interval_days": 0
    },
+   "feeding": "medium",
    "toxic_pets": true,
    "icon": "mdi:leaf"
   },
@@ -439,6 +459,7 @@
     "interval_days": 14,
     "winter_interval_days": 0
    },
+   "feeding": "medium",
    "toxic_pets": false,
    "icon": "mdi:sprout"
   },
@@ -460,6 +481,7 @@
     "interval_days": 7,
     "winter_interval_days": 0
    },
+   "feeding": "heavy",
    "toxic_pets": true,
    "icon": "mdi:flower"
   },
@@ -481,6 +503,7 @@
     "interval_days": 21,
     "winter_interval_days": 0
    },
+   "feeding": "medium",
    "toxic_pets": true,
    "icon": "mdi:palm-tree"
   },
@@ -502,6 +525,7 @@
     "interval_days": 14,
     "winter_interval_days": 0
    },
+   "feeding": "medium",
    "toxic_pets": false,
    "icon": "mdi:flower"
   },
@@ -523,6 +547,7 @@
     "interval_days": 14,
     "winter_interval_days": 0
    },
+   "feeding": "medium",
    "toxic_pets": true,
    "icon": "mdi:leaf"
   },
@@ -544,6 +569,7 @@
     "interval_days": 21,
     "winter_interval_days": 0
    },
+   "feeding": "medium",
    "toxic_pets": true,
    "icon": "mdi:palm-tree"
   },
@@ -565,6 +591,7 @@
     "interval_days": 28,
     "winter_interval_days": 0
    },
+   "feeding": "light",
    "toxic_pets": false,
    "icon": "mdi:cactus"
   },
@@ -586,6 +613,7 @@
     "interval_days": 14,
     "winter_interval_days": 0
    },
+   "feeding": "medium",
    "toxic_pets": true,
    "icon": "mdi:tree"
   },
@@ -607,6 +635,7 @@
     "interval_days": 14,
     "winter_interval_days": 0
    },
+   "feeding": "medium",
    "toxic_pets": true,
    "icon": "mdi:leaf"
   },
@@ -628,6 +657,7 @@
     "interval_days": 14,
     "winter_interval_days": 0
    },
+   "feeding": "medium",
    "toxic_pets": true,
    "icon": "mdi:leaf"
   },
@@ -649,6 +679,7 @@
     "interval_days": 14,
     "winter_interval_days": 0
    },
+   "feeding": "medium",
    "toxic_pets": true,
    "icon": "mdi:leaf"
   },
@@ -670,6 +701,7 @@
     "interval_days": 14,
     "winter_interval_days": 0
    },
+   "feeding": "medium",
    "toxic_pets": true,
    "icon": "mdi:flower"
   },
@@ -691,6 +723,7 @@
     "interval_days": 28,
     "winter_interval_days": 0
    },
+   "feeding": "light",
    "toxic_pets": false,
    "icon": "mdi:palm-tree"
   },
@@ -712,6 +745,7 @@
     "interval_days": 28,
     "winter_interval_days": 0
    },
+   "feeding": "light",
    "toxic_pets": true,
    "icon": "mdi:cactus"
   },
@@ -733,6 +767,7 @@
     "interval_days": 14,
     "winter_interval_days": 0
    },
+   "feeding": "heavy",
    "toxic_pets": false,
    "icon": "mdi:fruit-cherries"
   },
@@ -754,6 +789,7 @@
     "interval_days": 14,
     "winter_interval_days": 0
    },
+   "feeding": "heavy",
    "toxic_pets": true,
    "icon": "mdi:tree"
   },
@@ -775,6 +811,7 @@
     "interval_days": 14,
     "winter_interval_days": 28
    },
+   "feeding": "medium",
    "toxic_pets": true,
    "icon": "mdi:flower"
   },
@@ -796,6 +833,7 @@
     "interval_days": 21,
     "winter_interval_days": 0
    },
+   "feeding": "medium",
    "toxic_pets": true,
    "icon": "mdi:flower"
   },
@@ -817,6 +855,7 @@
     "interval_days": 14,
     "winter_interval_days": 0
    },
+   "feeding": "medium",
    "toxic_pets": false,
    "icon": "mdi:flower"
   },
@@ -838,6 +877,7 @@
     "interval_days": 21,
     "winter_interval_days": 0
    },
+   "feeding": "light",
    "toxic_pets": false,
    "icon": "mdi:leaf"
   },
@@ -859,6 +899,7 @@
     "interval_days": 7,
     "winter_interval_days": 0
    },
+   "feeding": "heavy",
    "toxic_pets": false,
    "icon": "mdi:flower"
   },
@@ -880,6 +921,7 @@
     "interval_days": 14,
     "winter_interval_days": 0
    },
+   "feeding": "medium",
    "toxic_pets": true,
    "icon": "mdi:flower"
   },
@@ -901,6 +943,7 @@
     "interval_days": 14,
     "winter_interval_days": 0
    },
+   "feeding": "medium",
    "toxic_pets": true,
    "icon": "mdi:leaf"
   },
@@ -922,6 +965,7 @@
     "interval_days": 28,
     "winter_interval_days": 0
    },
+   "feeding": "light",
    "toxic_pets": true,
    "icon": "mdi:cactus"
   },
@@ -943,6 +987,7 @@
     "interval_days": 7,
     "winter_interval_days": 0
    },
+   "feeding": "heavy",
    "toxic_pets": true,
    "icon": "mdi:flower"
   },
@@ -964,6 +1009,7 @@
     "interval_days": 28,
     "winter_interval_days": 0
    },
+   "feeding": "light",
    "toxic_pets": false,
    "icon": "mdi:leaf"
   },
@@ -985,6 +1031,7 @@
     "interval_days": 28,
     "winter_interval_days": 0
    },
+   "feeding": "medium",
    "toxic_pets": true,
    "icon": "mdi:grass"
   },
@@ -1006,6 +1053,7 @@
     "interval_days": 28,
     "winter_interval_days": 0
    },
+   "feeding": "light",
    "toxic_pets": true,
    "icon": "mdi:leaf"
   },
@@ -1027,6 +1075,7 @@
     "interval_days": 14,
     "winter_interval_days": 0
    },
+   "feeding": "medium",
    "toxic_pets": false,
    "icon": "mdi:palm-tree"
   },
@@ -1048,6 +1097,7 @@
     "interval_days": 14,
     "winter_interval_days": 0
    },
+   "feeding": "medium",
    "toxic_pets": false,
    "icon": "mdi:grass"
   },
@@ -1069,6 +1119,7 @@
     "interval_days": 14,
     "winter_interval_days": 0
    },
+   "feeding": "medium",
    "toxic_pets": true,
    "icon": "mdi:leaf"
   },
@@ -1090,6 +1141,7 @@
     "interval_days": 7,
     "winter_interval_days": 0
    },
+   "feeding": "heavy",
    "toxic_pets": false,
    "icon": "mdi:sprout"
   },
@@ -1111,6 +1163,7 @@
     "interval_days": 21,
     "winter_interval_days": 0
    },
+   "feeding": "medium",
    "toxic_pets": false,
    "icon": "mdi:palm-tree"
   },
@@ -1132,6 +1185,7 @@
     "interval_days": 28,
     "winter_interval_days": 0
    },
+   "feeding": "light",
    "toxic_pets": false,
    "icon": "mdi:cactus"
   },
@@ -1153,6 +1207,7 @@
     "interval_days": 14,
     "winter_interval_days": 0
    },
+   "feeding": "heavy",
    "toxic_pets": true,
    "icon": "mdi:flower"
   },
@@ -1174,6 +1229,7 @@
     "interval_days": 7,
     "winter_interval_days": 0
    },
+   "feeding": "heavy",
    "toxic_pets": false,
    "icon": "mdi:flower"
   },
@@ -1195,6 +1251,7 @@
     "interval_days": 14,
     "winter_interval_days": 0
    },
+   "feeding": "medium",
    "toxic_pets": true,
    "icon": "mdi:leaf"
   },
@@ -1216,6 +1273,7 @@
     "interval_days": 28,
     "winter_interval_days": 0
    },
+   "feeding": "light",
    "toxic_pets": false,
    "icon": "mdi:cactus"
   },
@@ -1237,6 +1295,7 @@
     "interval_days": 0,
     "winter_interval_days": 0
    },
+   "feeding": "none",
    "toxic_pets": false,
    "icon": "mdi:sprout"
   },
@@ -1258,6 +1317,7 @@
     "interval_days": 21,
     "winter_interval_days": 0
    },
+   "feeding": "medium",
    "toxic_pets": false,
    "icon": "mdi:palm-tree"
   },
@@ -1279,6 +1339,7 @@
     "interval_days": 14,
     "winter_interval_days": 0
    },
+   "feeding": "medium",
    "toxic_pets": true,
    "icon": "mdi:leaf"
   },
@@ -1300,6 +1361,7 @@
     "interval_days": 14,
     "winter_interval_days": 0
    },
+   "feeding": "medium",
    "toxic_pets": true,
    "icon": "mdi:flower"
   },
@@ -1321,6 +1383,7 @@
     "interval_days": 21,
     "winter_interval_days": 0
    },
+   "feeding": "medium",
    "toxic_pets": true,
    "icon": "mdi:leaf"
   },
@@ -1342,6 +1405,7 @@
     "interval_days": 14,
     "winter_interval_days": 0
    },
+   "feeding": "medium",
    "toxic_pets": false,
    "icon": "mdi:leaf"
   },
@@ -1363,6 +1427,7 @@
     "interval_days": 14,
     "winter_interval_days": 0
    },
+   "feeding": "medium",
    "toxic_pets": false,
    "icon": "mdi:sprout"
   },
@@ -1384,6 +1449,7 @@
     "interval_days": 28,
     "winter_interval_days": 0
    },
+   "feeding": "light",
    "toxic_pets": true,
    "icon": "mdi:flower"
   },
@@ -1405,6 +1471,7 @@
     "interval_days": 28,
     "winter_interval_days": 0
    },
+   "feeding": "light",
    "toxic_pets": false,
    "icon": "mdi:leaf"
   },
@@ -1426,6 +1493,7 @@
     "interval_days": 14,
     "winter_interval_days": 0
    },
+   "feeding": "medium",
    "toxic_pets": true,
    "icon": "mdi:sprout"
   },
@@ -1447,6 +1515,7 @@
     "interval_days": 14,
     "winter_interval_days": 0
    },
+   "feeding": "medium",
    "toxic_pets": true,
    "icon": "mdi:leaf"
   },
@@ -1468,6 +1537,7 @@
     "interval_days": 14,
     "winter_interval_days": 0
    },
+   "feeding": "medium",
    "toxic_pets": true,
    "icon": "mdi:leaf"
   },
@@ -1489,6 +1559,7 @@
     "interval_days": 14,
     "winter_interval_days": 0
    },
+   "feeding": "light",
    "toxic_pets": false,
    "icon": "mdi:leaf"
   },
@@ -1510,6 +1581,7 @@
     "interval_days": 21,
     "winter_interval_days": 0
    },
+   "feeding": "light",
    "toxic_pets": false,
    "icon": "mdi:leaf"
   },
@@ -1531,6 +1603,7 @@
     "interval_days": 7,
     "winter_interval_days": 0
    },
+   "feeding": "heavy",
    "toxic_pets": true,
    "icon": "mdi:flower"
   },
@@ -1552,6 +1625,7 @@
     "interval_days": 14,
     "winter_interval_days": 0
    },
+   "feeding": "light",
    "toxic_pets": false,
    "icon": "mdi:tree"
   },
@@ -1573,6 +1647,7 @@
     "interval_days": 7,
     "winter_interval_days": 28
    },
+   "feeding": "heavy",
    "toxic_pets": false,
    "icon": "mdi:fruit-citrus"
   },
@@ -1594,6 +1669,7 @@
     "interval_days": 14,
     "winter_interval_days": 0
    },
+   "feeding": "light",
    "toxic_pets": false,
    "icon": "mdi:flower"
   },
@@ -1615,6 +1691,7 @@
     "interval_days": 14,
     "winter_interval_days": 28
    },
+   "feeding": "light",
    "toxic_pets": false,
    "icon": "mdi:flower"
   },
@@ -1636,6 +1713,7 @@
     "interval_days": 14,
     "winter_interval_days": 28
    },
+   "feeding": "light",
    "toxic_pets": false,
    "icon": "mdi:flower"
   },
@@ -1657,6 +1735,7 @@
     "interval_days": 28,
     "winter_interval_days": 0
    },
+   "feeding": "light",
    "toxic_pets": true,
    "icon": "mdi:sprout"
   },
@@ -1678,6 +1757,7 @@
     "interval_days": 14,
     "winter_interval_days": 0
    },
+   "feeding": "light",
    "toxic_pets": false,
    "icon": "mdi:cactus"
   },
@@ -1699,6 +1779,7 @@
     "interval_days": 21,
     "winter_interval_days": 0
    },
+   "feeding": "light",
    "toxic_pets": false,
    "icon": "mdi:leaf"
   },
@@ -1720,6 +1801,7 @@
     "interval_days": 14,
     "winter_interval_days": 0
    },
+   "feeding": "medium",
    "toxic_pets": false,
    "icon": "mdi:sprout"
   },
@@ -1741,6 +1823,7 @@
     "interval_days": 7,
     "winter_interval_days": 0
    },
+   "feeding": "heavy",
    "toxic_pets": false,
    "icon": "mdi:flower"
   },
@@ -1762,6 +1845,7 @@
     "interval_days": 14,
     "winter_interval_days": 0
    },
+   "feeding": "medium",
    "toxic_pets": false,
    "icon": "mdi:leaf"
   },
@@ -1783,6 +1867,7 @@
     "interval_days": 14,
     "winter_interval_days": 0
    },
+   "feeding": "medium",
    "toxic_pets": false,
    "icon": "mdi:sprout"
   },
@@ -1804,6 +1889,7 @@
     "interval_days": 14,
     "winter_interval_days": 0
    },
+   "feeding": "medium",
    "toxic_pets": true,
    "icon": "mdi:leaf"
   },
@@ -1825,6 +1911,7 @@
     "interval_days": 14,
     "winter_interval_days": 0
    },
+   "feeding": "medium",
    "toxic_pets": true,
    "icon": "mdi:leaf"
   },
@@ -1846,6 +1933,7 @@
     "interval_days": 14,
     "winter_interval_days": 0
    },
+   "feeding": "medium",
    "toxic_pets": true,
    "icon": "mdi:leaf"
   },
@@ -1867,6 +1955,7 @@
     "interval_days": 14,
     "winter_interval_days": 0
    },
+   "feeding": "medium",
    "toxic_pets": true,
    "icon": "mdi:leaf"
   },
@@ -1888,6 +1977,7 @@
     "interval_days": 14,
     "winter_interval_days": 0
    },
+   "feeding": "medium",
    "toxic_pets": true,
    "icon": "mdi:leaf"
   },
@@ -1909,6 +1999,7 @@
     "interval_days": 14,
     "winter_interval_days": 0
    },
+   "feeding": "heavy",
    "toxic_pets": false,
    "icon": "mdi:flower"
   },
@@ -1930,6 +2021,7 @@
     "interval_days": 28,
     "winter_interval_days": 0
    },
+   "feeding": "light",
    "toxic_pets": false,
    "icon": "mdi:sprout"
   },
@@ -1951,6 +2043,7 @@
     "interval_days": 28,
     "winter_interval_days": 0
    },
+   "feeding": "light",
    "toxic_pets": false,
    "icon": "mdi:sprout"
   },
@@ -1972,6 +2065,7 @@
     "interval_days": 14,
     "winter_interval_days": 0
    },
+   "feeding": "medium",
    "toxic_pets": true,
    "icon": "mdi:sprout"
   },
@@ -1993,6 +2087,7 @@
     "interval_days": 21,
     "winter_interval_days": 0
    },
+   "feeding": "light",
    "toxic_pets": false,
    "icon": "mdi:leaf"
   },
@@ -2014,6 +2109,7 @@
     "interval_days": 21,
     "winter_interval_days": 0
    },
+   "feeding": "medium",
    "toxic_pets": true,
    "icon": "mdi:leaf"
   },
@@ -2035,6 +2131,7 @@
     "interval_days": 14,
     "winter_interval_days": 0
    },
+   "feeding": "medium",
    "toxic_pets": true,
    "icon": "mdi:leaf"
   },
@@ -2056,6 +2153,7 @@
     "interval_days": 7,
     "winter_interval_days": 0
    },
+   "feeding": "heavy",
    "toxic_pets": false,
    "icon": "mdi:flower"
   },
@@ -2077,6 +2175,7 @@
     "interval_days": 14,
     "winter_interval_days": 0
    },
+   "feeding": "medium",
    "toxic_pets": false,
    "icon": "mdi:leaf"
   },
@@ -2098,6 +2197,7 @@
     "interval_days": 28,
     "winter_interval_days": 0
    },
+   "feeding": "light",
    "toxic_pets": true,
    "icon": "mdi:cactus"
   },
@@ -2119,6 +2219,7 @@
     "interval_days": 28,
     "winter_interval_days": 0
    },
+   "feeding": "light",
    "toxic_pets": false,
    "icon": "mdi:sprout"
   },
@@ -2140,6 +2241,7 @@
     "interval_days": 28,
     "winter_interval_days": 0
    },
+   "feeding": "light",
    "toxic_pets": false,
    "icon": "mdi:sprout"
   },
@@ -2161,6 +2263,7 @@
     "interval_days": 7,
     "winter_interval_days": 0
    },
+   "feeding": "heavy",
    "toxic_pets": true,
    "icon": "mdi:fruit-cherries"
   },
@@ -2182,6 +2285,7 @@
     "interval_days": 14,
     "winter_interval_days": 0
    },
+   "feeding": "light",
    "toxic_pets": false,
    "icon": "mdi:leaf"
   },
@@ -2203,6 +2307,7 @@
     "interval_days": 14,
     "winter_interval_days": 28
    },
+   "feeding": "medium",
    "toxic_pets": false,
    "icon": "mdi:flower"
   },
@@ -2224,6 +2329,7 @@
     "interval_days": 0,
     "winter_interval_days": 0
    },
+   "feeding": "none",
    "toxic_pets": false,
    "icon": "mdi:sprout"
   },
@@ -2245,6 +2351,7 @@
     "interval_days": 21,
     "winter_interval_days": 0
    },
+   "feeding": "light",
    "toxic_pets": false,
    "icon": "mdi:flower"
   },
@@ -2266,6 +2373,7 @@
     "interval_days": 14,
     "winter_interval_days": 0
    },
+   "feeding": "light",
    "toxic_pets": false,
    "icon": "mdi:cactus"
   },
@@ -2287,6 +2395,7 @@
     "interval_days": 14,
     "winter_interval_days": 0
    },
+   "feeding": "medium",
    "toxic_pets": true,
    "icon": "mdi:flower"
   },
@@ -2308,6 +2417,7 @@
     "interval_days": 14,
     "winter_interval_days": 0
    },
+   "feeding": "medium",
    "toxic_pets": true,
    "icon": "mdi:leaf"
   },
@@ -2329,6 +2439,7 @@
     "interval_days": 21,
     "winter_interval_days": 0
    },
+   "feeding": "medium",
    "toxic_pets": true,
    "icon": "mdi:palm-tree"
   },
@@ -2350,6 +2461,7 @@
     "interval_days": 28,
     "winter_interval_days": 0
    },
+   "feeding": "medium",
    "toxic_pets": false,
    "icon": "mdi:grass"
   },
@@ -2371,6 +2483,7 @@
     "interval_days": 14,
     "winter_interval_days": 0
    },
+   "feeding": "medium",
    "toxic_pets": true,
    "icon": "mdi:leaf"
   },
@@ -2392,6 +2505,7 @@
     "interval_days": 7,
     "winter_interval_days": 28
    },
+   "feeding": "heavy",
    "toxic_pets": false,
    "icon": "mdi:flower"
   },
@@ -2413,6 +2527,7 @@
     "interval_days": 14,
     "winter_interval_days": 0
    },
+   "feeding": "medium",
    "toxic_pets": false,
    "icon": "mdi:flower"
   },
@@ -2434,6 +2549,7 @@
     "interval_days": 7,
     "winter_interval_days": 28
    },
+   "feeding": "heavy",
    "toxic_pets": false,
    "icon": "mdi:fruit-citrus"
   },
@@ -2455,6 +2571,7 @@
     "interval_days": 14,
     "winter_interval_days": 0
    },
+   "feeding": "medium",
    "toxic_pets": false,
    "icon": "mdi:sprout"
   },
@@ -2476,6 +2593,7 @@
     "interval_days": 14,
     "winter_interval_days": 0
    },
+   "feeding": "heavy",
    "toxic_pets": false,
    "icon": "mdi:grass"
   }

@@ -39,11 +39,20 @@ from homeassistant.helpers.selector import (
 )
 from homeassistant.util import slugify
 
+from .care import (
+    fertilizer_per_watering_ml,
+    pot_volume,
+    suggest_fertilizer,
+    suggest_watering,
+)
 from .const import (
     CONF_AREA,
     CONF_CLIMATE_STRENGTH,
+    CONF_FEEDING,
     CONF_FERTILIZER_AMOUNT,
+    CONF_FERTILIZER_DOSAGE,
     CONF_FERTILIZER_INTERVAL,
+    CONF_FERTILIZER_TYPE,
     CONF_FERTILIZER_UNIT,
     CONF_FERTILIZER_WINTER_INTERVAL,
     CONF_HUMIDITY_SENSOR,
@@ -58,7 +67,11 @@ from .const import (
     CONF_NOTES,
     CONF_PHOTO,
     CONF_PHOTO_UPLOAD,
+    CONF_POT_DIAMETER,
+    CONF_POT_HEIGHT,
+    CONF_POT_MATERIAL,
     CONF_SPECIES,
+    CONF_SUBSTRATE,
     CONF_TEMPERATURE_MAX,
     CONF_TEMPERATURE_MIN,
     CONF_TEMPERATURE_SENSOR,
@@ -66,27 +79,47 @@ from .const import (
     CONF_WATERING_AMOUNT,
     CONF_WATERING_INTERVAL,
     DEFAULT_CLIMATE_STRENGTH,
+    DEFAULT_FERTILIZER_DOSAGE,
     DOMAIN,
+    FEEDING_LEVELS,
+    FERTILIZER_TYPES,
     FERTILIZER_UNITS,
     LIGHT_LEVEL_KEYS,
+    POT_MATERIALS,
     SENSOR_KEYS,
     SPECIES_CUSTOM,
     SUBENTRY_TYPE_PLANT,
+    SUBSTRATES,
     WATER_LEVEL_KEYS,
 )
 from .species import async_get_species_db, species_defaults, species_name
 
-PROFILE_KEYS = (
+# Inputs of the care assistant step
+ASSISTANT_KEYS = (
     CONF_WATER_NEED,
     CONF_LIGHT_NEED,
     CONF_LOCATION_LIGHT,
-    CONF_TEMPERATURE_MIN,
-    CONF_TEMPERATURE_MAX,
+    CONF_FEEDING,
+    CONF_POT_DIAMETER,
+    CONF_POT_HEIGHT,
+    CONF_POT_MATERIAL,
+    CONF_SUBSTRATE,
+    CONF_FERTILIZER_TYPE,
+    CONF_FERTILIZER_DOSAGE,
+)
+# Results of the assistant, editable in the profile step
+CARE_KEYS = (
+    CONF_WATERING_INTERVAL,
     CONF_WATERING_AMOUNT,
     CONF_FERTILIZER_INTERVAL,
     CONF_FERTILIZER_WINTER_INTERVAL,
     CONF_FERTILIZER_AMOUNT,
     CONF_FERTILIZER_UNIT,
+)
+PROFILE_KEYS = (
+    *CARE_KEYS,
+    CONF_TEMPERATURE_MIN,
+    CONF_TEMPERATURE_MAX,
     CONF_PHOTO,
     CONF_NOTES,
 )
@@ -301,7 +334,7 @@ class PlantSubentryFlow(ConfigSubentryFlow):
         if user_input is not None:
             for key in SENSOR_KEYS:
                 self._data[key] = user_input.get(key)
-            return await self.async_step_profile()
+            return await self.async_step_assistant()
 
         schema = vol.Schema(
             {
@@ -320,30 +353,48 @@ class PlantSubentryFlow(ConfigSubentryFlow):
             data_schema=self.add_suggested_values_to_schema(schema, suggested),
         )
 
-    async def async_step_profile(
+    async def _async_species(self) -> dict[str, Any] | None:
+        db = await async_get_species_db(self.hass)
+        return db.get(self._data[CONF_SPECIES])
+
+    def _keeps_species(self) -> bool:
+        return not self._is_new and self._data[CONF_SPECIES] == self._previous.get(
+            CONF_SPECIES
+        )
+
+    async def async_step_assistant(
         self, user_input: dict[str, Any] | None = None
     ) -> SubentryFlowResult:
-        """Target values, prefilled from the species database."""
-        db = await async_get_species_db(self.hass)
-        species_id = self._data[CONF_SPECIES]
-        defaults = species_defaults(db.get(species_id))
-
+        """Care assistant: what the plant needs and what pot it lives in."""
+        defaults = species_defaults(await self._async_species())
         if user_input is not None:
-            return await self._async_finish(user_input, defaults)
+            for key in ASSISTANT_KEYS:
+                self._data[key] = user_input.get(key)
+            return await self.async_step_profile()
 
-        if not self._is_new and species_id == self._previous.get(CONF_SPECIES):
-            current = {**defaults, **self._runtime_settings()}
-        else:
-            current = dict(defaults)
-            current.setdefault(CONF_FERTILIZER_UNIT, "ml_per_l")
-            for key in (
-                CONF_PHOTO,
-                CONF_NOTES,
-                CONF_WATERING_AMOUNT,
-                CONF_FERTILIZER_AMOUNT,
-            ):
-                if self._previous.get(key) is not None:
-                    current[key] = self._previous[key]
+        current: dict[str, Any] = {
+            CONF_POT_MATERIAL: "plastic",
+            CONF_SUBSTRATE: "standard",
+            CONF_FERTILIZER_TYPE: "liquid",
+            CONF_FERTILIZER_DOSAGE: DEFAULT_FERTILIZER_DOSAGE,
+            **defaults,
+        }
+        if not self._is_new:
+            runtime = self._runtime_settings()
+            keep = (
+                ASSISTANT_KEYS
+                if self._keeps_species()
+                else (
+                    CONF_LOCATION_LIGHT,
+                    CONF_POT_DIAMETER,
+                    CONF_POT_HEIGHT,
+                    CONF_POT_MATERIAL,
+                    CONF_SUBSTRATE,
+                    CONF_FERTILIZER_TYPE,
+                    CONF_FERTILIZER_DOSAGE,
+                )
+            )
+            current.update({k: runtime[k] for k in keep if runtime.get(k) is not None})
 
         fields: dict[Any, Any] = {
             vol.Required(CONF_WATER_NEED): _level_selector(
@@ -359,28 +410,103 @@ class PlantSubentryFlow(ConfigSubentryFlow):
             )
         fields.update(
             {
-                vol.Required(CONF_TEMPERATURE_MIN): _number(-20, 40, 0.5, "°C"),
-                vol.Required(CONF_TEMPERATURE_MAX): _number(-20, 45, 0.5, "°C"),
-                vol.Optional(CONF_WATERING_AMOUNT): _number(0, 10000, 10, "ml"),
-                vol.Required(CONF_FERTILIZER_INTERVAL): _number(0, 180, 1, "d"),
-                vol.Required(CONF_FERTILIZER_WINTER_INTERVAL): _number(0, 180, 1, "d"),
-                vol.Optional(CONF_FERTILIZER_AMOUNT): _number(0, 1000, 0.5),
-                vol.Required(CONF_FERTILIZER_UNIT): _level_selector(
-                    CONF_FERTILIZER_UNIT, FERTILIZER_UNITS
+                vol.Optional(CONF_POT_DIAMETER): _number(4, 100, 1, "cm"),
+                vol.Optional(CONF_POT_HEIGHT): _number(4, 100, 1, "cm"),
+                vol.Required(CONF_POT_MATERIAL): _level_selector(
+                    CONF_POT_MATERIAL, POT_MATERIALS
                 ),
-                vol.Optional(CONF_PHOTO_UPLOAD): FileSelector(
-                    FileSelectorConfig(accept="image/*")
+                vol.Required(CONF_SUBSTRATE): _level_selector(
+                    CONF_SUBSTRATE, SUBSTRATES
                 ),
-                vol.Optional(CONF_PHOTO): TextSelector(),
-                vol.Optional(CONF_NOTES): TextSelector(
-                    TextSelectorConfig(multiline=True)
+                vol.Required(CONF_FEEDING): _level_selector(
+                    CONF_FEEDING, FEEDING_LEVELS
                 ),
+                vol.Required(CONF_FERTILIZER_TYPE): _level_selector(
+                    CONF_FERTILIZER_TYPE, FERTILIZER_TYPES
+                ),
+                vol.Optional(CONF_FERTILIZER_DOSAGE): _number(0, 50, 0.5, "ml/l"),
             }
         )
-        schema = vol.Schema(fields)
+        return self.async_show_form(
+            step_id="assistant",
+            data_schema=self.add_suggested_values_to_schema(
+                vol.Schema(fields), current
+            ),
+        )
+
+    async def async_step_profile(
+        self, user_input: dict[str, Any] | None = None
+    ) -> SubentryFlowResult:
+        """Results of the assistant plus temperature, photo and notes."""
+        defaults = species_defaults(await self._async_species())
+
+        if user_input is not None:
+            return await self._async_finish(user_input, defaults)
+
+        values = {**defaults, **{k: v for k, v in self._data.items() if v is not None}}
+        suggestion = {
+            **suggest_watering(values),
+            **suggest_fertilizer(
+                values,
+                int(defaults[CONF_FERTILIZER_INTERVAL]),
+                int(defaults[CONF_FERTILIZER_WINTER_INTERVAL]),
+            ),
+        }
+        current: dict[str, Any] = {
+            CONF_TEMPERATURE_MIN: defaults[CONF_TEMPERATURE_MIN],
+            CONF_TEMPERATURE_MAX: defaults[CONF_TEMPERATURE_MAX],
+            **suggestion,
+        }
+        if not self._is_new:
+            runtime = self._runtime_settings()
+            for key in (CONF_PHOTO, CONF_NOTES):
+                if runtime.get(key):
+                    current[key] = runtime[key]
+            if self._keeps_species():
+                current[CONF_TEMPERATURE_MIN] = runtime.get(
+                    CONF_TEMPERATURE_MIN, current[CONF_TEMPERATURE_MIN]
+                )
+                current[CONF_TEMPERATURE_MAX] = runtime.get(
+                    CONF_TEMPERATURE_MAX, current[CONF_TEMPERATURE_MAX]
+                )
+                # Unchanged assistant inputs: keep the values tuned so far
+                if all(self._data.get(k) == runtime.get(k) for k in ASSISTANT_KEYS):
+                    current.update(
+                        {k: runtime[k] for k in CARE_KEYS if runtime.get(k) is not None}
+                    )
+
+        volume = pot_volume(values)
+        per_watering = fertilizer_per_watering_ml(current)
+        placeholders = {
+            "volume": f"{volume:.1f}" if volume else "–",
+            "watering_amount": str(suggestion.get(CONF_WATERING_AMOUNT, "–")),
+            "watering_interval": str(suggestion[CONF_WATERING_INTERVAL]),
+            "fertilizer_total": f"{per_watering:g}" if per_watering else "–",
+        }
+
+        fields: dict[Any, Any] = {
+            vol.Required(CONF_WATERING_INTERVAL): _number(1, 90, 1, "d"),
+            vol.Optional(CONF_WATERING_AMOUNT): _number(0, 10000, 10, "ml"),
+            vol.Required(CONF_TEMPERATURE_MIN): _number(-20, 40, 0.5, "°C"),
+            vol.Required(CONF_TEMPERATURE_MAX): _number(-20, 45, 0.5, "°C"),
+            vol.Required(CONF_FERTILIZER_INTERVAL): _number(0, 365, 1, "d"),
+            vol.Required(CONF_FERTILIZER_WINTER_INTERVAL): _number(0, 365, 1, "d"),
+            vol.Optional(CONF_FERTILIZER_AMOUNT): _number(0, 1000, 0.5),
+            vol.Required(CONF_FERTILIZER_UNIT): _level_selector(
+                CONF_FERTILIZER_UNIT, FERTILIZER_UNITS
+            ),
+            vol.Optional(CONF_PHOTO_UPLOAD): FileSelector(
+                FileSelectorConfig(accept="image/*")
+            ),
+            vol.Optional(CONF_PHOTO): TextSelector(),
+            vol.Optional(CONF_NOTES): TextSelector(TextSelectorConfig(multiline=True)),
+        }
         return self.async_show_form(
             step_id="profile",
-            data_schema=self.add_suggested_values_to_schema(schema, current),
+            data_schema=self.add_suggested_values_to_schema(
+                vol.Schema(fields), current
+            ),
+            description_placeholders=placeholders,
         )
 
     async def _async_store_photo(self, file_id: str) -> str:
@@ -409,6 +535,8 @@ class PlantSubentryFlow(ConfigSubentryFlow):
         for key in PROFILE_KEYS:
             data[key] = profile.get(key)
         data[CONF_ICON] = defaults[CONF_ICON]
+        if data.get(CONF_FERTILIZER_AMOUNT) == 0:
+            data[CONF_FERTILIZER_AMOUNT] = None
         data = {k: v for k, v in data.items() if v not in (None, "")}
         title = data[CONF_NAME]
 

@@ -8,9 +8,11 @@ from typing import Any
 from freezegun.api import FrozenDateTimeFactory
 from homeassistant.components.todo import DOMAIN as TODO_DOMAIN
 from homeassistant.config_entries import ConfigEntryState
+from homeassistant.const import EntityCategory
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers import area_registry as ar
 from homeassistant.helpers import device_registry as dr
+from homeassistant.helpers import entity_registry as er
 from pytest_homeassistant_custom_component.common import async_fire_time_changed
 
 from custom_components.plant_butler.const import DOMAIN
@@ -67,7 +69,6 @@ async def test_entities_created_with_english_ids(
         "select.monstera_water_need",
         "select.monstera_light_need",
         "select.monstera_location_light",
-        "number.monstera_temperature_min",
         "number.monstera_watering_interval",
         "number.monstera_fertilizer_amount",
         "switch.monstera_winter_rest",
@@ -75,6 +76,26 @@ async def test_entities_created_with_english_ids(
         "todo.plant_butler",
     ):
         assert hass.states.get(entity_id) is not None, entity_id
+
+    # Rarely needed values are disabled by default, diagnostics are categorized
+    ent_reg = er.async_get(hass)
+    for entity_id in (
+        "number.monstera_temperature_min",
+        "number.monstera_temperature_max",
+        "number.monstera_fertilizer_winter_interval",
+    ):
+        assert (
+            ent_reg.async_get(entity_id).disabled_by
+            is er.RegistryEntryDisabler.INTEGRATION
+        )
+    assert (
+        ent_reg.async_get("binary_sensor.monstera_light_problem").entity_category
+        is EntityCategory.DIAGNOSTIC
+    )
+    assert (
+        ent_reg.async_get("select.monstera_water_need").entity_category
+        is EntityCategory.CONFIG
+    )
 
     # No moisture sensor -> no moisture thresholds, no DLI sensor
     assert hass.states.get("number.monstera_moisture_min") is None
@@ -140,7 +161,7 @@ async def test_fertilizer_and_todo_tick(
     assert hass.states.get("binary_sensor.monstera_needs_fertilizer").state == "on"
     items = await _todo_items(hass)
     fert = next(i for i in items if "Fertilize" in i["summary"])
-    assert fert["summary"] == "Monstera: Fertilize – 5 ml/l"
+    assert fert["summary"] == "Monstera: Fertilize – 5 ml/l (≈ 1.5 ml)"
 
     await hass.services.async_call(
         TODO_DOMAIN,
@@ -155,6 +176,7 @@ async def test_winter_rest_pauses_fertilizer(
     hass: HomeAssistant, make_entry, plant_data, freezer: FrozenDateTimeFactory
 ) -> None:
     """Winter rest pauses fertilizing (winter interval 0) and stretches watering."""
+    plant_data["location_light"] = "bright_indirect"
     await _setup(hass, make_entry, plant_data)
     await hass.services.async_call(
         "switch", "turn_on", {"entity_id": "switch.monstera_winter_rest"}, blocking=True
@@ -176,6 +198,7 @@ async def test_climate_shortens_interval(
     hass.states.async_set("sensor.room_hum", "40")
     plant_data["temperature_sensor"] = "sensor.room_temp"
     plant_data["humidity_sensor"] = "sensor.room_hum"
+    plant_data["location_light"] = "bright_indirect"
     await _setup(hass, make_entry, plant_data)
     attrs = hass.states.get("sensor.monstera_next_watering").attributes
     assert attrs["climate_factor"] == 0.7

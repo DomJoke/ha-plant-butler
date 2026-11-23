@@ -50,13 +50,32 @@
             "humidity_sensor": "Room humidity sensor"
           }
         },
-        "profile": {
-          "title": "Care profile",
-          "description": "Target values from the database – change anything you like. Water need: very low = let the soil dry out completely, medium = water when the top few cm are dry, very high = keep constantly moist.",
+        "assistant": {
+          "title": "Care assistant",
+          "description": "Prefilled from the database. Tell the assistant about the pot and your fertilizer – it calculates watering amount, interval and fertilizer dose in the next step. Water need: very low = let the soil dry out completely, medium = water when the top few cm are dry, very high = keep constantly moist.",
           "data": {
             "water_need": "Water need",
             "light_need": "Light need",
             "location_light": "Light at the location (without light sensor)",
+            "feeding": "Nutrient demand",
+            "pot_diameter": "Pot diameter (top)",
+            "pot_height": "Pot height",
+            "pot_material": "Pot material",
+            "substrate": "Substrate",
+            "fertilizer_type": "Fertilizer",
+            "fertilizer_dosage": "Fertilizer dose on the package"
+          },
+          "data_description": {
+            "pot_diameter": "Leave empty if unknown – then no watering amount is calculated.",
+            "pot_height": "Optional, default 0.9 × diameter.",
+            "fertilizer_dosage": "Liquid fertilizer only: ml per litre of water as printed on the package."
+          }
+        },
+        "profile": {
+          "title": "Care plan",
+          "description": "Assistant result: pot ≈ {volume} l → about {watering_amount} ml every {watering_interval} days; liquid fertilizer per watering ≈ {fertilizer_total} ml. Adjust anything you like – the room climate and winter rest also adjust the interval while running.",
+          "data": {
+            "watering_interval": "Watering interval",
             "temperature_min": "Minimum temperature",
             "temperature_max": "Maximum temperature",
             "watering_amount": "Watering amount",
@@ -104,6 +123,54 @@
         "ml": "ml",
         "sticks": "Sticks (pieces)",
         "g": "Gram (granules)"
+      }
+    },
+    "pot_material": {
+      "en": {
+        "plastic": "Plastic / glazed ceramic",
+        "terracotta": "Terracotta (unglazed clay)"
+      },
+      "de": {
+        "plastic": "Kunststoff / glasierte Keramik",
+        "terracotta": "Terrakotta (unglasierter Ton)"
+      }
+    },
+    "substrate": {
+      "en": {
+        "standard": "Potting soil",
+        "mineral": "Mineral / cactus soil"
+      },
+      "de": {
+        "standard": "Blumenerde",
+        "mineral": "Mineralisch / Kakteenerde"
+      }
+    },
+    "feeding": {
+      "en": {
+        "none": "None (e.g. carnivorous plants)",
+        "light": "Light feeder (½ package dose)",
+        "medium": "Medium (¾ package dose)",
+        "heavy": "Heavy feeder (full package dose)"
+      },
+      "de": {
+        "none": "Keinen (z. B. fleischfressende Pflanzen)",
+        "light": "Schwachzehrer (½ Packungsdosis)",
+        "medium": "Mittel (¾ Packungsdosis)",
+        "heavy": "Starkzehrer (volle Packungsdosis)"
+      }
+    },
+    "fertilizer_type": {
+      "en": {
+        "liquid": "Liquid fertilizer",
+        "sticks": "Fertilizer sticks",
+        "granules": "Slow-release granules",
+        "none": "No fertilizer"
+      },
+      "de": {
+        "liquid": "Flüssigdünger",
+        "sticks": "Düngestäbchen",
+        "granules": "Langzeitdünger (Granulat)",
+        "none": "Kein Dünger"
       }
     },
     "task": {
@@ -258,6 +325,54 @@
         "device_id": {
           "name": "Plant devices",
           "description": "The plant devices."
+        },
+        "pot_material": {
+          "en": {
+            "plastic": "Plastic / glazed ceramic",
+            "terracotta": "Terracotta (unglazed clay)"
+          },
+          "de": {
+            "plastic": "Kunststoff / glasierte Keramik",
+            "terracotta": "Terrakotta (unglasierter Ton)"
+          }
+        },
+        "substrate": {
+          "en": {
+            "standard": "Potting soil",
+            "mineral": "Mineral / cactus soil"
+          },
+          "de": {
+            "standard": "Blumenerde",
+            "mineral": "Mineralisch / Kakteenerde"
+          }
+        },
+        "feeding": {
+          "en": {
+            "none": "None (e.g. carnivorous plants)",
+            "light": "Light feeder (½ package dose)",
+            "medium": "Medium (¾ package dose)",
+            "heavy": "Heavy feeder (full package dose)"
+          },
+          "de": {
+            "none": "Keinen (z. B. fleischfressende Pflanzen)",
+            "light": "Schwachzehrer (½ Packungsdosis)",
+            "medium": "Mittel (¾ Packungsdosis)",
+            "heavy": "Starkzehrer (volle Packungsdosis)"
+          }
+        },
+        "fertilizer_type": {
+          "en": {
+            "liquid": "Liquid fertilizer",
+            "sticks": "Fertilizer sticks",
+            "granules": "Slow-release granules",
+            "none": "No fertilizer"
+          },
+          "de": {
+            "liquid": "Flüssigdünger",
+            "sticks": "Düngestäbchen",
+            "granules": "Langzeitdünger (Granulat)",
+            "none": "Kein Dünger"
+          }
         },
         "task": {
           "name": "Task",

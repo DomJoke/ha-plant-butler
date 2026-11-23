@@ -10,9 +10,11 @@ from homeassistant.components.sensor import (
     SensorEntity,
     SensorStateClass,
 )
+from homeassistant.const import EntityCategory
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
 
+from .care import fertilizer_per_watering_ml, pot_volume
 from .const import (
     CONF_FERTILIZER_AMOUNT,
     CONF_FERTILIZER_UNIT,
@@ -132,6 +134,8 @@ class PlantStatusSensor(PlantSensor):
                 "last_watered": plant.state["last_watered"],
                 "last_fertilized": plant.state["last_fertilized"],
                 "watering_interval_effective": ev.watering_interval_effective,
+                "pot_volume_l": round(vol, 1) if (vol := pot_volume(s)) else None,
+                "fertilizer_per_watering_ml": fertilizer_per_watering_ml(s),
                 "climate_factor": ev.climate_factor,
             },
             "light": {
@@ -196,6 +200,8 @@ class NextFertilizingSensor(PlantSensor):
 class DliSensor(PlantSensor):
     """Daily light integral accumulated today."""
 
+    _attr_entity_category = EntityCategory.DIAGNOSTIC
+
     _attr_native_unit_of_measurement = "mol/(m²·d)"
     _attr_state_class = SensorStateClass.MEASUREMENT
     _attr_suggested_display_precision = 1
@@ -217,6 +223,8 @@ class DliSensor(PlantSensor):
 
 class LightLevelSensor(PlantSensor):
     """Actual light level (from sensor or chosen location)."""
+
+    _attr_entity_category = EntityCategory.DIAGNOSTIC
 
     _attr_device_class = SensorDeviceClass.ENUM
     _attr_options = LIGHT_LEVEL_KEYS
