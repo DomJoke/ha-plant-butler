@@ -13,7 +13,7 @@
  * Plain web component without build step; served by the integration.
  */
 
-const CARD_VERSION = "0.7.0";
+const CARD_VERSION = "0.7.1";
 const DOMAIN = "plant_butler";
 
 const LIGHT_LEVELS = [

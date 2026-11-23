@@ -29,10 +29,10 @@
           "climate_level": "Raumklima-Korrektur"
         },
         "data_description": {
-          "learning_strength": "Wie schnell sich Plant Butler an deine Antworten anpasst. Gelernte Werte bleiben zwischen halbem und doppeltem berechnetem Intervall und zwischen 50 % und 150 % der berechneten Menge.",
+          "learning_strength": "Wie schnell sich Plant Butler an deine Antworten anpasst. Vorsichtig: ±5 %, wenn 3 der letzten 4 Antworten übereinstimmen. Ausgewogen: ±10 %, wenn 2 von 3 übereinstimmen. Stark: ±15 % schon nach einer Antwort. Gelernte Werte bleiben zwischen halbem und doppeltem berechnetem Intervall und zwischen 50 % und 150 % der berechneten Menge.",
           "learn_interval": "Nach dem Gießen fragt Plant Butler, wie die Erde war (noch feucht / leicht trocken / sehr trocken), und passt das Gießintervall jeder Pflanze an. Pflanzen mit Bodensensor lernen zusätzlich aus der gemessenen Austrocknungszeit.",
-          "learn_amount": "Nach dem Gießen fragt Plant Butler, ob die Menge gepasst hat (zu viel / passt / zu wenig), und passt die Gießmenge jeder Pflanze an. Pflanzen mit Bodensensor lernen zusätzlich aus der gemessenen Feuchte. Ein Häkchen entfernen verwendet wieder die berechneten Werte – das Gelernte bleibt gespeichert und ist beim Einschalten sofort zurück. Zum vorübergehenden Pausieren (z. B. Urlaub) gibt es den Schalter „Dazulernen pausiert“.",
-          "climate_level": "Nur für Pflanzen ohne Bodenfeuchtesensor. Plant Butler schätzt aus Raumtemperatur und Luftfeuchte, wie schnell die Erde austrocknet: Warme, trockene Luft verkürzt das Gießintervall, kühle, feuchte Luft verlängert es (höchstens 0,6- bis 1,4-fach). „Stark“ wählen, wenn deine Pflanzen vor der Erinnerung regelmäßig schon trocken sind, „Wenig“, wenn sie noch feucht sind, „Aus“ für ein festes Intervall."
+          "learn_amount": "Nach dem Gießen fragt Plant Butler, ob die Menge gepasst hat (zu viel / passt / zu wenig), und passt die Gießmenge jeder Pflanze an. Pflanzen mit Bodensensor lernen zusätzlich aus der gemessenen Feuchte. Ein Häkchen entfernen verwendet wieder die berechneten Werte – das Gelernte bleibt gespeichert und ist beim Einschalten sofort zurück. Zum vorübergehenden Pausieren (z. B. Urlaub) gibt es den Schalter „Dazulernen pausieren“.",
+          "climate_level": "Nur für Pflanzen ohne Bodenfeuchtesensor. Plant Butler schätzt aus Raumtemperatur und Luftfeuchte, wie schnell die Erde austrocknet: Warme, trockene Luft verkürzt das Gießintervall, kühle, feuchte Luft verlängert es (höchstens 0,6- bis 1,4-fach). Aus: festes Intervall. Schwach / Mittel / Stark: wie stark das Raumklima wirkt. „Stark“ wählen, wenn deine Pflanzen vor der Erinnerung regelmäßig schon trocken sind, „Schwach“, wenn sie noch feucht sind."
         }
       },
       "phone": {
@@ -330,9 +330,9 @@
     },
     "learning_strength": {
       "options": {
-        "gentle": "Sanft (±5 %, wenn 3 von 4 Antworten übereinstimmen)",
-        "normal": "Normal (±10 %, wenn 2 von 3 übereinstimmen)",
-        "strong": "Stark (±15 %, sofort)"
+        "gentle": "Vorsichtig",
+        "normal": "Ausgewogen",
+        "strong": "Stark"
       }
     },
     "feedback_amount": {
@@ -345,8 +345,8 @@
     "climate_level": {
       "options": {
         "off": "Aus",
-        "low": "Wenig",
-        "normal": "Normal",
+        "low": "Schwach",
+        "normal": "Mittel",
         "strong": "Stark"
       }
     },
@@ -405,13 +405,13 @@
         "name": "Gießen ab"
       },
       "moisture_max": {
-        "name": "Feuchte-Maximum"
+        "name": "Feuchtigkeit Max"
       },
       "temperature_min": {
-        "name": "Temperatur-Minimum"
+        "name": "Temperatur Min"
       },
       "temperature_max": {
-        "name": "Temperatur-Maximum"
+        "name": "Temperatur Max"
       },
       "watering_interval": {
         "name": "Gießintervall"
@@ -582,7 +582,7 @@
         "name": "Benachrichtigungen"
       },
       "learning_paused": {
-        "name": "Dazulernen pausiert"
+        "name": "Dazulernen pausieren"
       }
     },
     "todo": {

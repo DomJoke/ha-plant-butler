@@ -155,13 +155,13 @@ data:
 
 ## Learning from experience
 
-Plant Butler adjusts each plant's watering interval and watering amount from experience. Settings under **General**: **Learning strength** (Gentle / Normal / Strong) and two checkboxes, **Learn watering interval** and **Learn watering amount**.
+Plant Butler adjusts each plant's watering interval and watering amount from experience. Settings under **General**: **Learning strength** (Cautious / Balanced / Strong) and two checkboxes, **Learn watering interval** and **Learn watering amount**.
 
 - **Your feedback:** after watering it asks *"How was the soil before watering?"* – on the phone after tapping *Watered*, and on the plant card after ticking the task off: **Still moist / Slightly dry / Very dry**.
 - For plants with a watering amount it also asks *"How was the amount?"*: **Too much** (water in the saucer / ran out at the bottom) / **Just right** / **Too little** (soil not fully moist). On the phone the questions come one after the other, on the card both rows are shown at once.
 - It learns from the **days that actually passed**, not from the reminder: watering late and finding the soil very dry is expected and changes nothing; still moist after a long wait lengthens the interval; very dry after a short time shortens it.
 - **Soil sensor plants** learn without questions: the measured time until "water below" is reached adjusts the interval, and whether the soil got moist enough (or stayed soaking) adjusts the watering amount.
-- Small steps (Gentle ±5 % when 3 of 4 answers agree, Normal ±10 % when 2 of 3 agree, Strong ±15 % at once), limited to 50–200 % (interval) and 50–150 % (amount).
+- Small steps (Cautious ±5 % when 3 of 4 answers agree, Balanced ±10 % when 2 of 3 agree, Strong ±15 % at once), limited to 50–200 % (interval) and 50–150 % (amount).
 - A notification tells you when the rhythm or amount changes ("I will remind you every 9 instead of 8 days", "watering amount from now on 330 instead of 300 ml").
 - Unticking a checkbox applies the calculated values again; what was learned stays saved. **switch.plant_butler_learning_paused** pauses learning for all plants (e.g. holidays). Per plant: **Reset learned values** button.
 - **Undo:** watered by mistake? *Undo* on the card (30 s), the button **Undo last watering** (24 h) or tap the feedback notification.
@@ -177,7 +177,7 @@ Plant Butler adjusts each plant's watering interval and watering amount from exp
 
 Settings → Devices & services → Plant Butler → ⚙ **Configure** opens the settings page:
 
-- **General** – learning strength (Gentle / Normal / Strong), learn watering interval / amount (checkboxes) and room climate correction (Off / Low / Normal / Strong), both explained on the page.
+- **General** – learning strength (Cautious / Balanced / Strong), learn watering interval / amount (checkboxes) and room climate correction (Off / Weak / Medium / Strong), both explained on the page.
 - **Phone notifications** – recipients (all Companion app phones are listed automatically), topics (watering, fertilizing, soil too wet, temperature, light, sensor unavailable), per level *off / daily summary / immediately*, summary time, critical repeat interval, whether critical overrides do-not-disturb, quiet hours, respecting the phone's do-not-disturb, buttons.
 - **Announcements** – voice assistants and speakers (listed automatically), *only in the plant's room* or *all selected*, the same topics and levels, quiet hours, volume, text-to-speech engine. Music Assistant players lower the music for the announcement.
 

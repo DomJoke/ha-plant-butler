@@ -29,10 +29,10 @@
           "climate_level": "Room climate correction"
         },
         "data_description": {
-          "learning_strength": "How quickly Plant Butler adapts to your answers. Learned values stay between half and double the calculated interval and between 50 % and 150 % of the calculated amount.",
+          "learning_strength": "How quickly Plant Butler adapts to your answers. Cautious: ±5 % when 3 of the last 4 answers agree. Balanced: ±10 % when 2 of 3 agree. Strong: ±15 % after a single answer. Learned values stay between half and double the calculated interval and between 50 % and 150 % of the calculated amount.",
           "learn_interval": "After watering, Plant Butler asks how the soil was (still moist / slightly dry / very dry) and adjusts each plant's watering interval. Plants with a soil sensor also learn from the measured drying time.",
-          "learn_amount": "After watering, Plant Butler asks whether the amount was right (too much / just right / too little) and adjusts each plant's watering amount. Plants with a soil sensor also learn from the measured moisture. Turning a checkbox off applies the calculated values again – everything learned stays saved and is back when you switch it on. To pause temporarily (e.g. holidays), use the switch 'Learning paused'.",
-          "climate_level": "Only for plants without a soil moisture sensor. Plant Butler uses room temperature and humidity to estimate how fast the soil dries out: warm, dry air shortens the watering interval, cool, humid air lengthens it (at most 0.6× to 1.4×). Choose 'Strong' if your plants are regularly dry before the reminder, 'Low' if they are still moist, 'Off' for a fixed interval."
+          "learn_amount": "After watering, Plant Butler asks whether the amount was right (too much / just right / too little) and adjusts each plant's watering amount. Plants with a soil sensor also learn from the measured moisture. Turning a checkbox off applies the calculated values again – everything learned stays saved and is back when you switch it on. To pause temporarily (e.g. holidays), use the switch 'Pause learning'.",
+          "climate_level": "Only for plants without a soil moisture sensor. Plant Butler uses room temperature and humidity to estimate how fast the soil dries out: warm, dry air shortens the watering interval, cool, humid air lengthens it (at most 0.6× to 1.4×). Off: fixed interval. Weak / Medium / Strong: how much the room climate counts. Choose 'Strong' if your plants are regularly dry before the reminder, 'Weak' if they are still moist."
         }
       },
       "phone": {
@@ -330,9 +330,9 @@
     },
     "learning_strength": {
       "options": {
-        "gentle": "Gentle (±5 %, when 3 of 4 answers agree)",
-        "normal": "Normal (±10 %, when 2 of 3 agree)",
-        "strong": "Strong (±15 %, immediately)"
+        "gentle": "Cautious",
+        "normal": "Balanced",
+        "strong": "Strong"
       }
     },
     "feedback_amount": {
@@ -345,8 +345,8 @@
     "climate_level": {
       "options": {
         "off": "Off",
-        "low": "Low",
-        "normal": "Normal",
+        "low": "Weak",
+        "normal": "Medium",
         "strong": "Strong"
       }
     },
@@ -405,13 +405,13 @@
         "name": "Water below"
       },
       "moisture_max": {
-        "name": "Moisture maximum"
+        "name": "Moisture Max"
       },
       "temperature_min": {
-        "name": "Temperature minimum"
+        "name": "Temperature Min"
       },
       "temperature_max": {
-        "name": "Temperature maximum"
+        "name": "Temperature Max"
       },
       "watering_interval": {
         "name": "Watering interval"
@@ -582,7 +582,7 @@
         "name": "Notifications"
       },
       "learning_paused": {
-        "name": "Learning paused"
+        "name": "Pause learning"
       }
     },
     "todo": {
