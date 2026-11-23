@@ -1,3 +1,5 @@
+<img src="custom_components/plant_butler/brand/icon@2x.png" alt="Plant Butler" width="128" align="right">
+
 # Plant Butler 🌿
 
 *[English version](README.md)*
