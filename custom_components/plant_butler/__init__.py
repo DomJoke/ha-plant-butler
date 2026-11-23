@@ -2,9 +2,13 @@
 
 from __future__ import annotations
 
+import hashlib
+from pathlib import Path
 from typing import Any
 
 import voluptuous as vol
+from homeassistant.components.frontend import add_extra_js_url
+from homeassistant.components.http import StaticPathConfig
 from homeassistant.const import ATTR_DEVICE_ID, ATTR_ENTITY_ID, Platform
 from homeassistant.core import HomeAssistant, ServiceCall
 from homeassistant.exceptions import ServiceValidationError
@@ -77,8 +81,29 @@ def _plants_for_call(hass: HomeAssistant, call: ServiceCall) -> list[PlantRuntim
     return plants
 
 
+CARD_URL_BASE = f"/{DOMAIN}_static"
+CARD_FILE = "plant-butler-card.js"
+
+
+async def _async_register_card(hass: HomeAssistant) -> None:
+    """Serve the dashboard card and load it on every dashboard."""
+    if "frontend" not in hass.config.components or hass.http is None:
+        return
+    folder = Path(__file__).parent / "frontend"
+
+    def _file_hash() -> str:
+        return hashlib.sha1((folder / CARD_FILE).read_bytes()).hexdigest()[:8]
+
+    version = await hass.async_add_executor_job(_file_hash)
+    await hass.http.async_register_static_paths(
+        [StaticPathConfig(CARD_URL_BASE, str(folder), cache_headers=False)]
+    )
+    add_extra_js_url(hass, f"{CARD_URL_BASE}/{CARD_FILE}?v={version}")
+
+
 async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
-    """Register services."""
+    """Register services and the dashboard card."""
+    await _async_register_card(hass)
 
     async def mark_done(call: ServiceCall) -> None:
         for plant in _plants_for_call(hass, call):

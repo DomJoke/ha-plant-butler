@@ -4,7 +4,7 @@
 
 A Home Assistant integration for plant care: every plant is a device with target values from a bundled plant database, optional sensors, a care assistant for watering amount and fertilizer dose, watering and fertilizing schedules, warning levels and a checklist that resets itself.
 
-> Status: **0.2** – plant card, dashboard and notification blueprint are next.
+> Status: **0.3** – checklist card, dashboard and notification blueprint are next.
 
 ## Features
 
@@ -73,6 +73,22 @@ These are guide values. Soil sensors read differently depending on the manufactu
 | `image.monstera_photo` | Photo (if set) |
 
 Visibility: target values (selects, numbers, winter rest) are *configuration* entities, light level, DLI and the light/temperature problem sensors are *diagnostic* entities – both are kept out of auto-generated dashboards. Temperature min/max, moisture maximum and the winter fertilizing interval are **disabled by default**; enable them on the device page if you want to fine-tune them.
+
+## Plant card
+
+The integration ships a dashboard card and loads it automatically – no resource needs to be added. In the dashboard editor choose **"Plant Butler"** from the card picker, or:
+
+```yaml
+type: custom:plant-butler-card
+entity: sensor.monstera_status
+compact: false      # optional: header and tasks only
+show_bars: true     # optional: sensor values against target ranges
+show_tasks: true    # optional: watering/fertilizing with tick buttons
+```
+
+![Plant cards](docs/plant-card.png)
+
+The card shows the photo (or the species icon), status, problems, soil moisture / light / room temperature / humidity against the plant's targets, and the next care tasks. Tapping the circle next to a task marks it as done (`plant_butler.mark_done`); tapping the header or a value opens the details.
 
 ## Service
 

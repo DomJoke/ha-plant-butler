@@ -4,7 +4,7 @@
 
 Home-Assistant-Integration für die Pflanzenpflege: Jede Pflanze ist ein Gerät mit Sollwerten aus einer Pflanzendatenbank, optionalen Sensoren, einem Pflege-Assistenten für Gießmenge und Düngerdosis, Gieß- und Düngeplan, Warnstufen und einer Checkliste, die sich selbst zurücksetzt.
 
-> Status: **0.2** – Pflanzenkarte, Dashboard und Benachrichtigungs-Blueprint folgen.
+> Status: **0.3** – Checklisten-Karte, Dashboard und Benachrichtigungs-Blueprint folgen.
 
 ## Funktionen
 
@@ -57,5 +57,17 @@ Im Betrieb passen Raumklima (warme, trockene Luft → kürzer) und Winterruhe (�
 Die Werte sind Richtwerte. Bodensensoren messen je nach Hersteller unterschiedlich – passe „Gießen ab“ an deine Messung an.
 
 Sichtbarkeit: Sollwerte (Selects, Zahlen, Winterruhe) sind *Konfigurations*-Entities, Lichtstufe, DLI und die Licht-/Temperaturproblem-Sensoren *Diagnose*-Entities – beide erscheinen nicht in automatisch erzeugten Dashboards. Temperatur-Min/-Max, Feuchte-Maximum und das Winter-Düngeintervall sind **standardmäßig deaktiviert**; aktiviere sie auf der Geräteseite, wenn du sie fein einstellen willst.
+
+## Pflanzenkarte
+
+Die Integration bringt eine Dashboard-Karte mit und lädt sie automatisch – keine Ressource nötig. Im Dashboard-Editor **„Plant Butler“** aus der Kartenauswahl wählen, oder:
+
+```yaml
+type: custom:plant-butler-card
+entity: sensor.monstera_status
+compact: false      # optional: nur Kopf und Aufgaben
+```
+
+Die Karte zeigt Foto (oder Symbol), Status, Probleme, Bodenfeuchte / Licht / Raumtemperatur / Luftfeuchte gegen die Sollwerte und die nächsten Pflegeaufgaben. Ein Tipp auf den Kreis neben einer Aufgabe hakt sie ab.
 
 Entities, Dienst und Benachrichtigungs-Beispiel: siehe [englische README](README.md).
