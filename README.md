@@ -9,7 +9,7 @@
 
 A Home Assistant integration for plant care: every plant is a device with target values from a bundled plant database, optional sensors, a care assistant for watering amount and fertilizer dose, watering and fertilizing schedules, warning levels and a checklist that resets itself.
 
-> Status: **0.6**
+> Status: **0.7**
 
 ## Features
 
@@ -153,11 +153,30 @@ data:
   task: water                          # or fertilize
 ```
 
+## Learning from experience
+
+Plant Butler adjusts each plant's watering interval from experience (setting **General → Learn from experience: Off / Gentle / Normal / Strong**).
+
+- **Your feedback:** after watering it asks *"How was the soil before watering?"* – on the phone after tapping *Watered*, and on the plant card after ticking the task off: **Still moist / Slightly dry / Very dry**.
+- It learns from the **days that actually passed**, not from the reminder: watering late and finding the soil very dry is expected and changes nothing; still moist after a long wait lengthens the interval; very dry after a short time shortens it.
+- **Soil sensor plants** learn without questions: the measured time until "water below" is reached adjusts the interval, and whether the soil got moist enough (or stayed soaking) adjusts the watering amount.
+- Small steps (Gentle ±5 % when 3 of 4 answers agree, Normal ±10 % when 2 of 3 agree, Strong ±15 % at once), limited to 50–200 % (interval) and 50–150 % (amount).
+- A notification tells you when the rhythm changes ("I will remind you every 9 instead of 8 days").
+- **Off** applies the calculated values again; what was learned stays saved. **switch.plant_butler_learning_paused** pauses learning for all plants (e.g. holidays). Per plant: **Reset learned values** button.
+- **Undo:** watered by mistake? *Undo* on the card (30 s), the button **Undo last watering** (24 h) or tap the feedback notification.
+
+| Entity | Meaning |
+| --- | --- |
+| `sensor.<plant>_learned_interval` | Change of the watering interval in %, history in the attributes |
+| `sensor.<plant>_learned_amount` | Change of the watering amount in % (soil sensor only) |
+| `button.<plant>_undo_watering` / `_reset_learning` | Undo the last watering / forget learned values |
+| `switch.plant_butler_learning_paused` | Pause learning for all plants |
+
 ## Notifications and announcements
 
 Settings → Devices & services → Plant Butler → ⚙ **Configure** opens the settings page:
 
-- **General** – strength of the room climate correction (explained on the page).
+- **General** – learning (Off / Gentle / Normal / Strong) and room climate correction (Off / Low / Normal / Strong), both explained on the page.
 - **Phone notifications** – recipients (all Companion app phones are listed automatically), topics (watering, fertilizing, soil too wet, temperature, light, sensor unavailable), per level *off / daily summary / immediately*, summary time, critical repeat interval, whether critical overrides do-not-disturb, quiet hours, respecting the phone's do-not-disturb, buttons.
 - **Announcements** – voice assistants and speakers (listed automatically), *only in the plant's room* or *all selected*, the same topics and levels, quiet hours, volume, text-to-speech engine. Music Assistant players lower the music for the announcement.
 

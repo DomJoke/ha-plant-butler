@@ -158,3 +158,16 @@ DEFAULT_ANNOUNCE_OPTIONS: Final = {
     "tts_engine": None,
 }
 ACTION_PREFIX: Final = "PLANT_BUTLER"
+
+# --------------------------------------------------------------------- learning
+CONF_LEARNING: Final = "learning"
+CONF_CLIMATE_LEVEL: Final = "climate_level"
+LEARNING_LEVELS: Final = ["off", "gentle", "normal", "strong"]
+DEFAULT_LEARNING: Final = "normal"
+CLIMATE_LEVELS: Final = {"off": 0.0, "low": 0.5, "normal": 1.0, "strong": 1.5}
+DEFAULT_CLIMATE_LEVEL: Final = "normal"
+FEEDBACK_ANSWERS: Final = ["moist", "ok", "dry"]
+SERVICE_FEEDBACK: Final = "watering_feedback"
+SERVICE_UNDO: Final = "undo_watering"
+UNDO_WINDOW_HOURS: Final = 24
+FEEDBACK_WINDOW_HOURS: Final = 48

@@ -175,11 +175,13 @@ async def test_options_flow(hass: HomeAssistant) -> None:
     result = await hass.config_entries.options.async_configure(
         result["flow_id"], {"next_step_id": "general"}
     )
+    schema = {str(k): k.default() for k in result["data_schema"].schema}
+    assert schema == {"learning": "normal", "climate_level": "normal"}
     result = await hass.config_entries.options.async_configure(
-        result["flow_id"], {"climate_strength": 0.5}
+        result["flow_id"], {"learning": "gentle", "climate_level": "low"}
     )
     assert result["type"] is FlowResultType.CREATE_ENTRY
-    assert entry.options["climate_strength"] == 0.5
+    assert entry.options["climate_level"] == "low"
     await hass.async_block_till_done()
 
     result = await hass.config_entries.options.async_init(entry.entry_id)
@@ -209,7 +211,7 @@ async def test_options_flow(hass: HomeAssistant) -> None:
     assert phone["topics"] == ["water", "temperature"]
     assert phone["summary_time"] == "07:30:00"
     assert phone["quiet_start"] is None  # emptied = no quiet hours
-    assert entry.options["climate_strength"] == 0.5  # other settings kept
+    assert entry.options["learning"] == "gentle"  # other settings kept
     await hass.async_block_till_done()
 
     result = await hass.config_entries.options.async_init(entry.entry_id)
@@ -279,3 +281,23 @@ async def test_suggest_sensors(hass: HomeAssistant) -> None:
         "humidity_sensor": "sensor.room_humidity",
     }
     assert suggest_sensors(hass, None) == {}
+
+
+async def test_climate_strength_migration(hass: HomeAssistant) -> None:
+    """A numeric climate strength from older versions maps to the nearest level."""
+    entry = MockConfigEntry(
+        domain=DOMAIN, title="Plant Butler", data={}, options={"climate_strength": 0.4}
+    )
+    entry.add_to_hass(hass)
+    assert await hass.config_entries.async_setup(entry.entry_id)
+    await hass.async_block_till_done()
+    result = await hass.config_entries.options.async_init(entry.entry_id)
+    result = await hass.config_entries.options.async_configure(
+        result["flow_id"], {"next_step_id": "general"}
+    )
+    schema = {str(k): k.default() for k in result["data_schema"].schema}
+    assert schema["climate_level"] == "low"
+    result = await hass.config_entries.options.async_configure(
+        result["flow_id"], {"learning": "normal", "climate_level": "low"}
+    )
+    assert "climate_strength" not in entry.options

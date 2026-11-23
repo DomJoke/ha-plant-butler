@@ -145,7 +145,9 @@ async def test_watered_button(
     )
     await hass.async_block_till_done()
     assert hass.states.get("binary_sensor.monstera_needs_water").state == "off"
-    assert notify_calls[-1].data["message"] == "clear_notification"
+    messages = [c.data["message"] for c in notify_calls]
+    assert "clear_notification" in messages
+    assert messages[-1].startswith("Watered ✓")  # feedback question follows
 
 
 async def test_snooze(

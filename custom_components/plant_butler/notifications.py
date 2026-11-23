@@ -32,10 +32,10 @@ from .const import (
     CONF_FERTILIZER_UNIT,
     CONF_TEMPERATURE_MAX,
     CONF_TEMPERATURE_MIN,
-    CONF_WATERING_AMOUNT,
     DEFAULT_ANNOUNCE_OPTIONS,
     DEFAULT_PHONE_OPTIONS,
     DOMAIN,
+    FEEDBACK_ANSWERS,
     MODE_IMMEDIATE,
     MODE_OFF,
     OPT_ANNOUNCE,
@@ -218,7 +218,7 @@ class Notifier:
         settings = plant.settings
         lang = self._lang
         if task == TASK_WATER:
-            amount = settings.get(CONF_WATERING_AMOUNT)
+            amount = plant.watering_amount_effective()
             return f"{fmt_number(float(amount), lang)} ml" if amount else None
         amount = settings.get(CONF_FERTILIZER_AMOUNT)
         if not amount:
@@ -268,7 +268,7 @@ class Notifier:
         room = self._room(plant)
         fields: dict[str, Any] = {"plant": plant.name, "room": room}
         if key == "needs_water":
-            amount = plant.settings.get(CONF_WATERING_AMOUNT)
+            amount = plant.watering_amount_effective()
             fields["amount"] = (
                 msg["say_amount"].format(value=fmt_number(float(amount), lang))
                 if amount
@@ -704,8 +704,88 @@ class Notifier:
         if plant is None:
             return
         if parts[1] == "DONE" and parts[3] in (TASK_WATER, TASK_FERTILIZE):
-            await plant.async_mark_done(parts[3])
+            await plant.async_mark_done(parts[3], source="phone")
+            if parts[3] == TASK_WATER:
+                self._ask_feedback(plant, event.data.get("device_id"))
+        elif parts[1] == "FEEDBACK" and parts[3] in FEEDBACK_ANSWERS:
+            await plant.async_feedback(parts[3])
+            self.async_clear_feedback(plant)
         elif parts[1] == "SNOOZE" and len(parts) == 5:
             until = dt_util.utcnow() + timedelta(hours=float(parts[4]))
             self.data["snooze"][f"{plant.id}|{parts[3]}"] = until.isoformat()
             self.hub.async_schedule_save()
+
+    # --------------------------------------------------------------- learning
+    def _feedback_tag(self, plant: PlantRuntime) -> str:
+        return f"{DOMAIN}_{plant.id}_feedback"
+
+    def _ask_feedback(self, plant: PlantRuntime, device_id: str | None = None) -> None:
+        """After 'Watered' on the phone: how was the soil? (undo via tap)."""
+        if not plant.learning_collects:
+            return
+        msg = messages(self._lang)
+        data: dict[str, Any] = {
+            "tag": self._feedback_tag(plant),
+            "group": DOMAIN,
+            "channel": "Plant Butler",
+            "actions": [
+                {
+                    "action": f"{ACTION_PREFIX}|FEEDBACK|{plant.id}|{answer}",
+                    "title": msg[f"btn_{answer}"],
+                }
+                for answer in FEEDBACK_ANSWERS
+            ],
+        }
+        undo = er.async_get(self.hass).async_get_entity_id(
+            "button", DOMAIN, f"{plant.id}_undo_watering"
+        )
+        if undo:
+            data["clickAction"] = f"entityId:{undo}"
+        services = self._phone_services()
+        targets = [s for d, s in services.items() if device_id in (None, d)] or list(
+            services.values()
+        )
+        for service in targets:
+            self._call_notify(
+                service,
+                {
+                    "title": plant.name,
+                    "message": msg["feedback_question"],
+                    "data": data,
+                },
+            )
+
+    @callback
+    def async_clear_feedback(self, plant: PlantRuntime) -> None:
+        """Remove an open feedback question from the phones."""
+        for service in self._phone_services().values():
+            self._call_notify(
+                service,
+                {
+                    "message": "clear_notification",
+                    "data": {"tag": self._feedback_tag(plant)},
+                },
+            )
+
+    @callback
+    def async_learning_info(
+        self, plant: PlantRuntime, old_days: int, new_days: int
+    ) -> None:
+        """Tell the user that the watering rhythm changed."""
+        msg = messages(self._lang)
+        now = dt_util.utcnow()
+        for device_id, service in self._phone_services().items():
+            if self._phone_blocked(device_id, SEVERITY_INFO, now):
+                continue
+            self._call_notify(
+                service,
+                {
+                    "title": plant.name,
+                    "message": msg["learning_info"].format(new=new_days, old=old_days),
+                    "data": {
+                        "tag": f"{DOMAIN}_{plant.id}_learning",
+                        "group": DOMAIN,
+                        "channel": "Plant Butler",
+                    },
+                },
+            )

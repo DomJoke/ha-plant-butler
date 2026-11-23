@@ -23,10 +23,12 @@
       "general": {
         "title": "Allgemein",
         "data": {
-          "climate_strength": "Stärke der Raumklima-Korrektur"
+          "learning": "Dazulernen",
+          "climate_level": "Raumklima-Korrektur"
         },
         "data_description": {
-          "climate_strength": "Nur für Pflanzen ohne Bodenfeuchtesensor. Plant Butler schätzt aus Raumtemperatur und Luftfeuchte, wie schnell die Erde austrocknet: Warme, trockene Luft verkürzt das Gießintervall, kühle, feuchte Luft verlängert es (höchstens 0,6- bis 1,4-fach). 0 = aus (festes Intervall), 1 = empfohlen, 2 = doppelt so stark – mehr wählen, wenn deine Pflanzen vor der Erinnerung regelmäßig schon trocken sind, weniger, wenn sie noch feucht sind."
+          "learning": "Nach dem Gießen fragt Plant Butler, wie die Erde war (noch feucht / leicht trocken / sehr trocken), und passt das Gießintervall jeder Pflanze an; Pflanzen mit Bodensensor lernen zusätzlich aus der gemessenen Austrocknungszeit und die Gießmenge. „Aus“ verwendet wieder die berechneten Werte – das Gelernte bleibt gespeichert und ist beim Einschalten sofort zurück. Zum vorübergehenden Pausieren (z. B. Urlaub) gibt es den Schalter „Dazulernen pausiert“.",
+          "climate_level": "Nur für Pflanzen ohne Bodenfeuchtesensor. Plant Butler schätzt aus Raumtemperatur und Luftfeuchte, wie schnell die Erde austrocknet: Warme, trockene Luft verkürzt das Gießintervall, kühle, feuchte Luft verlängert es (höchstens 0,6- bis 1,4-fach). „Stark“ wählen, wenn deine Pflanzen vor der Erinnerung regelmäßig schon trocken sind, „Wenig“, wenn sie noch feucht sind, „Aus“ für ein festes Intervall."
         }
       },
       "phone": {
@@ -322,6 +324,29 @@
         "all": "Alle ausgewählten"
       }
     },
+    "learning": {
+      "options": {
+        "off": "Aus",
+        "gentle": "Sanft (±5 %, wenn 3 von 4 Antworten übereinstimmen)",
+        "normal": "Normal (±10 %, wenn 2 von 3 übereinstimmen)",
+        "strong": "Stark (±15 %, sofort)"
+      }
+    },
+    "climate_level": {
+      "options": {
+        "off": "Aus",
+        "low": "Wenig",
+        "normal": "Normal",
+        "strong": "Stark"
+      }
+    },
+    "feedback": {
+      "options": {
+        "moist": "Noch feucht",
+        "ok": "Leicht trocken",
+        "dry": "Sehr trocken"
+      }
+    },
     "task": {
       "options": {
         "water": "Gießen",
@@ -352,6 +377,12 @@
       },
       "mark_fertilized": {
         "name": "Gedüngt"
+      },
+      "undo_watering": {
+        "name": "Letztes Gießen rückgängig"
+      },
+      "reset_learning": {
+        "name": "Gelerntes zurücksetzen"
       }
     },
     "image": {
@@ -506,6 +537,12 @@
       "hints": {
         "name": "Hinweise"
       },
+      "learned_interval": {
+        "name": "Gelerntes Gießintervall"
+      },
+      "learned_amount": {
+        "name": "Gelernte Gießmenge"
+      },
       "next_watering": {
         "name": "Nächstes Gießen"
       },
@@ -533,6 +570,9 @@
       },
       "notifications": {
         "name": "Benachrichtigungen"
+      },
+      "learning_paused": {
+        "name": "Dazulernen pausiert"
       }
     },
     "todo": {
@@ -542,6 +582,38 @@
     }
   },
   "services": {
+    "watering_feedback": {
+      "name": "Rückmeldung zum Gießen",
+      "description": "Wie war die Erde vor dem letzten Gießen? Passt das gelernte Gießintervall an.",
+      "fields": {
+        "entity_id": {
+          "name": "Pflanzen-Entities",
+          "description": "Beliebige Entity der Pflanze."
+        },
+        "device_id": {
+          "name": "Pflanzen-Geräte",
+          "description": "Die Pflanzen-Geräte."
+        },
+        "answer": {
+          "name": "Antwort",
+          "description": "Wie war die Erde vor dem letzten Gießen? Passt das gelernte Gießintervall an."
+        }
+      }
+    },
+    "undo_watering": {
+      "name": "Letztes Gießen rückgängig",
+      "description": "Stellt den Zustand vor dem letzten Gießen wieder her (innerhalb von 24 Stunden).",
+      "fields": {
+        "entity_id": {
+          "name": "Pflanzen-Entities",
+          "description": "Beliebige Entity der Pflanze."
+        },
+        "device_id": {
+          "name": "Pflanzen-Geräte",
+          "description": "Die Pflanzen-Geräte."
+        }
+      }
+    },
     "mark_done": {
       "name": "Pflegeaufgabe erledigt",
       "description": "Markiert Gießen oder Düngen für die gewählten Pflanzen als erledigt und startet den Zeitplan neu.",

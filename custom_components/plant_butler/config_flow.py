@@ -51,7 +51,9 @@ from .care import (
     suggest_watering,
 )
 from .const import (
+    CLIMATE_LEVELS,
     CONF_AREA,
+    CONF_CLIMATE_LEVEL,
     CONF_CLIMATE_STRENGTH,
     CONF_FEEDING,
     CONF_FERTILIZER_AMOUNT,
@@ -63,6 +65,7 @@ from .const import (
     CONF_HUMIDITY_SENSOR,
     CONF_ICON,
     CONF_ILLUMINANCE_SENSOR,
+    CONF_LEARNING,
     CONF_LIGHT_NEED,
     CONF_LOCATION_LIGHT,
     CONF_MOISTURE_MAX,
@@ -87,11 +90,13 @@ from .const import (
     DEFAULT_ANNOUNCE_OPTIONS,
     DEFAULT_CLIMATE_STRENGTH,
     DEFAULT_FERTILIZER_DOSAGE,
+    DEFAULT_LEARNING,
     DEFAULT_PHONE_OPTIONS,
     DOMAIN,
     FEEDING_LEVELS,
     FERTILIZER_TYPES,
     FERTILIZER_UNITS,
+    LEARNING_LEVELS,
     LIGHT_LEVEL_KEYS,
     MODE_IMMEDIATE,
     MODE_OFF,
@@ -298,15 +303,28 @@ class PlantButlerOptionsFlow(OptionsFlow):
     ) -> ConfigFlowResult:
         """General settings."""
         if user_input is not None:
-            return self._save(None, user_input)
+            options = dict(self.config_entry.options)
+            options.pop(CONF_CLIMATE_STRENGTH, None)  # replaced by the level
+            options.update(user_input)
+            return self.async_create_entry(data=options)
+        options = self.config_entry.options
+        if CONF_CLIMATE_LEVEL in options:
+            climate = options[CONF_CLIMATE_LEVEL]
+        else:  # numeric setting from before 0.7 -> nearest level
+            strength = float(
+                options.get(CONF_CLIMATE_STRENGTH, DEFAULT_CLIMATE_STRENGTH)
+            )
+            climate = min(
+                CLIMATE_LEVELS, key=lambda k: abs(CLIMATE_LEVELS[k] - strength)
+            )
         schema = vol.Schema(
             {
                 vol.Required(
-                    CONF_CLIMATE_STRENGTH,
-                    default=self.config_entry.options.get(
-                        CONF_CLIMATE_STRENGTH, DEFAULT_CLIMATE_STRENGTH
-                    ),
-                ): _number(0, 2, 0.1),
+                    CONF_LEARNING, default=options.get(CONF_LEARNING, DEFAULT_LEARNING)
+                ): _mode_selector(CONF_LEARNING, LEARNING_LEVELS),
+                vol.Required(CONF_CLIMATE_LEVEL, default=climate): _mode_selector(
+                    CONF_CLIMATE_LEVEL, list(CLIMATE_LEVELS)
+                ),
             }
         )
         return self.async_show_form(step_id="general", data_schema=schema)
