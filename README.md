@@ -124,6 +124,6 @@ pip install -r requirements_test.txt
 pytest
 ```
 
-The integration icon lives in `custom_components/plant_butler/brand/` (shown by Home Assistant 2026.3 and newer); its source is `tools/brand/icon.svg`, rendered with `tools/brand/render.py`.
+The integration icon lives in `custom_components/plant_butler/brand/` (shown by Home Assistant 2026.3 and newer); its source is `tools/brand/build.py` (all style options) and `tools/brand/export.py` (exports the chosen ring icon).
 
 The plant database is generated from `tools/species.tsv` with `tools/build_db.py`; translations are generated with `tools/build_translations.py`.
